@@ -1,0 +1,32 @@
+/* src/components/Header.css */
+.pb-header {
+  height: 64px;
+  padding: 0 3rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0e0d0d;
+  color: #f4f4ff;
+}
+
+.pb-header__logo {
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.pb-header__nav {
+  display: flex;
+  gap: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.pb-header__nav a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+.pb-header__nav a:hover {
+  opacity: 1;
+}
