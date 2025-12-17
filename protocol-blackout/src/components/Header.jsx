@@ -1,5 +1,6 @@
 import "./header.css";
 import Button from "./button.jsx";
+import { Link } from "react-router-dom";
 
 function Header() {
   return (
@@ -10,7 +11,7 @@ function Header() {
         <a href="#hero">Startseite</a>
         <a href="#about">Geschichte</a>
         <a href="#ethics">Etisches Hacken</a>
-        <a href="#simulation">Spiele</a>
+        <Link to="/games">Spiele</Link>
         <a href="#ethics">Login</a>
         <a href="#ethics">Über uns</a>
         <a href="#contact">Kontakt & Impressum</a>
