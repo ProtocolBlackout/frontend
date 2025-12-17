@@ -1,12 +1,12 @@
-// src/components/SettingsButton.jsx
-import "./Button.css";
+// src/components/Button.jsx
+import "./button.css";
 
 function Button() {
   return (
 
-<button class="button">
-  <span>Login</span>
-</button>
+    <button class="button">
+      <span>Login</span>
+    </button>
   );
 }
 
