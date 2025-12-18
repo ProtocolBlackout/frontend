@@ -1,14 +1,20 @@
 import React from 'react'
 import { useState } from 'react'
 import Quiz from "./quiz/gameQuiz"
+import GamePasswordCracker from './password-cracker/passwordCracker'
 
 
 export default function Gamespage() {
     const [count, setCount] = useState(0)
     const [showQuiz, setShowQuiz] = useState(false)
+    const [showCracker, setShowCracker] = useState(false)
 
     if (showQuiz) {
         return <Quiz onBack={() => setShowQuiz(false)} />
+    }
+
+    if (showCracker) {
+        return <GamePasswordCracker onBack={() => setShowCracker(false)} />
     }
 
  
@@ -21,9 +27,11 @@ export default function Gamespage() {
                 <button onClick={() => setShowQuiz(true)}>Zum Quiz</button>
             </div>
 
-            {/* <div style={{ margin: '1rem 0' }}>
+            <div style={{ margin: '1rem 0' }}>
+                <h2>Passwort Cracker</h2>
+                <p>Na schaffst du es unsere Passwörter herauszufinden</p>
                 <button onClick={() => setShowCracker(true)}>Zum Zum PasswordCracker</button>
-            </div> */}
+            </div>
         </>
     )
 }

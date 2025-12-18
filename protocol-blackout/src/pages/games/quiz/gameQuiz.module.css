@@ -1,0 +1,224 @@
+:root {
+  --bg-dark: #111111;
+  --green-neon: #00ff00;
+  --blue-deep: #0033aa;
+  --purple-retro: #711d9a;
+  --purple-alt: #a42db4;
+  --cyan-neon: #00ffd0;
+  --text-white: #f4f4ff;
+}
+
+/* --- THEMES --- */
+.themeGreen {
+  --main-color: var(--green-neon);
+  --bg-color: var(--bg-dark);
+  --monitor-body: #1a1a1a;
+  --screen-bg: #080c08;
+  --text-glow: 0 0 4px rgba(0, 255, 0, 0.6);
+}
+
+.themeAmber {
+  --main-color: #ffb000;
+  --bg-color: var(--bg-dark);
+  --monitor-body: #2d241b;
+  --screen-bg: #14100a;
+  --text-glow: 0 0 4px rgba(255, 176, 0, 0.6);
+}
+
+/* --- LAYOUT --- */
+.appContainer {
+  /* reserve space for the site header to avoid overlap with absolute children */
+  position: relative;
+  padding-top: 84px;
+  min-height: calc(100vh - 84px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-color);
+  background-image: radial-gradient(circle at center, #222 0%, #000 100%);
+  font-family: "Courier New", Courier, monospace;
+  color: var(--main-color);
+  overflow: hidden;
+}
+
+.monitorCasing {
+  position: relative;
+  width: 800px;
+  max-width: 95vw;
+  aspect-ratio: 4/3;
+  background: var(--monitor-body);
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow:
+    inset 0 0 15px #000,
+    0 0 50px rgba(0, 0, 0, 0.8),
+    0 0 0 2px #333;
+  transition: background 0.5s ease;
+}
+
+.crtScreen {
+  width: 100%;
+  height: 100%;
+  background-color: var(--screen-bg);
+  border-radius: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.8);
+}
+
+/* --- EFFEKTE --- */
+.scanlines {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0.25) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle,
+      rgba(255, 255, 255, 0.02) 0%,
+      rgba(0, 0, 0, 0) 80%);
+  animation: flicker 0.15s infinite;
+  pointer-events: none;
+  z-index: 11;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.95;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.95;
+  }
+}
+
+/* --- CONTENT --- */
+.uiContent {
+  position: relative;
+  z-index: 5;
+  padding: 40px;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-shadow: var(--text-glow);
+  color: var(--main-color);
+}
+
+.uiContent h1 {
+  text-transform: uppercase;
+  border-bottom: 2px solid var(--main-color);
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.questionText {
+  color: var(--main-color);
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 80%;
+}
+
+/* --- BUTTONS --- */
+.retroBtn {
+  background: transparent;
+  border: 2px solid var(--main-color);
+  color: var(--main-color);
+  padding: 15px 30px;
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  text-transform: uppercase;
+  box-shadow: 0 0 5px var(--main-color);
+  transition: all 0.1s ease;
+  margin: 10px;
+  width: 80%;
+  max-width: 500px;
+}
+
+.retroBtn:hover {
+  background: var(--main-color);
+  color: #000;
+  box-shadow: 0 0 20px var(--main-color);
+}
+
+/* Theme Switcher Button */
+.themeSwitchBtn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: transparent;
+  border: 1px solid #555;
+  color: #888;
+  padding: 5px 10px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  z-index: 20;
+  font-family: sans-serif;
+}
+
+.themeSwitchBtn:hover {
+  color: #fff;
+  border-color: #fff;
+}
+
+/* Back Button */
+.backBtn {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 100;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid #444;
+  color: #666;
+  padding: 8px 15px;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  text-decoration: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.backBtn:hover {
+  color: var(--main-color);
+  border-color: var(--main-color);
+  box-shadow: 0 0 10px var(--main-color);
+  text-shadow: 0 0 5px var(--main-color);
+}
+
+/* --- COMPONENT-SPECIFIC CLASSES ADDED FROM INLINE STYLES --- */
+.questionHeader {
+  border-bottom: 1px dashed currentColor;
+  width: 100%;
+  text-align: center;
+  padding-bottom: 10px;
+  margin-bottom: 1rem;
+}
+
+.answersContainer {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.loadError {
+  color: #f88;
+}
