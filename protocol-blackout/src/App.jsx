@@ -3,6 +3,7 @@ import Footer from "./components/Footer.jsx";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Gamespage from "./pages/games/Gamespage.jsx";
+import About from "./pages/aboutus/AboutUs.jsx";
 
 function Home() {
   return (
@@ -80,6 +81,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/games" element={<Gamespage />} />
+        <Route path="/about" element={<About />} />
       </Routes>
 
       <Footer />

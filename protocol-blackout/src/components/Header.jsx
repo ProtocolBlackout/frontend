@@ -13,7 +13,7 @@ function Header() {
         <a href="#ethics">Etisches Hacken</a>
         <Link to="/games">Spiele</Link>
         <a href="#ethics">Login</a>
-        <a href="#ethics">Über uns</a>
+        <Link to="/about">Über uns</Link>
         <a href="#contact">Kontakt & Impressum</a>
       </nav>
 
