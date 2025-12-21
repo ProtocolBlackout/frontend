@@ -6,30 +6,74 @@ const TEAM = [
     id: "bella",
     name: "Bella",
     role: "Game Development (Frontend & Backend)",
-    tags: ["Game Dev", "Frontend", "Backend"],
+    tags: [
+      "Game Dev",
+      "Frontend",
+      "Backend",
+      "Emotional Intelligence",
+      "Creative Thinker",
+      "Dark Romance",
+      "Team Harmony",
+      "Fantasy Fan",
+      "Slytherin",
+      "Organization Talent",
+      "Story Lover",
+      "Music Soul",
+      "Emotionsexplosion"
+    ],
     avatar: "/images/BellaAvatar.png",
     avatarAlt: "Porträt von Bella",
-    bio: "Bella bringt als stolze Slytherin und Fantasy-Fan die Portion Magie ins Team. Zwischen Kita-Alltag, Code und Dark-Romance-Romanen jongliert sie ihr Leben mit beeindruckender Gelassenheit – bis eine ihrer berühmten Emotionsexplosionen das Team wieder mit neuer Energie erfüllt. Grün ist ihre Farbe, sieben ihre Zahl – und wenn Saltatio Mortis oder Versengold läuft, läuft’s erst richtig rund.",
+    bio: "Bella, Baujahr 1993, ist unsere leidenschaftliche Slytherin mit einem Herzen für Fantasie und Emotionen. Sie ist die, die Struktur und Gefühl mit einer beeindruckenden Leichtigkeit vereint. Zwischen Kita-Alltag, Code und Dark-Romance-Romanen schafft sie es, rational zu denken und gleichzeitig mit dem Herzen zu führen. Wenn sie sich in ein Projekt stürzt, dann mit voller Leidenschaft – und wenn die Emotionen hochkochen, entstehen daraus oft kleine Explosionen voller Kreativität und Inspiration, die das ganze Team anstecken. Ihre Lieblingsfarbe Grün und die Zahl Sieben begleiten sie wie ein roter Faden – Symbole für Harmonie, Wachstum und Glück. Musikalisch lässt sie sich von Saltatio Mortis und Versengold tragen, die ihren Sinn für Tiefe, Geschichte und Melancholie perfekt widerspiegeln. Im Team bringt Bella Empathie, Organisationstalent und emotionale Tiefe zusammen – und sorgt damit dafür, dass jedes Projekt nicht nur funktioniert, sondern sich auch richtig anfühlt."
   },
   {
     id: "lulu",
     name: "Lulu",
     role: "Backend (Full) & Project Managerin",
-    tags: ["Backend", "Project Management"],
+    tags: [
+      "Backend",
+      "Project Management",
+      "Idealistin",
+      "Freedom Lover",
+      "Naturfreundin",
+      "Punkrock",
+      "Dog Mom",
+      "Handmade Spirit",
+      "Creative Chaos",
+      "Energiebündel",
+      "Authentizität",
+      "Team Motivation",
+      "Problem Solver"
+    ],
     avatar: "/images/LuNesAvatar.png",
     avatarAlt: "Porträt von Lulu",
-    bio: "Lulu, Baujahr 1988 und gebürtig aus der ehemaligen DDR, steht für Idealismus, Freiheit und Herzblut. Punkrock im Ohr, Hündin Xara an der Seite und das Herz am richtigen Fleck – so kennt man unseren „Terrorzwerg“. Mit 1,50 m geballter Energie sorgt sie für kreative Explosionen, gute Laune und klare Worte. Ihren Ausgleich findet sie in der Natur oder beim kreativen Handwerken.",
+    bio: "Lulu, Baujahr 1988, bringt Punkrock, Idealismus und jede Menge Herzblut ins Team. Aufgewachsen in der ehemaligen DDR hat sie ein starkes Bewusstsein für Freiheit, Gerechtigkeit und Selbstbestimmung entwickelt – Werte, die sie in allem, was sie tut, verteidigt und lebt. In ihr steckt ein echtes Naturkind mit einem Sinn für das Wesentliche: frische Luft, ehrliche Worte und kreative Energie. Ihr treuer Hund Xara begleitet sie dabei auf Schritt und Tritt – ob bei langen Spaziergängen im Wald oder beim kreativen Handwerken, das sie als Ausgleich zu Kopf- und Bildschirmarbeit liebt. Trotz (oder gerade wegen) ihrer 1,50 m ist sie im Team als unser „Terrorzwerg“ bekannt – ein Wirbelwind, der nicht aufzuhalten ist, wenn sie sich für eine Idee begeistert. Mit Punkrock im Ohr, einem frischen Blick auf Probleme und einem unerschütterlichen Idealismus schafft sie es, kreative Prozesse in Bewegung zu bringen, wo andere stehen bleiben. Lulu ist unsere Stimme der Freiheit, unser Herz für Authentizität und ein Energiebündel, das jede Routine sprengt."
   },
   {
     id: "jenny",
     name: "Jenny",
     role: "Frontend (Full) & Content",
-    tags: ["Frontend", "UI/UX", "Content"],
+    tags: [
+      "Frontend",
+      "UI/UX",
+      "Content",
+      "Gamer",
+      "Fantasy Author",
+      "Creative Mind",
+      "Empathie",
+      "Music Lover",
+      "Batman Fan",
+      "Storytelling",
+      "Color Lover",
+      "Team Spirit",
+      "Problem Solver",
+      "A Day to Remember"
+    ],
     avatar: "/images/JennyAvatar.png",
     avatarAlt: "Porträt von Jenny",
-    bio: "Jenny, Baujahr 1992, ist leidenschaftliche Zockerin, Batman-Freak und stolzer Fan von A Day to Remember. Sie hat den Sprung von der Altenpflege in die IT gewagt – und schreibt nebenbei noch an einer eigenen Fantasy-Trilogie. Zwischen Blau, Rot und Lila findet sie die perfekte Balance aus Struktur, Leidenschaft und Kreativität.",
-  },
+    bio: "Jenny, Baujahr 1992, ist der kreative Kopf mit einem Faible für Fantasie und Technik gleichermaßen. Als leidenschaftliche Zockerin und überzeugter A Day to Remember-Fan liebt sie alles, was Herz, Action und Emotion vereint – ob im Game, beim Schreiben oder im Code. Mit ihrem Hintergrund in der Altenpflege bringt sie nicht nur Empathie und Geduld mit, sondern auch die Fähigkeit, Probleme strukturiert und mit ruhiger Hand zu lösen. Doch wer denkt, sie wäre nur ruhig und analytisch, irrt: Wenn sie über Batman oder ihre selbstgeschriebene Fantasy-Trilogie spricht, sprüht sie vor Begeisterung. Zwischen Blau, Rot und Lila findet sie ihre kreative Balance – und im Team sorgt sie mit ihrem Humor, ihrer Hartnäckigkeit und einem guten Schuss Fantasie dafür, dass selbst komplexe Ideen lebendig werden."
+  }
 ];
+
 
 export default function AboutUs() {
   const [activeId, setActiveId] = useState(null);
@@ -51,7 +95,6 @@ export default function AboutUs() {
     setActiveId(null);
   };
 
-  // open/close the native dialog
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
@@ -67,7 +110,11 @@ export default function AboutUs() {
     <main className="about">
       <header className="about__header">
         <h1>Über uns</h1>
-        <p>Drei Köpfe, eine Vision. Wir sind Bella, Lulu und Jenny – drei kreative Köpfe mit völlig unterschiedlichen Wegen, die sich in der Welt des Programmierens gefunden haben.</p>
+        <p>
+          Drei Köpfe, eine Vision. Wir sind Bella, Lulu und Jenny – drei kreative
+          Köpfe mit völlig unterschiedlichen Wegen, die sich in der Welt des
+          Programmierens gefunden haben.
+        </p>
       </header>
 
       <section className="about__team">
@@ -91,7 +138,6 @@ export default function AboutUs() {
         </div>
       </section>
 
-      {/* Modal (nur Bild -> flip -> Text) */}
       <dialog
         ref={dialogRef}
         className="aboutModal"
@@ -110,7 +156,6 @@ export default function AboutUs() {
               </button>
             </div>
 
-            {/* Click area that flips */}
             <button
               type="button"
               className={`zoomFlip ${flipped ? "isFlipped" : ""}`}
@@ -133,7 +178,9 @@ export default function AboutUs() {
                     <p className="zoomFlip__bio">{activeMember.bio}</p>
                     <div className="zoomFlip__tags">
                       {activeMember.tags.map((t) => (
-                        <span key={t} className="tag">{t}</span>
+                        <span key={t} className="tag">
+                          {t}
+                        </span>
                       ))}
                     </div>
                   </div>

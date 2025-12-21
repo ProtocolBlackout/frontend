@@ -44,7 +44,7 @@
 
 :root {
   /* Fonts */
-  --pb-font-content: "Roboto", system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  --pb-font-content: "Roboto",;
   --pb-font-header: "Pixelify Sans", var(--pb-font-content);
   --pb-font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
 
@@ -62,7 +62,7 @@ body {
   margin: 0;
   background: var(--bg-dark);
   color: var(--text-white);
-  font-family: var(--pb-font-content);
+
 }
 
 
