@@ -8,13 +8,13 @@ function Header() {
       <div className="pb-header__logo">Protocol Blackout</div>
 
       <nav className="pb-header__nav">
-        <a href="#hero">Startseite</a>
-        <a href="#about">Geschichte</a>
-        <a href="#ethics">Etisches Hacken</a>
+        <Link to="/home">Startseite</Link>
+        <Link to="/history">Geschichte</Link>
+        <Link to="/ethics">Etisches Hacken</Link>
         <Link to="/games">Spiele</Link>
-        <a href="#ethics">Login</a>
+        <Link to="/login">Login</Link>
         <Link to="/about">Über uns</Link>
-        <a href="#contact">Kontakt & Impressum</a>
+        <Link to="/contact">Kontakt & Impressum</Link>
       </nav>
 
       <Button />

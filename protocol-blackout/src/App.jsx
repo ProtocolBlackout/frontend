@@ -4,6 +4,10 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Gamespage from "./pages/games/Gamespage.jsx";
 import About from "./pages/aboutus/AboutUs.jsx";
+//import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
+//import History from "./pages/geschichte/Geschichte.jsx";
+//import Ethics from "./pages/ethik/EthischesHacken.jsx";
+//import Login from "./pages/login/LoginRegistrieren.jsx";
 
 function Home() {
   return (
@@ -17,12 +21,11 @@ function Home() {
         </h1>
         <p>
           Tauche ein in die Welt des Ethical Hackings! Unsere interaktive
-          Simulation vermittelt dir realistische Szenarien aus der
-          IT-Sicherheit und erklärt, warum ethisches Verhalten beim Hacken so
-          wichtig ist. Wichtig: Dieses Tool ist eine reine Simulation zu
-          Trainings- und Lernzwecken und stellt keine Anleitung oder
-          Aufforderung zu illegalem Handeln dar. Handle stets nach den
-          Gesetzen und ethischen Grundsätzen.
+          Simulation vermittelt dir realistische Szenarien aus der IT-Sicherheit
+          und erklärt, warum ethisches Verhalten beim Hacken so wichtig ist.
+          Wichtig: Dieses Tool ist eine reine Simulation zu Trainings- und
+          Lernzwecken und stellt keine Anleitung oder Aufforderung zu illegalem
+          Handeln dar. Handle stets nach den Gesetzen und ethischen Grundsätzen.
         </p>
         <button className="btn-primary">Start Simulation</button>
       </section>
@@ -32,13 +35,12 @@ function Home() {
         <div className="landing-ethics-text">
           <h2>Disclaimer</h2>
           <p>
-            Alle hier gezeigten Methoden dienen ausschließlich der Schulung
-            und Sensibilisierung für IT-Sicherheitsrisiken in einer sicheren,
-            kontrollierten Umgebung. Missbrauch oder Anwendung außerhalb
-            dieses Trainings ist ausdrücklich untersagt. Das Projektteam
-            übernimmt keine Haftung für etwaige Schäden oder
-            Missbrauchsversuche. Bitte halte dich streng an geltende Gesetze
-            und Schulvorgaben.
+            Alle hier gezeigten Methoden dienen ausschließlich der Schulung und
+            Sensibilisierung für IT-Sicherheitsrisiken in einer sicheren,
+            kontrollierten Umgebung. Missbrauch oder Anwendung außerhalb dieses
+            Trainings ist ausdrücklich untersagt. Das Projektteam übernimmt
+            keine Haftung für etwaige Schäden oder Missbrauchsversuche. Bitte
+            halte dich streng an geltende Gesetze und Schulvorgaben.
           </p>
           <button className="btn-secondary">Learn More</button>
         </div>
@@ -63,8 +65,8 @@ function Home() {
           <div className="visual-caption">
             <strong>Matrix Lines Graphic</strong>
             <p>
-              Space reserved for an animated visualization that represents
-              data streams, scans and intrusion attempts.
+              Space reserved for an animated visualization that represents data
+              streams, scans and intrusion attempts.
             </p>
           </div>
         </div>
@@ -79,9 +81,13 @@ function App() {
       <Header />
 
       <Routes>
-        <Route path="/" element={<Home />} />
+        <Route path="/home" element={<Home />} />
+        {/*<Route path="/history" element={<History />} />*/}
+        {/*<Route path="/ethics" element={<Ethics />} />*/}
         <Route path="/games" element={<Gamespage />} />
+        {/*<Route path="/login" element={<Login />} />*/}
         <Route path="/about" element={<About />} />
+        {/*<Route path="/contact" element={<Contact />} />*/}
       </Routes>
 
       <Footer />
