@@ -1,7 +1,8 @@
 /* Pixelify Sans (Variable) */
 @font-face {
   font-family: "Pixelify Sans";
-  src: url("/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf") format("truetype");
+  src: url("/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf")
+    format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -10,7 +11,8 @@
 /* Roboto (Variable) */
 @font-face {
   font-family: "Roboto";
-  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf") format("truetype");
+  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
+    format("truetype");
   font-style: normal;
   font-weight: 100 1000;
   font-display: swap;
@@ -18,7 +20,8 @@
 
 @font-face {
   font-family: "Roboto";
-  src: url("/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf") format("truetype");
+  src: url("/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf")
+    format("truetype");
   font-style: italic;
   font-weight: 100 1000;
   font-display: swap;
@@ -27,7 +30,8 @@
 /* Roboto Mono (Variable) */
 @font-face {
   font-family: "Roboto Mono";
-  src: url("/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf") format("truetype");
+  src: url("/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf")
+    format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -35,20 +39,27 @@
 
 @font-face {
   font-family: "Roboto Mono";
-  src: url("/fonts/Roboto_Mono/RobotoMono-Italic-VariableFont_wght.ttf") format("truetype");
+  src: url("/fonts/Roboto_Mono/RobotoMono-Italic-VariableFont_wght.ttf")
+    format("truetype");
   font-style: italic;
   font-weight: 100 900;
   font-display: swap;
 }
 
-
 :root {
-  /* Fonts */
-  --pb-font-content: "Roboto",;
+ 
+  --pb-font-content: "Roboto";
   --pb-font-header: "Pixelify Sans", var(--pb-font-content);
-  --pb-font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  --pb-font-mono: "Roboto Mono",
+    ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    Consolas,
+    "Liberation Mono",
+    monospace;
 
-  /* Colors */
+  
   --bg-dark: #111111;
   --green-neon: #00ff00;
   --blue-deep: #0033aa;
@@ -62,7 +73,4 @@ body {
   margin: 0;
   background: var(--bg-dark);
   color: var(--text-white);
-
 }
-
-
