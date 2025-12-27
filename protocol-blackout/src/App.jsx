@@ -6,7 +6,7 @@ import Gamespage from "./pages/games/Gamespage.jsx";
 import About from "./pages/aboutus/AboutUs.jsx";
 //import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
-//import Ethics from "./pages/ethik/EthischesHacken.jsx";
+import Ethics from "./pages/ethik/EthischesHacken.jsx";
 //import Login from "./pages/login/LoginRegistrieren.jsx";
 
 function Home() {
@@ -84,7 +84,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/home" element={<Home />} />
         <Route path="/history" element={<History />} />
-        {/*<Route path="/ethics" element={<Ethics />} />*/}
+        <Route path="/ethics" element={<Ethics />} />
         <Route path="/games" element={<Gamespage />} />
         {/*<Route path="/login" element={<Login />} />*/}
         <Route path="/about" element={<About />} />
