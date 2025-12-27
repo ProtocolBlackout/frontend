@@ -1,6 +1,6 @@
 // src/pages/geschichte/Geschichte.jsx
 import { useState } from "react";
-import "./geschichte.css";
+import "./Geschichte.css";
 
 const mainTimeline = [
   {
