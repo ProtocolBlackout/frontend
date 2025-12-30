@@ -7,7 +7,7 @@ import About from "./pages/aboutus/AboutUs.jsx";
 import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
 import Ethics from "./pages/ethik/EthischesHacken.jsx";
-//import Login from "./pages/login/LoginRegistrieren.jsx";
+import Login from "./pages/login/LoginRegistrieren.jsx";
 
 function Home() {
   return (
@@ -86,7 +86,7 @@ function App() {
         <Route path="/history" element={<History />} />
         <Route path="/ethics" element={<Ethics />} />
         <Route path="/games" element={<Gamespage />} />
-        {/*<Route path="/login" element={<Login />} />*/}
+        <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
       <Route path="/contact" element={<Contact />} />
       </Routes>
