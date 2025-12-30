@@ -1,0 +1,219 @@
+.ki {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 4rem 2rem 5rem;
+  color: var(--text-white);
+  background: var(--bg-dark);
+  font-family: var(--pb-font-mono);
+}
+
+/* ===== Console Shell ===== */
+
+.ki-console {
+  max-width: 920px;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 255, 208, 0.4);
+  background: radial-gradient(
+      circle at 0 0,
+      rgba(0, 255, 208, 0.09),
+      transparent 60%
+    ),
+    #050505;
+  box-shadow:
+    0 0 0 1px rgba(0, 255, 208, 0.15),
+    0 0 40px rgba(0, 255, 208, 0.16);
+}
+
+.ki-console__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid rgba(0, 255, 208, 0.25);
+  background: rgba(0, 0, 0, 0.9);
+}
+
+.ki-console__title {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--cyan-neon);
+}
+
+.ki-console__dots {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: rgba(244, 244, 255, 0.55);
+}
+
+.ki-console__body {
+  padding: 1.2rem 1.2rem 1.4rem;
+}
+
+/* ===== Tabs ===== */
+
+.ki-tabs {
+  display: flex;
+  gap: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border-bottom: 1px solid rgba(0, 255, 208, 0.18);
+  background: rgba(0, 0, 0, 0.75);
+}
+
+.ki-tab {
+  border: 1px solid rgba(244, 244, 255, 0.14);
+  background: transparent;
+  color: rgba(244, 244, 255, 0.8);
+  font-family: var(--pb-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+  transition: border-color 0.12s ease, color 0.12s ease, box-shadow 0.12s ease,
+    transform 0.12s ease;
+}
+
+.ki-tab:hover {
+  transform: translateY(-1px);
+  border-color: rgba(0, 255, 208, 0.35);
+}
+
+.ki-tab--active {
+  border-color: rgba(0, 255, 208, 0.6);
+  color: var(--cyan-neon);
+  box-shadow: 0 0 16px rgba(0, 255, 208, 0.25);
+}
+
+/* ===== Panel content ===== */
+
+.ki-panel {
+  font-family: var(--pb-font-content);
+}
+
+.ki-lead {
+  margin: 0 0 1rem;
+  color: rgba(244, 244, 255, 0.75);
+}
+
+/* ===== Terminal Form ===== */
+
+.ki-form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem 1.2rem;
+}
+
+.ki-field {
+  display: block;
+}
+
+.ki-field--full {
+  grid-column: 1 / -1;
+}
+
+.ki-label {
+  display: block;
+  font-family: var(--pb-font-mono);
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+  margin-bottom: 0.25rem;
+}
+
+.ki-input,
+.ki-textarea {
+  width: 100%;
+  border: 0;
+  outline: none;
+  border-bottom: 1px solid rgba(0, 255, 208, 0.55);
+  background: transparent;
+  color: rgba(244, 244, 255, 0.9);
+  padding: 0.5rem 0.1rem;
+  font-family: var(--pb-font-mono);
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.ki-input:focus,
+.ki-textarea:focus {
+  border-bottom-color: rgba(0, 255, 208, 0.9);
+  box-shadow: 0 10px 24px rgba(0, 255, 208, 0.08);
+}
+
+.ki-textarea {
+  resize: vertical;
+  border-left: 1px solid rgba(0, 255, 208, 0.18);
+  border-right: 1px solid rgba(0, 255, 208, 0.18);
+  border-top: 1px solid rgba(0, 255, 208, 0.18);
+  padding: 0.6rem 0.6rem;
+}
+
+.ki-input::placeholder,
+.ki-textarea::placeholder {
+  color: rgba(244, 244, 255, 0.45);
+}
+
+/* Actions */
+
+.ki-actions {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.2rem;
+}
+
+.ki-btn {
+  border-radius: 0;
+  border: 1px solid var(--cyan-neon);
+  background: transparent;
+  color: var(--cyan-neon);
+  padding: 0.55rem 1.1rem;
+  font-family: var(--pb-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.ki-btn:hover {
+  background: rgba(0, 255, 208, 0.14);
+  box-shadow: 0 0 18px rgba(0, 255, 208, 0.45);
+  transform: translateY(-1px);
+}
+
+.ki-hint {
+  margin: 0;
+  font-size: 0.9rem;
+  color: rgba(244, 244, 255, 0.6);
+}
+
+/* Impressum */
+
+.ki-impressum__h {
+  margin: 1.2rem 0 0.35rem;
+  font-family: var(--pb-font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+.ki-impressum__p {
+  margin: 0;
+  color: rgba(244, 244, 255, 0.82);
+  line-height: 1.6;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .ki {
+    padding: 3.5rem 1.4rem 4.5rem;
+  }
+
+  .ki-form {
+    grid-template-columns: 1fr;
+  }
+}
