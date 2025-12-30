@@ -1,44 +1,62 @@
-/* From Uiverse.io by nima-mollazadeh */ 
-.button {
-  position: relative;
-  text-decoration: none;
-  color: #fff;
-  background: linear-gradient(45deg, #0ce39a, #69007f, #fc0987);
-  padding: 14px 25px;
-  border-radius: 10px;
-  font-size: 1.25em;
+/* src/components/button.css */
+
+.retroBtn {
+  /* default: exakt wie auth (cyan) */
+  --btn-color: var(--cyan-neon);
+  --btn-bg-hover: rgba(0, 255, 208, 0.14);
+  --btn-glow: rgba(0, 255, 208, 0.45);
+
+  border-radius: 0;
+  border: 1px solid var(--btn-color);
+  background: transparent;
+  color: var(--btn-color);
+
+  padding: 0.55rem 1.1rem;
+  font-family: var(--pb-font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+
   cursor: pointer;
+  transition: background 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
 }
 
-.button span {
-  position: relative;
-  z-index: 1;
+.retroBtn:hover {
+  background: var(--btn-bg-hover);
+  box-shadow: 0 0 18px var(--btn-glow);
+  transform: translateY(-1px);
 }
 
-.button::before {
-  content: "";
-  position: absolute;
-  inset: 1px;
-  background: #272727;
-  border-radius: 9px;
-  transition: 0.5s;
+.retroBtn:active {
+  transform: translateY(0);
 }
 
-.button:hover::before {
-  opacity: 0.7;
+.retroBtn:focus-visible {
+  outline: 2px solid var(--btn-color);
+  outline-offset: 3px;
 }
 
-.button::after {
-  content: "";
-  position: absolute;
-  inset: 0px;
-  background: linear-gradient(45deg, #0ce39a, #69007f, #fc0987);
-  border-radius: 9px;
-  transition: 0.5s;
-  opacity: 0;
-  filter: blur(20px);
+.retroBtn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
 }
 
-.button:hover:after {
-  opacity: 1;
+/* Optional: Varianten passend zu eurem :root */
+.retroBtn--green {
+  --btn-color: var(--green-neon);
+  --btn-bg-hover: rgba(0, 255, 0, 0.14);
+  --btn-glow: rgba(0, 255, 0, 0.45);
+}
+
+.retroBtn--purple {
+  --btn-color: var(--purple-alt);
+  --btn-bg-hover: rgba(164, 45, 180, 0.14);
+  --btn-glow: rgba(164, 45, 180, 0.45);
+}
+
+/* Navbar kompakter */
+.retroBtn--nav {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.75rem;
 }
