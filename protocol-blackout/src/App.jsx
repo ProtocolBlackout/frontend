@@ -4,7 +4,7 @@ import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Gamespage from "./pages/games/Gamespage.jsx";
 import About from "./pages/aboutus/AboutUs.jsx";
-//import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
+import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
 import Ethics from "./pages/ethik/EthischesHacken.jsx";
 //import Login from "./pages/login/LoginRegistrieren.jsx";
@@ -88,7 +88,7 @@ function App() {
         <Route path="/games" element={<Gamespage />} />
         {/*<Route path="/login" element={<Login />} />*/}
         <Route path="/about" element={<About />} />
-        {/*<Route path="/contact" element={<Contact />} />*/}
+      <Route path="/contact" element={<Contact />} />
       </Routes>
 
       <Footer />
