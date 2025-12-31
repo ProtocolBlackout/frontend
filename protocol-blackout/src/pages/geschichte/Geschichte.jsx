@@ -86,17 +86,18 @@ const milestoneTimeline = [
 ];
 
 function Geschichte() {
-  const [openMainId, setOpenMainId] = useState("mit");
-  const [openMilestoneId, setOpenMilestoneId] = useState("ms-mit");
+  // Start: alles geschlossen
+  const [openMainId, setOpenMainId] = useState(null);
+  const [openMilestoneId, setOpenMilestoneId] = useState(null);
 
   return (
     <main className="history">
       <section className="history-intro">
         <h1>Die Geschichte des Hackings</h1>
         <p>
-          Von spielerischen Tüftlern am MIT bis zu globalen Cyberangriffen: 
-          diese Timelines zeigen die Entwicklung der Hackerkultur und die 
-          wichtigsten Wendepunkte in der Geschichte des Hackings.
+          Von spielerischen Tüftlern am MIT bis zu globalen Cyberangriffen: diese
+          Timelines zeigen die Entwicklung der Hackerkultur und die wichtigsten
+          Wendepunkte in der Geschichte des Hackings.
         </p>
       </section>
 
@@ -108,9 +109,7 @@ function Geschichte() {
           return (
             <article
               key={item.id}
-              className={`history-event ${
-                isOpen ? "history-event--open" : ""
-              }`}
+              className={`history-event ${isOpen ? "history-event--open" : ""}`}
               onClick={() => setOpenMainId(isOpen ? null : item.id)}
             >
               <div className="history-event__marker">
@@ -144,7 +143,7 @@ function Geschichte() {
         })}
       </section>
 
-      {/* Meilenstein-Timeline (gleicher Stil, eigene Linie) */}
+      {/* Meilenstein-Timeline */}
       <section className="history-timeline history-timeline--milestones">
         <h3 className="history-section-title">Wichtige Meilensteine</h3>
 
