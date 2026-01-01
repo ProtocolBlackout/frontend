@@ -74,12 +74,12 @@ const TEAM = [
   }
 ];
 
-
 export default function AboutUs() {
   const [activeId, setActiveId] = useState(null);
   const [flipped, setFlipped] = useState(false);
 
   const dialogRef = useRef(null);
+
   const activeMember = useMemo(
     () => TEAM.find((m) => m.id === activeId) ?? null,
     [activeId]
@@ -156,27 +156,31 @@ export default function AboutUs() {
               </button>
             </div>
 
-            <button
-              type="button"
-              className={`zoomFlip ${flipped ? "isFlipped" : ""}`}
-              onClick={() => setFlipped((p) => !p)}
-              aria-label={flipped ? "Bild anzeigen" : "Text anzeigen"}
-            >
-              <div className="zoomFlip__inner">
-                <div className="zoomFlip__face zoomFlip__front">
+            <div className="flipCard">
+              <div className={`flipCard__inner ${flipped ? "isFlipped" : ""}`}>
+                {/* FRONT */}
+                <section className="flipCard__face flipCard__front">
                   <img
-                    className="zoomFlip__img"
+                    className="flipCard__img"
                     src={activeMember.avatar}
                     alt={activeMember.avatarAlt}
                   />
-                  <div className="zoomFlip__hint">Klick fürs Umdrehen</div>
-                </div>
+                  <button
+                    type="button"
+                    className="flipCard__hint"
+                    onClick={() => setFlipped(true)}
+                  >
+                    Klick fürs Umdrehen
+                  </button>
+                </section>
 
-                <div className="zoomFlip__face zoomFlip__back">
-                  <div className="zoomFlip__text">
-                    <div className="zoomFlip__role">{activeMember.role}</div>
-                    <p className="zoomFlip__bio">{activeMember.bio}</p>
-                    <div className="zoomFlip__tags">
+                {/* BACK */}
+                <section className="flipCard__face flipCard__back">
+                  <div className="flipCard__text">
+                    <div className="flipCard__role">{activeMember.role}</div>
+                    <p className="flipCard__bio">{activeMember.bio}</p>
+
+                    <div className="flipCard__tags">
                       {activeMember.tags.map((t) => (
                         <span key={t} className="tag">
                           {t}
@@ -184,10 +188,17 @@ export default function AboutUs() {
                       ))}
                     </div>
                   </div>
-                  <div className="zoomFlip__hint">Klick fürs Bild</div>
-                </div>
+
+                  <button
+                    type="button"
+                    className="flipCard__hint"
+                    onClick={() => setFlipped(false)}
+                  >
+                    Klick fürs Bild
+                  </button>
+                </section>
               </div>
-            </button>
+            </div>
           </div>
         )}
       </dialog>
