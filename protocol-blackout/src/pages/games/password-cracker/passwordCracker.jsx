@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./passwordCracker.module.css";
+import Button from '../../../components/button';
 
 // KONFIGURATION: Lösungen
 const TARGETS = [
@@ -141,9 +142,9 @@ const GamePasswordCracker = ({ onBack }) => {
   return (
     <div className={styles.gameContainer}>
 
-      <button className={styles.backBtn} onClick={handleBack}>
+      <Button className={styles.backBtn} onClick={handleBack}>
         ← SYSTEM_EXIT
-      </button>
+      </Button>
 
       <h2 className={styles.title}>PASSWORD CRACKER v2.0</h2>
 
@@ -178,31 +179,31 @@ const GamePasswordCracker = ({ onBack }) => {
               className={styles.input}
               disabled={isHacking || targetsStatus.find(t => t.id === selectedTargetId).solved}
             />
-            <button type="submit" className={styles.addBtn} disabled={isHacking}>
+            <Button type="submit" className={styles.addBtn} disabled={isHacking}>
               LOAD
-            </button>
+            </Button>
           </form>
 
           <div className={styles.wordList}>
             {wordList.map((word, idx) => (
               <span key={idx} className={styles.wordTag}>
                 {word}
-                <button
+                <Button
                   onClick={() => setWordList(wordList.filter(w => w !== word))}
                   className={styles.deleteTag}
                   disabled={isHacking}
-                >x</button>
+                >x</Button>
               </span>
             ))}
           </div>
 
-          <button
+          <Button
             onClick={startHack}
             className={styles.hackBtn}
             disabled={isHacking || targetsStatus.find(t => t.id === selectedTargetId).solved}
           >
             {isHacking ? "DECODING..." : "EXECUTE HASHCAT"}
-          </button>
+          </Button>
         </div>
 
         <div className={styles.terminal}>
