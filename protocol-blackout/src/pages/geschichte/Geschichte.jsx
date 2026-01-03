@@ -5,83 +5,167 @@ import "./Geschichte.css";
 const mainTimeline = [
   {
     id: "mit",
-    year: "1950/1960",
+    year: "1950–1960",
     title: "Die ersten Hacker am MIT",
-    teaser: "Hacker = kreative Tüftler, nicht Kriminelle.",
-    full: "Der Begriff „Hacker“ entstand am MIT für Leute, die mit Hardware und Software spielerisch experimentierten. Ziel war es, technische Systeme smarter und effizienter zu machen – nicht, Schaden anzurichten."
+    teaser: "Hacking als kreative Problemlösung.",
+    full: "Der Begriff „Hacker“ entstand Ende der 1950er und Anfang der 1960er Jahre am MIT. Gemeint waren Studierende und Forschende, die Hard- und Software spielerisch erforschten, Systeme verbesserten und kreative Abkürzungen fanden. Hacking hatte keinen kriminellen Hintergrund, sondern stand für Neugier, technisches Verständnis und das Austesten von Systemgrenzen."
+  },
+  {
+    id: "universities",
+    year: "1960–1970",
+    title: "Universitäten als Keimzellen der Hackerkultur",
+    teaser: "Großrechner, Wissen und Freiheit.",
+    full: "Universitäten spielten eine zentrale Rolle für die frühe Hackerkultur. Dort standen teure Großrechner zur Verfügung, und Studierende konnten offen experimentieren. Wissen wurde geteilt, Programme analysiert und Systeme jenseits der vorgesehenen Nutzung verstanden – eine Grundlage für das heutige Hackerverständnis."
+  },
+  {
+    id: "phreaking",
+    year: "1960–1970",
+    title: "Phone-Phreaking",
+    teaser: "Hacking vor dem Internet.",
+    full: "Schon vor vernetzten Computern manipulierten sogenannte Phone-Phreaker das analoge Telefonsystem. Durch das Ausnutzen technischer Tonsignale konnten sie Gebühren umgehen und kostenlose Gespräche führen. Der bekannteste Vertreter war John Draper („Cap’n Crunch“). Phreaking zeigte früh, dass auch komplexe Infrastrukturen angreifbar sind."
   },
   {
     id: "arpanet",
     year: "1970",
-    title: "ARPANET & Creeper/Reaper",
-    teaser: "Die ersten selbstverbreitenden Programme im Netz.",
-    full: "Mit ARPANET als Forschungsnetz der US‑Behörde ARPA entstand die Grundlage des späteren Internets. In diesem Umfeld tauchten Creeper (früher Wurm‑Vorläufer) und Reaper (Gegenprogramm) auf – frühe Beispiele selbstverbreitender Software."
+    title: "ARPANET entsteht",
+    teaser: "Der Ursprung des Internets.",
+    full: "Das ARPANET wurde von der US-Behörde ARPA als Forschungsnetz entwickelt. Es verband erstmals Computer über große Entfernungen und ermöglichte den Austausch von Daten zwischen Universitäten. Damit entstand die technische Grundlage für das Internet – und für netzwerkbasierte Angriffe."
   },
   {
-    id: "phonephreak",
-    year: "1970",
-    title: "Phone‑Phreaking & Cap’n Crunch",
-    teaser: "Hacken, bevor das Internet Mainstream war.",
-    full: "Phone‑Phreaker wie John Draper („Cap’n Crunch“) nutzten spezielle Tonsignale, um das Telefonsystem zu manipulieren und Gespräche kostenlos zu führen. Das zeigte, dass auch analoge Netze gehackt werden können und prägte das Bild des Hackers stark."
+    id: "creeper",
+    year: "1971–1972",
+    title: "Creeper und Reaper",
+    teaser: "Erste selbstverbreitende Software.",
+    full: "Mit Creeper tauchte eines der ersten Programme auf, das sich selbst über ein Netzwerk verbreitete. Reaper wurde als gezielte Gegenmaßnahme entwickelt. Diese Experimente gelten als frühe Vorläufer von Schadsoftware und IT-Sicherheitskonzepten."
   },
   {
-    id: "wargames_morris",
-    year: "1983–1988",
-    title: "WarGames & Morris‑Wurm",
-    teaser: "Hacking wird Popkultur – und ein Risiko.",
-    full: "Der Film „WarGames“ machte die Vorstellung vom jugendlichen Hacker populär, der versehentlich beinahe einen Krieg auslöst. Kurz darauf infizierte der Morris‑Wurm tausende vernetzte UNIX‑Systeme und führte zur Einrichtung der ersten CERT‑Strukturen."
+    id: "kgbhack",
+    year: "1980er",
+    title: "Der KGB-Hack",
+    teaser: "Hacking wird geopolitisch.",
+    full: "In den 1980er Jahren drang eine deutsche Hackergruppe in westliche Computersysteme ein und verkaufte die erlangten Daten an den sowjetischen Geheimdienst. Der sogenannte KGB-Hack machte deutlich, dass Hacking nicht nur technisches, sondern auch politisches und sicherheitliches Gewicht hat."
   },
   {
-    id: "massviren",
-    year: "1990/2000",
-    title: "Internet, Massenviren & Phishing",
-    teaser: "Vom Experiment zur globalen Cyberkriminalität.",
-    full: "Mit der Kommerzialisierung des Internets entstanden Viren, Würmer und Makro‑Schadsoftware, die Millionen von Systemen trafen. Parallel tauchten erste große Phishing‑Kampagnen und Exploit‑Kits auf, wodurch Hacking zunehmend finanziell motiviert wurde."
+    id: "law",
+    year: "1986",
+    title: "Erste Computerstrafgesetze",
+    teaser: "Recht reagiert auf neue Risiken.",
+    full: "Mit dem Computer Fraud and Abuse Act in den USA wurde unbefugter Computerzugriff erstmals klar unter Strafe gestellt. Die zunehmende Zahl bekannter Hacks führte dazu, dass Staaten rechtliche Rahmenbedingungen für den Umgang mit Computerkriminalität schufen."
   },
   {
-    id: "apt_ransom",
-    year: "2000–heute",
-    title: "APT‑Gruppen & Ransomware‑Ökonomie",
-    teaser: "Hacking als Industrie und geopolitisches Werkzeug.",
-    full: "Staatlich unterstützte APT‑Gruppen setzen zielgerichtete Angriffe für Spionage und Sabotage ein, während Ransomware‑Banden ein globales Erpressungs‑Ökosystem aufgebaut haben. Heute reicht die Landschaft von Bug‑Bounties bis zu Crime‑as‑a‑Service und groß angelegten Kampagnen."
+    id: "morris",
+    year: "1988",
+    title: "Der Morris-Wurm",
+    teaser: "Das Internet wird verwundbar.",
+    full: "Der Morris-Wurm verbreitete sich selbstständig im noch jungen Internet und legte tausende UNIX-Systeme lahm. Obwohl er aus Neugier entwickelt wurde, zeigte er drastisch, wie Softwarefehler in vernetzten Systemen globale Auswirkungen haben können."
+  },
+  {
+    id: "commercial",
+    year: "1990er",
+    title: "Kommerzialisierung des Internets",
+    teaser: "Von Forschung zu Wirtschaft.",
+    full: "Mit dem World Wide Web wurde das Internet für Unternehmen und Privatpersonen zugänglich. Gleichzeitig nahmen Viren, Phishing und Betrugsversuche stark zu. Hacking verlagerte sich zunehmend von Experimenten hin zu finanziell motivierter Cyberkriminalität."
+  },
+  {
+    id: "worms",
+    year: "2000er",
+    title: "Massenwürmer und globale Schäden",
+    teaser: "Cyberangriffe erreichen neue Dimensionen.",
+    full: "Schadprogramme wie ILOVEYOU oder Code Red infizierten weltweit Millionen Systeme und verursachten enorme wirtschaftliche Schäden. Unternehmen begannen, Sicherheitsstrategien, Firewalls, Patch-Management und Incident-Response-Pläne einzuführen."
+  },
+  {
+    id: "apt",
+    year: "2000–2010er",
+    title: "Gezielte Angriffe und APTs",
+    teaser: "Cyberangriffe als Strategie.",
+    full: "Staatlich unterstützte Angreifergruppen führten gezielte und langfristige Angriffe durch. Diese Advanced Persistent Threats (APTs) zielten auf Spionage, Sabotage und Informationsgewinnung und unterschieden sich klar von breit gestreuten Massenangriffen."
+  },
+  {
+    id: "modern",
+    year: "2010er",
+    title: "Cloud, Mobile und IoT",
+    teaser: "Die Angriffsfläche wächst.",
+    full: "Mit Cloud-Diensten, Smartphones und vernetzten Geräten wuchs die Angriffsfläche erheblich. Fehlkonfigurationen, unsichere Zugänge und neue Schnittstellen wurden zu häufigen Einfallstoren für Angreifer."
+  },
+  {
+    id: "ransomware",
+    year: "2020er",
+    title: "Ransomware und Crime-as-a-Service",
+    teaser: "Cybercrime als Industrie.",
+    full: "Ransomware-Gruppen agieren heute hochprofessionell und arbeitsteilig. Angriffe werden als Dienstleistung angeboten, Daten gestohlen und Opfer erpresst. Cyberkriminalität ist damit zu einem globalen Geschäftsmodell geworden."
+  },
+  {
+    id: "ethical",
+    year: "Heute",
+    title: "Ethisches Hacking und Cybersecurity",
+    teaser: "Angreifen, um zu schützen.",
+    full: "Ethisches Hacking, Penetrationstests und Bug-Bounty-Programme werden gezielt eingesetzt, um Sicherheitslücken mit Erlaubnis zu finden. Ziel ist es, Systeme zu verbessern und Angriffe frühzeitig zu verhindern."
   }
 ];
 
 const milestoneTimeline = [
   {
-    id: "ms-mit",
-    year: "1950/1960",
-    title: "Entstehung des Hackerbegriffs am MIT",
-    teaser: "Startpunkt der Hackerkultur als kreatives, spielerisches Tüfteln.",
-    full: "Am MIT entstand der Begriff „Hacker“ für Menschen, die technische Systeme mit viel Kreativität umbauten, optimierten und zweckentfremdeten – als Hobby und Herausforderung, nicht um Schaden anzurichten."
+    id: "ms_mit",
+    year: "1950–1960",
+    title: "Geburt des Hackerbegriffs",
+    teaser: "Hacking als kreative Problemlösung.",
+    full: "Am MIT entsteht „Hacker“ als Bezeichnung für neugierige Tüftler. Hacking ist ursprünglich nicht kriminell."
   },
   {
-    id: "ms-arpanet",
-    year: "frühe 1970",
-    title: "ARPANET & Creeper/Reaper",
-    teaser: "Frühe selbstverbreitende Programme im Netz.",
-    full: "Creeper und Reaper im ARPANET zeigten, dass sich Programme automatisch über vernetzte Systeme bewegen und bekämpfen können – ein wichtiger Schritt hin zu heutigen Würmern und Anti‑Malware‑Ansätzen."
+    id: "ms_phreaking",
+    year: "1960–1970",
+    title: "Phone-Phreaking",
+    teaser: "Angriffe auf technische Infrastruktur.",
+    full: "Phreaker manipulieren das Telefonsystem und zeigen erstmals, dass komplexe technische Netze gezielt ausnutzbar sind."
   },
   {
-    id: "ms-phone",
+    id: "ms_arpanet",
     year: "1970",
-    title: "Phone‑Phreaking & Cap’n Crunch",
-    teaser: "Hacken außerhalb von Computern.",
-    full: "Phone‑Phreaker nutzten spezielle Tonsignale, um Telefonnetze auszutricksen. John Draper („Cap’n Crunch“) wurde zum Symbol dafür, dass sich auch analoge Infrastrukturen hacken lassen."
+    title: "ARPANET",
+    teaser: "Der Beginn vernetzter Systeme.",
+    full: "Computer werden über große Entfernungen vernetzt – Angriffe sind nun nicht mehr lokal begrenzt."
   },
   {
-    id: "ms-morris",
+    id: "ms_creeper",
+    year: "1971–1972",
+    title: "Creeper & Reaper",
+    teaser: "Selbstverbreitende Programme.",
+    full: "Erste Programme bewegen sich selbstständig durch Netzwerke und machen automatisierte Angriffe denkbar."
+  },
+  {
+    id: "ms_law",
+    year: "1986",
+    title: "Hacking wird strafbar",
+    teaser: "Recht reagiert auf Technik.",
+    full: "Gesetze wie der Computer Fraud and Abuse Act kriminalisieren unbefugten Systemzugriff."
+  },
+  {
+    id: "ms_morris",
     year: "1988",
-    title: "Morris‑Wurm & CERT‑Strukturen",
-    teaser: "Erster großer Internet‑Wurm.",
-    full: "Der Morris‑Wurm legte einen großen Teil des frühen Internets lahm und machte deutlich, wie verwundbar vernetzte Systeme sind. Er führte zur Einrichtung von Computer Emergency Response Teams (CERT)."
+    title: "Morris-Wurm",
+    teaser: "Globale Auswirkungen von Malware.",
+    full: "Ein einzelnes Programm legt große Teile des frühen Internets lahm und macht IT-Sicherheit notwendig."
   },
   {
-    id: "ms-ransom",
-    year: "2010/2020",
-    title: "Ransomware‑Ökonomie & Crime‑as‑a‑Service",
-    teaser: "Cybercrime als Schattenindustrie.",
-    full: "Mit Ransomware‑as‑a‑Service, Double‑Extortion‑Modellen und Crime‑as‑a‑Service ist Hacking zu einer arbeitsteiligen Schattenindustrie geworden, in der Angriffe gemietet und skaliert werden können."
+    id: "ms_commercial",
+    year: "1990er",
+    title: "Kommerzialisierung des Internets",
+    teaser: "Cybercrime wird wirtschaftlich.",
+    full: "Mit Online-Diensten und E-Commerce entstehen finanzielle Anreize für Angriffe."
+  },
+  {
+    id: "ms_ransomware",
+    year: "2010–2020er",
+    title: "Ransomware als Geschäftsmodell",
+    teaser: "Professionalisierung von Cybercrime.",
+    full: "Cyberangriffe werden organisiert, arbeitsteilig und hochprofitabel."
+  },
+  {
+    id: "ms_ethical",
+    year: "Heute",
+    title: "Ethisches Hacking",
+    teaser: "Angreifen zur Verteidigung.",
+    full: "Sicherheitslücken werden gezielt gesucht, um Systeme zu schützen statt zu schädigen."
   }
 ];
 
