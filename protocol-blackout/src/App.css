@@ -1,203 +1,231 @@
-/* ===== Base / Palette ===== */
-:root {
-  --bg-dark: #111111;
-  --green-neon: #00ff00;
-  --blue-deep: #0033aa;
-  --purple-retro: #711d9a;
-  --purple-alt: #a42db4;
-  --cyan-neon: #00ffd0;
-  --text-white: #f4f4ff;
+/* ========= Landing im Ethics-Console Look ========= */
 
-  --container: 1120px;
-  --radius: 14px;
-  --border: rgba(244, 244, 255, 0.12);
-  --muted: rgba(244, 244, 255, 0.7);
-}
-
-/* optional: wenn du in index.css nicht schon gesetzt hast */
-.app {
-  min-height: 100vh;
-  background: var(--bg-dark);
-  color: var(--text-white);
-}
-
-/* Layout container */
-.landing {
-  max-width: var(--container);
+.home {
+  max-width: 1120px;
   margin: 0 auto;
-  padding: 4.5rem 2rem 5rem;
-}
-
-/* ===== Hero ===== */
-.landing-hero {
-  text-align: center;
-  padding: 4.5rem 1rem 5rem;
-}
-
-.landing-hero h1 {
-  font-size: clamp(2rem, 4vw, 3.1rem);
-  line-height: 1.1;
-  margin: 0 0 1rem;
-  letter-spacing: -0.02em;
-}
-
-.landing-hero p {
-  max-width: 52ch;
-  margin: 0.25rem auto 2rem;
-  color: var(--muted);
-  font-size: 1.05rem;
-}
-
-.btn-primary,
-.btn-secondary {
-  border: 1px solid var(--border);
-  padding: 0.85rem 1.4rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  transition: transform 0.15s ease, opacity 0.15s ease, border-color 0.15s ease;
-}
-
-.btn-primary {
-  background: linear-gradient(180deg, rgba(0, 255, 208, 0.18), rgba(0, 255, 208, 0.06));
+  padding: 4rem 2rem 5rem;
   color: var(--text-white);
-  border-color: rgba(0, 255, 208, 0.35);
+  background: var(--bg-dark);
+  font-family: var(--pb-font-mono);
 }
 
-.btn-secondary {
-  background: transparent;
-  color: var(--text-white);
+.home-console {
+  max-width: 920px;
+  margin: 0 auto;
+  border: 1px solid rgba(0, 255, 208, 0.4);
+  background: radial-gradient(circle at 0 0, rgba(0, 255, 208, 0.09), transparent 60%), #050505;
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.15), 0 0 40px rgba(0, 255, 208, 0.16);
 }
 
-.btn-primary:hover,
-.btn-secondary:hover {
-  transform: translateY(-1px);
-  border-color: rgba(244, 244, 255, 0.25);
+.home-console__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid rgba(0, 255, 208, 0.25);
+  background: rgba(0, 0, 0, 0.9);
 }
 
-.btn-primary:active,
-.btn-secondary:active {
-  transform: translateY(0);
-  opacity: 0.9;
+.home-console__title {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--cyan-neon);
 }
 
-/* ===== Ethics Section (2 columns) ===== */
-.landing-ethics {
-  display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
-  gap: 2.2rem;
-  align-items: start;
-  padding: 4rem 0;
-  border-top: 1px solid rgba(244, 244, 255, 0.06);
-}
-
-.landing-ethics-text h2 {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-  margin: 0 0 0.9rem;
-}
-
-.landing-ethics-text p {
-  margin: 0 0 1.4rem;
-  color: var(--muted);
-  max-width: 60ch;
-  line-height: 1.6;
-}
-
-.landing-ethics-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 1.2rem 1.2rem 1.1rem;
-  background: rgba(244, 244, 255, 0.04);
-  backdrop-filter: blur(6px);
-}
-
-.landing-ethics-card h3 {
-  margin: 0 0 0.5rem;
-  font-size: 1.05rem;
-}
-
-.landing-ethics-card p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.55;
-  font-size: 0.95rem;
-}
-
-/* ===== Visuals ===== */
-.landing-visuals {
-  padding: 4rem 0 1rem;
-  border-top: 1px solid rgba(244, 244, 255, 0.06);
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.2rem;
-  align-items: start;
-}
-
-.landing-visuals h2 {
-  margin: 0;
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
-}
-
-.landing-visuals-card {
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  overflow: hidden;
-  background: rgba(244, 244, 255, 0.04);
-}
-
-.tag {
-  display: inline-block;
-  font-size: 0.8rem;
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  margin: 0.9rem;
-  border: 1px solid rgba(244, 244, 255, 0.18);
-  color: var(--muted);
-}
-
-.visual-placeholder {
-  height: 220px;
-  margin: 0 0.9rem 0.9rem;
-  border-radius: 12px;
-  border: 1px dashed rgba(244, 244, 255, 0.22);
-  display: grid;
-  place-items: center;
+.home-console__dots {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
   color: rgba(244, 244, 255, 0.55);
-  background: radial-gradient(
-    circle at 30% 20%,
-    rgba(0, 255, 208, 0.12),
-    transparent 55%
-  );
 }
 
-.visual-caption {
-  padding: 0 1.1rem 1.1rem;
+.home-console__body {
+  padding: 1.4rem 1.2rem 1.4rem;
 }
 
-.visual-caption strong {
+.home-block + .home-block {
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid rgba(0, 255, 208, 0.2);
+}
+
+.home-block__heading {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+/* Overview rows */
+.home-console__row + .home-console__row {
+  margin-top: 1.1rem;
+}
+
+.home-console__label {
   display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
   margin-bottom: 0.25rem;
 }
 
-.visual-caption p {
-  margin: 0;
-  color: var(--muted);
-  line-height: 1.5;
-  font-size: 0.95rem;
+.home-console__value {
+  display: block;
+  font-size: 0.8rem;
+  color: rgba(244, 244, 255, 0.85);
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid rgba(0, 255, 208, 0.45);
 }
 
-/* ===== Responsive ===== */
+/* Modules list */
+.home-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.home-list li + li {
+  margin-top: 0.6rem;
+}
+
+.home-list__key {
+  display: inline-block;
+  min-width: 220px;
+  margin-right: 0.8rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+.home-list__value {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: rgba(244, 244, 255, 0.85);
+}
+
+/* Disclaimer paragraphs */
+.home-paragraph {
+  margin: 0 0 0.9rem;
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: rgba(244, 244, 255, 0.85);
+}
+
+/* Visual Log wrapper inside console */
+.home-visual {
+  border: 1px solid rgba(244, 244, 255, 0.12);
+  background: rgba(0, 0, 0, 0.75);
+  padding: 0.85rem 0.9rem 0.9rem;
+}
+
+.home-visual__meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-visual__prompt {
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  color: rgba(0, 255, 208, 0.85);
+}
+
+.home-visual__status {
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--green-neon);
+}
+
+/* ========= Slideshow (passt in den Console-Block) ========= */
+.slideshow {
+  width: 100%;
+}
+
+.slideshow-frame {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(0, 255, 208, 0.35);
+  background: rgba(0, 0, 0, 0.35);
+  aspect-ratio: 16 / 9;
+}
+
+.slideshow-img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.slideshow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 36px;
+  height: 36px;
+  border: 1px solid rgba(0, 255, 208, 0.45);
+  background: rgba(0, 0, 0, 0.65);
+  color: var(--text-white);
+  cursor: pointer;
+  font-size: 24px;
+  line-height: 34px;
+}
+
+.slideshow-btn.left {
+  left: 10px;
+}
+.slideshow-btn.right {
+  right: 10px;
+}
+
+/* Dots */
+.slideshow-dots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border: 1px solid rgba(0, 255, 208, 0.4);
+  background: rgba(0, 255, 208, 0.14);
+  cursor: pointer;
+}
+
+.dot.active {
+  background: rgba(0, 255, 208, 0.9);
+  border-color: rgba(0, 255, 208, 1);
+}
+
+.slideshow-caption {
+  margin: 8px 0 0;
+  text-align: center;
+  color: rgba(0, 255, 208, 0.75);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+}
+
+/* Responsive */
 @media (max-width: 900px) {
-  .landing-ethics {
-    grid-template-columns: 1fr;
+  .home {
+    padding: 3.5rem 1.4rem 4.5rem;
   }
 
-  .landing-visuals {
-    grid-template-columns: 1fr;
+  .home-console {
+    max-width: 100%;
   }
 
-  .landing {
-    padding: 3.5rem 1.25rem 4.5rem;
+  .home-list__key {
+    min-width: 0;
+    display: block;
+    margin-right: 0;
+    margin-bottom: 0.15rem;
   }
 }
