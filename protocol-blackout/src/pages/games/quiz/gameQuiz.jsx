@@ -44,7 +44,9 @@ function GameQuiz({ onBack }) {
             : (q.answers || q.options || []).indexOf(q.answer),
       }));
 
-      setQuestions(mapped);
+      // Zufällig mischen und auf maximal 10 Fragen begrenzen
+      const shuffled = mapped.sort(() => Math.random() - 0.5).slice(0, 10);
+      setQuestions(shuffled);
     } catch (err) {
       console.error(err);
       setLoadError(err.message || "Fehler");
@@ -52,16 +54,18 @@ function GameQuiz({ onBack }) {
       try {
         const mod = await import("./questions.js");
         const fallback = mod.questions || mod.default || [];
-        setQuestions(
-          fallback.map((q) => ({
-            question: q.question || q.questionText || "",
-            answers: q.options || q.answers || [],
-            correctIndex:
-              typeof q.correctIndex === "number"
-                ? q.correctIndex
-                : (q.options || q.answers || []).indexOf(q.answer),
-          }))
-        );
+        const mappedFallback = fallback.map((q) => ({
+          question: q.question || q.questionText || "",
+          answers: q.options || q.answers || [],
+          correctIndex:
+            typeof q.correctIndex === "number"
+              ? q.correctIndex
+              : (q.options || q.answers || []).indexOf(q.answer),
+        }));
+
+        // Zufällig mischen und auf 10 begrenzen
+        const shuffledFallback = mappedFallback.sort(() => Math.random() - 0.5).slice(0, 10);
+        setQuestions(shuffledFallback);
       } catch (e) {
         console.warn("Kein Fallback-Questions-Modul gefunden", e);
         setQuestions([]);
