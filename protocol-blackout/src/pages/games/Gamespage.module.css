@@ -193,21 +193,13 @@
 
 /* Action Button */
 .gamesActionBtn {
+    /* inherit base button visuals from global retroBtn */
+    composes: retroBtn from "../../components/button.css";
     margin-top: 0.9rem;
     display: inline-block;
-    padding: 0.6rem 1rem;
-    background: transparent;
-    border: 1px solid rgba(0, 255, 208, 0.25);
-    color: var(--text-white);
-    font-family: var(--pb-font-mono);
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.gamesActionBtn:hover {
-    background: rgba(0, 255, 208, 0.06);
-    box-shadow: 0 0 12px rgba(0, 255, 208, 0.12);
-}
+
 
 /* Responsive */
 @media (max-width: 900px) {

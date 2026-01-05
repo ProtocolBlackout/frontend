@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./gameQuiz.module.css";
+import Button from '../../../components/button';
 // Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
 
 function GameQuiz({ onBack }) {
@@ -100,9 +101,9 @@ function GameQuiz({ onBack }) {
             <br />
             10 Fragen. Bereit?
           </p>
-          <button className={styles.retroBtn} onClick={handleStart}>
+          <Button className={styles.retroBtn} onClick={handleStart}>
             [ VERBINDUNG HERSTELLEN ]
-          </button>
+          </Button>
           {loadingQuestions && <p>Lade Fragen…</p>}
           {loadError && <p className={styles.loadError}>Fehler: {loadError}</p>}
         </>
@@ -119,9 +120,9 @@ function GameQuiz({ onBack }) {
             <br />
             Ergebnis: {score} / {questions.length} Pakete gesichert.
           </p>
-          <button className={styles.retroBtn} onClick={handleRestart}>
+          <Button className={styles.retroBtn} onClick={handleRestart}>
             [ NEUSTART ]
-          </button>
+          </Button>
         </>
       );
     }
@@ -137,13 +138,13 @@ function GameQuiz({ onBack }) {
 
         <div className={styles.answersContainer}>
           {currentQuestion.answers.map((answer, index) => (
-            <button
+            <Button
               key={index}
               className={styles.retroBtn}
               onClick={() => handleAnswerClick(index)}
             >
               {answer}
-            </button>
+            </Button>
           ))}
         </div>
       </>
@@ -152,13 +153,13 @@ function GameQuiz({ onBack }) {
 
   return (
     <div className={`${styles.appContainer} ${themeClass}`}>
-      <button className={styles.backBtn} onClick={onBack}>
+      <Button className={styles.backBtn} onClick={onBack}>
         ← SYSTEM_EXIT
-      </button>
+      </Button>
 
-      <button className={styles.themeSwitchBtn} onClick={toggleTheme}>
+      <Button className={styles.themeSwitchBtn} onClick={toggleTheme}>
         COLOR_MODE: {theme.toUpperCase()}
-      </button>
+      </Button>
 
       <div className={styles.monitorCasing}>
         <div className={styles.crtScreen}>
