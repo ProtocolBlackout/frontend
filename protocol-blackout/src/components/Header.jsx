@@ -17,6 +17,7 @@ function Header() {
         {/*<Link to="/login">Login</Link>*/}
         <Link to="/about">Über uns</Link>
         <Link to="/contact">Kontakt & Impressum</Link>
+        <Link to="/profil">Profil</Link>
       </nav>
 
       <Button onClick={() => navigate("/login")}>Login</Button>

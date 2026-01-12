@@ -10,6 +10,7 @@ import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
 import Ethics from "./pages/ethik/EthischesHacken.jsx";
 import Login from "./pages/login/LoginRegistrieren.jsx";
+import Profil from "./pages/profil/profil.jsx";
 
 import { useEffect, useState } from "react";
 
@@ -224,6 +225,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/profil" element={<Profil />} />
       </Routes>
 
       <Footer />
