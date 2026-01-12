@@ -243,6 +243,7 @@
     transform-origin: center center;
     position: relative;
     overflow: hidden;
+    
 }
 
 .tile:hover {
