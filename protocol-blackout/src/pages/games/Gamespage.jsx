@@ -130,7 +130,7 @@ export default function Gamespage() {
                                 <div className={styles.nestedContent}>
                                     <div className={styles.nestedHeader}>
                                         <h3>{games.find(g => g.id === playingInOverlay)?.title}</h3>
-                                        <button className={styles.stopBtn} onClick={() => setPlayingInOverlay(null)}>Beenden</button>
+                                        <button className={styles.stopBtn} onClick={() => setPlayingInOverlay(null)}>System Exit</button>
                                     </div>
                                     <div className={styles.nestedBody}>
                                         {games.find(g => g.id === playingInOverlay)?.render(() => setPlayingInOverlay(null))}
