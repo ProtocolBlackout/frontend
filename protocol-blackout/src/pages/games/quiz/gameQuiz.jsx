@@ -1,9 +1,12 @@
 import { useState } from "react";
 import styles from "./gameQuiz.module.css";
-import Button from '../../../components/button';
-// Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
 
-function GameQuiz({ onBack }) {
+// Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
+// Falls nicht, greift der automatische Fallback auf './questions.js'.
+
+function GameQuiz() {
+
+  // --- STATE ---
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFinished, setIsFinished] = useState(false);
@@ -11,75 +14,89 @@ function GameQuiz({ onBack }) {
   const [questions, setQuestions] = useState([]);
   const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [loadError, setLoadError] = useState(null);
-  const [theme, setTheme] = useState("green");
 
-  const toggleTheme = () => {
-    setTheme((prev) => (prev === "green" ? "amber" : "green"));
-  };
+  // Theme wurde entfernt — statisches Aussehen
 
-  const themeClass =
-    theme === "green" ? styles.themeGreen : styles.themeAmber;
-
+  // --- LOGIC: START & LOAD QUESTIONS ---
   const handleStart = async () => {
     setStarted(true);
     setIsFinished(false);
     setCurrentIndex(0);
     setScore(0);
-
-    // Fragen vom Backend laden
     setLoadingQuestions(true);
     setLoadError(null);
+
+    let loadedQuestions = [];
+
     try {
+      // 1. Versuch: Backend abfragen
       const res = await fetch(`/games/quiz-01/questions`);
-      if (!res.ok) throw new Error("Fehler beim Laden der Fragen");
-      const data = await res.json();
-      // Backend liefert { questionText, answers, correctIndex, gameId }
-      // Mappe auf das lokale Format, das die Komponente erwartet:
-      const mapped = data.map((q) => ({
-        question: q.questionText || q.question || "",
-        answers: q.answers || q.options || [],
-        correctIndex:
-          typeof q.correctIndex === "number"
+
+      // Prüfen, ob die Antwort wirklich valide und JSON ist
+      const contentType = res.headers.get("content-type");
+      if (res.ok && contentType && contentType.includes("application/json")) {
+        const data = await res.json();
+
+        // Mappe Backend-Daten auf unser Frontend-Format
+        const mapped = data.map((q) => ({
+          question: q.questionText || q.question || "",
+          answers: q.answers || q.options || [],
+          correctIndex: typeof q.correctIndex === "number"
             ? q.correctIndex
             : (q.answers || q.options || []).indexOf(q.answer),
-      }));
+        }));
+        loadedQuestions = mapped;
+      } else {
+        throw new Error("Backend nicht erreichbar oder liefert kein JSON");
+      }
 
-      // Zufällig mischen und auf maximal 10 Fragen begrenzen
-      const shuffled = mapped.sort(() => Math.random() - 0.5).slice(0, 10);
-      setQuestions(shuffled);
     } catch (err) {
-      console.error(err);
-      setLoadError(err.message || "Fehler");
-      // Fallback: falls lokale Datei `questions` existiert, importiere sie dynamisch
+      console.warn("Backend-Load fehlgeschlagen, nutze Fallback:", err.message);
+
+      // 2. Fallback: Lokale Datei importieren
       try {
         const mod = await import("./questions.js");
-        const fallback = mod.questions || mod.default || [];
-        const mappedFallback = fallback.map((q) => ({
+        // Sicherstellen, dass wir das Array erwischen (egal ob default export oder named export)
+        const rawQuestions = mod.questions || mod.default || [];
+
+        const mappedFallback = rawQuestions.map((q) => ({
           question: q.question || q.questionText || "",
           answers: q.options || q.answers || [],
-          correctIndex:
-            typeof q.correctIndex === "number"
-              ? q.correctIndex
-              : (q.options || q.answers || []).indexOf(q.answer),
+          correctIndex: typeof q.correctIndex === "number"
+            ? q.correctIndex
+            : (q.options || q.answers || []).indexOf(q.answer),
         }));
-
-        // Zufällig mischen und auf 10 begrenzen
-        const shuffledFallback = mappedFallback.sort(() => Math.random() - 0.5).slice(0, 10);
-        setQuestions(shuffledFallback);
+        loadedQuestions = mappedFallback;
       } catch (e) {
-        console.warn("Kein Fallback-Questions-Modul gefunden", e);
-        setQuestions([]);
+        console.error("Kritischer Fehler: Auch Fallback konnte nicht geladen werden", e);
+        setLoadError("Systemfehler: Keine Fragen verfügbar.");
       }
-    } finally {
-      setLoadingQuestions(false);
     }
+
+    // Abschluss-Logik: Mischen & Setzen
+    if (loadedQuestions.length > 0) {
+      // Zufällig mischen und auf maximal 10 Fragen begrenzen
+      const shuffled = loadedQuestions.sort(() => Math.random() - 0.5).slice(0, 10);
+      setQuestions(shuffled);
+      // Wichtig: Fehler löschen, da wir ja jetzt Fragen haben (der Fallback hat funktioniert)
+      setLoadError(null);
+    } else {
+      if (!loadError) setLoadError("Keine Fragen gefunden.");
+    }
+
+    setLoadingQuestions(false);
   };
 
+  // --- LOGIC: ANSWER HANDLING ---
   const handleAnswerClick = (index) => {
     const currentQuestion = questions[currentIndex];
+
+    // Punkte zählen
     if (index === currentQuestion.correctIndex) {
       setScore((prev) => prev + 1);
     }
+
+    // Nächste Frage oder Ende
     const nextIndex = currentIndex + 1;
     if (nextIndex < questions.length) {
       setCurrentIndex(nextIndex);
@@ -93,86 +110,99 @@ function GameQuiz({ onBack }) {
     setIsFinished(false);
     setCurrentIndex(0);
     setScore(0);
+    setQuestions([]);
   };
 
-  const renderContent = () => {
-    if (!started) {
-      return (
-        <>
-          <h1> SYSTEM_LOGIN</h1>
-          <p className={styles.questionText}>
-            Zugriff auf Sicherheits-Quiz anfordern.
-            <br />
-            10 Fragen. Bereit?
-          </p>
-          <Button className={styles.retroBtn} onClick={handleStart}>
-            [ VERBINDUNG HERSTELLEN ]
-          </Button>
-          {loadingQuestions && <p>Lade Fragen…</p>}
-          {loadError && <p className={styles.loadError}>Fehler: {loadError}</p>}
-        </>
-      );
-    }
+  // --- RENDER HELPERS ---
 
-    if (isFinished) {
-      return (
-        <>
-          <h1> SESSION_ENDED</h1>
-          <p className={styles.questionText}>
-            Analyse abgeschlossen.
-            <br />
-            <br />
-            Ergebnis: {score} / {questions.length} Pakete gesichert.
-          </p>
-          <Button className={styles.retroBtn} onClick={handleRestart}>
-            [ NEUSTART ]
-          </Button>
-        </>
-      );
-    }
+  // 1. Start Screen
+  const renderStartScreen = () => (
+    <div className={styles.contentArea}>
+      <p className={styles.introText}>
+        &gt; SYSTEM_LOGIN REQUIRED<br /><br />
+        Fordern Sie Zugriff auf das Sicherheits-Quiz an.<br />
+        10 Fragen. 10 Chancen.
+      </p>
 
-    const currentQuestion = questions[currentIndex] || { question: "", answers: [] };
+      {/* Zeige Fehler nur an, wenn wir WIRKLICH keine Fragen laden konnten (auch nicht lokal) */}
+      {loadError && (
+        <div className={styles.errorMsg}>
+          ERROR: {loadError}
+        </div>
+      )}
+
+      {loadingQuestions ? (
+        <p className={styles.introText}>&gt; Lade Module...</p>
+      ) : (
+        <button className={styles.actionBtn} onClick={handleStart}>
+          [ VERBINDUNG HERSTELLEN ]
+        </button>
+      )}
+    </div>
+  );
+
+  // 2. Result Screen
+  const renderResultScreen = () => (
+    <div className={styles.contentArea}>
+      <h2 className={styles.title}>ANALYSE ABGESCHLOSSEN</h2>
+
+      <div className={styles.scoreDisplay}>
+        SCORE: {score} / {questions.length}
+      </div>
+
+      <p className={styles.resultText}>
+        {score >= 8
+          ? "> ZUGRIFF GEWÄHRT. Systemintegrität bestätigt."
+          : "> ZUGRIFF VERWEIGERT. Sicherheitslücken erkannt."}
+      </p>
+
+      <button className={styles.actionBtn} onClick={handleRestart}>
+        [ NEUSTART ]
+      </button>
+    </div>
+  );
+
+  // 3. Question Screen
+  const renderQuestionScreen = () => {
+    const currentQuestion = questions[currentIndex];
+    if (!currentQuestion) return <div>Ladefehler...</div>;
+
     return (
-      <>
-        <h2 className={styles.questionHeader}>
-          FRAGE {currentIndex + 1} / {questions.length}
-        </h2>
+      <div className={styles.contentArea}>
+        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: '#666', fontSize: '0.8rem' }}>
+          <span>FRAGE {currentIndex + 1} / {questions.length}</span>
+        </div>
 
-        <p className={styles.questionText}>{currentQuestion.question}</p>
+        <h3 className={styles.questionText}>
+          {currentQuestion.question}
+        </h3>
 
         <div className={styles.answersContainer}>
-          {currentQuestion.answers.map((answer, index) => (
-            <Button
-              key={index}
-              className={styles.retroBtn}
-              onClick={() => handleAnswerClick(index)}
+          {currentQuestion.answers.map((answer, idx) => (
+            <button
+              key={idx}
+              className={styles.answerBtn}
+              onClick={() => handleAnswerClick(idx)}
             >
-              {answer}
-            </Button>
+              {`> ${answer}`}
+            </button>
           ))}
         </div>
-      </>
+      </div>
     );
   };
 
   return (
-    <div className={`${styles.appContainer} ${themeClass}`}>
-      <Button className={styles.backBtn} onClick={onBack}>
-        ← SYSTEM_EXIT
-      </Button>
-
-      <Button className={styles.themeSwitchBtn} onClick={toggleTheme}>
-        COLOR_MODE: {theme.toUpperCase()}
-      </Button>
-
-      <div className={styles.monitorCasing}>
-        <div className={styles.crtScreen}>
-          <div className={styles.scanlines}></div>
-          <div className={styles.overlay}></div>
-
-          <div className={styles.uiContent}>{renderContent()}</div>
-        </div>
+    <div className={styles.gameContainer}>
+      {/* Header Row - Angepasst an PasswordCracker Style */}
+      <div className={styles.headerRow}>
+        <h1 className={styles.title}>SECURITY_QUIZ v2.0</h1>
       </div>
+
+      {/* Main Content Switch */}
+      {!started && renderStartScreen()}
+      {started && !isFinished && renderQuestionScreen()}
+      {isFinished && renderResultScreen()}
     </div>
   );
 }

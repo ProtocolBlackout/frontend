@@ -243,6 +243,7 @@
     transform-origin: center center;
     position: relative;
     overflow: hidden;
+    
 }
 
 .tile:hover {
@@ -456,12 +457,12 @@
 }
 
 .nestedContent {
-    width: min(1100px, 96%);
-    max-height: 92vh;
+    width: 80vh;
+    max-height: 80vh;
     overflow: auto;
     background: #050505;
     border: 1px solid rgba(0, 255, 208, 0.14);
-    padding: 1rem;
+    padding: 10px;
     border-radius: 6px;
     box-shadow: 0 40px 120px rgba(0, 0, 0, 0.8);
 }

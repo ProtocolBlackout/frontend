@@ -9,13 +9,13 @@ import styles from "./Gamespage.module.css"
 export default function Gamespage() {
     const [selectedGame, setSelectedGame] = useState(null)
     const [isPlaying, setIsPlaying] = useState(false)
-    const [modalPageIndex, setModalPageIndex] = useState(0) // 0..N-1: instruction pages, last = highscore
+    const [modalPageIndex, setModalPageIndex] = useState(0) 
     const [playingInOverlay, setPlayingInOverlay] = useState(null)
     const games = [
         {
             id: 'quiz',
             title: 'Quiz',
-            desc: 'Hier geht es zu unserem Quiz zum Thema Hacking und Cybersecurity',
+            desc: 'Teste dein Wissen rund um das Thema Hacking',
             instructions: [
                 'Seite 1: Lies die Frage sorgfältig.',
                 'Seite 2: Wähle die beste Antwort. Du hast 60 Sekunden pro Frage.'
@@ -130,7 +130,7 @@ export default function Gamespage() {
                                 <div className={styles.nestedContent}>
                                     <div className={styles.nestedHeader}>
                                         <h3>{games.find(g => g.id === playingInOverlay)?.title}</h3>
-                                        <button className={styles.stopBtn} onClick={() => setPlayingInOverlay(null)}>Beenden</button>
+                                        <button className={styles.stopBtn} onClick={() => setPlayingInOverlay(null)}>System Exit</button>
                                     </div>
                                     <div className={styles.nestedBody}>
                                         {games.find(g => g.id === playingInOverlay)?.render(() => setPlayingInOverlay(null))}
