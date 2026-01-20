@@ -1,5 +1,5 @@
-import { useState } from "react";
-import Button from "../../../components/Button";
+import { useState, useMemo } from "react";
+import Button from "../../../components/button";
 import styles from "./phishingFinder.module.css";
 import { initialEmails } from "./phishingFinderData";
 
@@ -9,10 +9,11 @@ function PhishingFinder({ onBack }) {
   );
   
   const [selectedEmail, setSelectedEmail] = useState(null);
+  const [step, setStep] = useState("READING");
+  const [currentSelection, setCurrentSelection] = useState([]);
   
-  // Neuer State für den Ablauf
-  const [step, setStep] = useState("READING"); // 'READING' oder 'ANALYZING'
-  const [currentSelection, setCurrentSelection] = useState([]); // Gewählte Checkboxen
+  // Neuer State: Game Over
+  const [gameState, setGameState] = useState("PLAYING"); // 'PLAYING' | 'FINISHED'
 
   // --- HANDLER ---
   const handleSelectEmail = (email) => {
@@ -25,27 +26,22 @@ function PhishingFinder({ onBack }) {
 
   const handleVerdict = (verdict) => {
     if (verdict === "PHISHING") {
-      // Bei Phishing: Weiter zur Analyse (Checkboxen)
       setStep("ANALYZING");
     } else {
-      // Bei Sicher: Sofort speichern und schließen
       saveResultAndClose(selectedEmail.id, "LEGIT", []);
     }
   };
 
-  // Checkbox umschalten
   const toggleOption = (id) => {
     setCurrentSelection(prev => 
       prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
     );
   };
 
-  // Analyse absenden
   const handleSubmitAnalysis = () => {
     saveResultAndClose(selectedEmail.id, "PHISHING", currentSelection);
   };
 
-  // Zentrale Speicherfunktion
   const saveResultAndClose = (id, verdict, options) => {
     const updated = emails.map(e => 
       e.id === id 
@@ -55,13 +51,72 @@ function PhishingFinder({ onBack }) {
     setEmails(updated);
     setSelectedEmail(null);
     
-    // Prüfen ob Spiel zu Ende ist (alle Mails bearbeitet)
+    // Check Game Over
     if (updated.every(e => e.status === "processed")) {
-      console.log("GAME OVER - Alle Mails bearbeitet");
-      // Hier triggern wir im nächsten Schritt den Report-Screen
+      setGameState("FINISHED");
     }
   };
 
+  const handleRestart = () => {
+    setEmails(initialEmails.map(e => ({ ...e, status: "new", userVerdict: null, userOptions: [] })));
+    setGameState("PLAYING");
+  };
+
+  // --- SCORE BERECHNUNG ---
+  const reportData = useMemo(() => {
+    if (gameState !== "FINISHED") return null;
+    
+    let totalPoints = 0;
+    let correctCount = 0;
+    
+    const results = emails.map(email => {
+      let isCorrect = false;
+      let points = 0;
+      let reason = "";
+
+      if (email.isPhishing) {
+        // Fall: Es IST Phishing
+        if (email.userVerdict === "PHISHING") {
+          // Prüfen ob richtige Optionen gewählt wurden
+          // Einfache Logik: Mindestens 1 richtiger Treffer nötig
+          const hits = email.userOptions.filter(id => email.correctOptionIds.includes(id)).length;
+          
+          if (hits > 0) {
+            isCorrect = true;
+            points = 100;
+            reason = "Korrekt als Phishing erkannt.";
+          } else {
+            // Richtig erkannt, aber falsche Begründung
+            isCorrect = false; 
+            points = 50; // Teilpunkte
+            reason = "Phishing erkannt, aber Begründung war falsch.";
+          }
+        } else {
+          // Falsch: Als sicher eingestuft
+          reason = "Falsch! Das war eine Phishing-Mail.";
+        }
+      } else {
+        // Fall: Es ist KEIN Phishing (Sicher)
+        if (email.userVerdict === "LEGIT") {
+          isCorrect = true;
+          points = 100;
+          reason = "Korrekt als sicher erkannt.";
+        } else {
+          reason = "Falsch! Das war eine legitime Mail (False Positive).";
+        }
+      }
+
+      if (isCorrect) totalPoints += points;
+      if (isCorrect) correctCount++;
+      
+      return { ...email, isCorrect, points, reason };
+    });
+
+    return { totalPoints, correctCount, results };
+  }, [gameState, emails]);
+
+
+  // Hilfsfunktion für Text
   const renderBody = (text) => text.split(/(\[\[LINK:.*?\]\])/g).map((part, i) => {
     if (part.startsWith("[[LINK:")) {
         return <span key={i} className={styles.fakeLink} onClick={() => alert("Vorsicht!")}>{part.slice(7, -2)}</span>;
@@ -74,41 +129,72 @@ function PhishingFinder({ onBack }) {
       <div className={styles.headerRow}>
         <Button onClick={onBack}>← Zurück</Button>
         <h1 className={styles.title}>Phishing Finder</h1>
-        <div>Mails: {emails.length}</div>
+        <div>
+           {gameState === 'PLAYING' ? 
+             `Mails: ${emails.filter(e => e.status==='processed').length} / ${emails.length}` : 
+             'Ergebnis'
+           }
+        </div>
       </div>
 
-      <div className={styles.mailClientWindow}>
-        <div className={styles.clientTitleBar}>📧 Corporate Mail v1.0</div>
-        <div className={styles.clientBody}>
-          <div className={styles.sidebar}>
-            <div className={`${styles.sidebarItem} ${styles.active}`}>
-              📥 Posteingang ({emails.filter(e => e.status === 'new').length})
-            </div>
-            <div className={styles.sidebarItem}>📤 Gesendet</div>
-            <div className={styles.sidebarItem}>🗑️ Papierkorb</div>
+      {/* --- HAUPTANSICHT: ENTWEDER SPIEL ODER REPORT --- */}
+      {gameState === "FINISHED" ? (
+        <div className={styles.reportContainer}>
+          <div className={styles.reportHeader}>
+            <h2>Mission Abgeschlossen</h2>
+            <div className={styles.reportScore}>Score: {reportData.totalPoints}</div>
+            <p>Du hast {reportData.correctCount} von {emails.length} Mails korrekt bewertet.</p>
           </div>
-          <div className={styles.mailListArea}>
-            <div className={styles.listHeader}>
-              <span className={styles.colFrom}>Von</span>
-              <span className={styles.colSub}>Betreff</span>
-              <span className={styles.colDate}>Datum</span>
-            </div>
-            <div className={styles.mailRowsContainer}>
-              {emails.map((email) => (
-                <div 
-                  key={email.id} 
-                  className={`${styles.mailRow} ${email.status === 'processed' ? styles.read : styles.unread}`}
-                  onClick={() => handleSelectEmail(email)}
-                >
-                  <span className={styles.colFrom}>{email.from}</span>
-                  <span className={styles.colSub}>{email.subject}</span>
-                  <span className={styles.colDate}>{email.date}</span>
+          
+          <div className={styles.reportList}>
+            {reportData.results.map(res => (
+              <div key={res.id} className={`${styles.reportItem} ${res.isCorrect ? styles.correct : styles.wrong}`}>
+                <div style={{fontWeight: 'bold', display:'flex', justifyContent:'space-between'}}>
+                    <span>{res.subject}</span>
+                    <span>{res.points} Pkt</span>
                 </div>
-              ))}
+                <div>{res.isPhishing ? "⚠️ War Phishing" : "✅ War Sicher"} | Deine Wahl: {res.userVerdict}</div>
+                <div style={{fontStyle:'italic', marginTop:'5px'}}>➡ {res.reason}</div>
+              </div>
+            ))}
+          </div>
+          
+          <button className={styles.restartBtn} onClick={handleRestart}>Neustart</button>
+        </div>
+      ) : (
+        <div className={styles.mailClientWindow}>
+          <div className={styles.clientTitleBar}>📧 Corporate Mail v1.0</div>
+          <div className={styles.clientBody}>
+            <div className={styles.sidebar}>
+              <div className={`${styles.sidebarItem} ${styles.active}`}>
+                📥 Posteingang ({emails.filter(e => e.status === 'new').length})
+              </div>
+              <div className={styles.sidebarItem}>📤 Gesendet</div>
+              <div className={styles.sidebarItem}>🗑️ Papierkorb</div>
+            </div>
+            <div className={styles.mailListArea}>
+              <div className={styles.listHeader}>
+                <span className={styles.colFrom}>Von</span>
+                <span className={styles.colSub}>Betreff</span>
+                <span className={styles.colDate}>Datum</span>
+              </div>
+              <div className={styles.mailRowsContainer}>
+                {emails.map((email) => (
+                  <div 
+                    key={email.id} 
+                    className={`${styles.mailRow} ${email.status === 'processed' ? styles.read : styles.unread}`}
+                    onClick={() => handleSelectEmail(email)}
+                  >
+                    <span className={styles.colFrom}>{email.from}</span>
+                    <span className={styles.colSub}>{email.subject}</span>
+                    <span className={styles.colDate}>{email.date}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* --- READER OVERLAY --- */}
       {selectedEmail && step === "READING" && (
@@ -128,13 +214,11 @@ function PhishingFinder({ onBack }) {
         </div>
       )}
 
-      {/* --- ANALYSE OVERLAY (Neu) --- */}
+      {/* --- ANALYSE OVERLAY --- */}
       {selectedEmail && step === "ANALYZING" && (
         <div className={styles.overlayBackdrop}>
           <div className={styles.analysisModal}>
             <h3>Warum ist das Phishing?</h3>
-            <p style={{fontSize: '0.9rem', marginBottom: '10px'}}>Markiere alle verdächtigen Merkmale:</p>
-            
             {selectedEmail.options.map(opt => (
               <label key={opt.id} className={styles.optionLabel}>
                 <input 
@@ -146,10 +230,7 @@ function PhishingFinder({ onBack }) {
                 {opt.text}
               </label>
             ))}
-            
-            <button className={`${styles.btnBase} ${styles.btnSubmit}`} onClick={handleSubmitAnalysis}>
-              Bestätigen
-            </button>
+            <button className={`${styles.btnBase} ${styles.btnSubmit}`} onClick={handleSubmitAnalysis}>Bestätigen</button>
           </div>
         </div>
       )}

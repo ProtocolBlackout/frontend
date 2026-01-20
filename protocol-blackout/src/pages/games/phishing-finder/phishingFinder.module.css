@@ -220,3 +220,55 @@
   padding: 12px;
 }
 .btnSubmit:hover { background: #004488; }
+
+/* REPORT SCREEN */
+.reportContainer {
+  background: #fff;
+  color: #333;
+  padding: 20px;
+  flex: 1;
+  overflow-y: auto;
+  font-family: Arial, sans-serif;
+  margin-top: 20px;
+  border: 2px solid #005500;
+}
+
+.reportHeader {
+  text-align: center;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+}
+
+.reportScore {
+  font-size: 2rem;
+  color: #0055aa;
+  font-weight: bold;
+}
+
+.reportList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reportItem {
+  border: 1px solid #ddd;
+  padding: 10px;
+  background: #f9f9f9;
+  border-left-width: 5px;
+}
+.reportItem.correct { border-left-color: #27ae60; }
+.reportItem.wrong { border-left-color: #c0392b; }
+
+.restartBtn {
+  margin-top: 30px;
+  padding: 15px;
+  background: #0055aa;
+  color: white;
+  width: 100%;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+.restartBtn:hover { background: #004488; }
