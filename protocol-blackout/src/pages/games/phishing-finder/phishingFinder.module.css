@@ -32,3 +32,87 @@
   color: #666;
   background: #111;
 }
+
+/* MAIL CLIENT WINDOW */
+.mailClientWindow {
+  background: #e9e9e9;
+  border: 2px solid #005500;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  color: #000;
+  font-family: Tahoma, Arial, sans-serif;
+  overflow: hidden;
+  margin-top: 20px;
+  height: 500px; /* Feste Höhe für Scroll */
+}
+
+.clientTitleBar {
+  background: linear-gradient(to right, #000080, #1084d0);
+  color: white;
+  padding: 5px 10px;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.clientBody {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+
+/* SIDEBAR & LIST */
+.sidebar {
+  width: 180px;
+  background: #fff;
+  border-right: 1px solid #ccc;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.sidebarItem {
+  padding: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.sidebarItem.active {
+  background-color: #ddeeff;
+  font-weight: bold;
+  border: 1px dotted #888;
+}
+
+.mailListArea {
+  flex: 1;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+}
+
+.listHeader {
+  display: flex;
+  background: #f9f9f9;
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.colFrom { width: 25%; padding-right: 5px; }
+.colSub { flex: 1; }
+.colDate { width: 80px; text-align: right; }
+
+.mailRowsContainer { flex: 1; overflow-y: auto; }
+
+.mailRow {
+  display: flex;
+  padding: 6px 5px;
+  border-bottom: 1px solid #eee;
+  font-size: 12px;
+  cursor: pointer;
+}
+.mailRow:hover { background: #e8f3ff; }
+.mailRow.read { color: #888; font-style: italic; }
+.mailRow.unread { font-weight: bold; }
