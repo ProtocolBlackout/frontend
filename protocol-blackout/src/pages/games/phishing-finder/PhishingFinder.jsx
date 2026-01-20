@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Button from "../../../components/button";
+import Button from "../../../components/Button";
 import styles from "./phishingFinder.module.css";
 import { initialEmails } from "./phishingFinderData";
 
@@ -8,43 +8,67 @@ function PhishingFinder({ onBack }) {
     initialEmails.map((e) => ({ ...e, status: "new", userVerdict: null, userOptions: [] }))
   );
   
-  // Neuer State für Reader
   const [selectedEmail, setSelectedEmail] = useState(null);
+  
+  // Neuer State für den Ablauf
+  const [step, setStep] = useState("READING"); // 'READING' oder 'ANALYZING'
+  const [currentSelection, setCurrentSelection] = useState([]); // Gewählte Checkboxen
 
   // --- HANDLER ---
   const handleSelectEmail = (email) => {
     setSelectedEmail(email);
+    setStep("READING");
+    setCurrentSelection([]);
   };
 
-  const handleCloseOverlay = () => {
-    setSelectedEmail(null);
-  };
+  const handleCloseOverlay = () => setSelectedEmail(null);
 
-  // Entscheidung treffen (vorerst nur Console Log / Alert Ersatz)
   const handleVerdict = (verdict) => {
-    // verdict ist entweder 'LEGIT' oder 'PHISHING'
-    console.log("Entscheidung:", verdict, "für Mail ID:", selectedEmail.id);
-    
-    // Wir markieren die Mail als 'processed' (gelesen) und schließen das Fenster
-    // (Später kommt hier die komplexe Logik für Phishing-Analyse rein)
+    if (verdict === "PHISHING") {
+      // Bei Phishing: Weiter zur Analyse (Checkboxen)
+      setStep("ANALYZING");
+    } else {
+      // Bei Sicher: Sofort speichern und schließen
+      saveResultAndClose(selectedEmail.id, "LEGIT", []);
+    }
+  };
+
+  // Checkbox umschalten
+  const toggleOption = (id) => {
+    setCurrentSelection(prev => 
+      prev.includes(id) ? prev.filter(x => x !== id) : [...prev, id]
+    );
+  };
+
+  // Analyse absenden
+  const handleSubmitAnalysis = () => {
+    saveResultAndClose(selectedEmail.id, "PHISHING", currentSelection);
+  };
+
+  // Zentrale Speicherfunktion
+  const saveResultAndClose = (id, verdict, options) => {
     const updated = emails.map(e => 
-        e.id === selectedEmail.id 
-        ? { ...e, status: "processed", userVerdict: verdict } 
-        : e
+      e.id === id 
+      ? { ...e, status: "processed", userVerdict: verdict, userOptions: options } 
+      : e
     );
     setEmails(updated);
     setSelectedEmail(null);
+    
+    // Prüfen ob Spiel zu Ende ist (alle Mails bearbeitet)
+    if (updated.every(e => e.status === "processed")) {
+      console.log("GAME OVER - Alle Mails bearbeitet");
+      // Hier triggern wir im nächsten Schritt den Report-Screen
+    }
   };
 
-  // Hilfsfunktion um [[LINK:...]] Text klickbar zu machen
   const renderBody = (text) => text.split(/(\[\[LINK:.*?\]\])/g).map((part, i) => {
     if (part.startsWith("[[LINK:")) {
-        return <span key={i} className={styles.fakeLink} onClick={() => alert("Vorsicht! In echt wäre das gefährlich.")}>{part.slice(7, -2)}</span>;
+        return <span key={i} className={styles.fakeLink} onClick={() => alert("Vorsicht!")}>{part.slice(7, -2)}</span>;
     }
     return part;
   });
 
-  // --- RENDER ---
   return (
     <div className={styles.gameContainer}>
       <div className={styles.headerRow}>
@@ -87,29 +111,45 @@ function PhishingFinder({ onBack }) {
       </div>
 
       {/* --- READER OVERLAY --- */}
-      {selectedEmail && (
+      {selectedEmail && step === "READING" && (
         <div className={styles.overlayBackdrop}>
           <div className={styles.emailModal}>
             <div className={styles.emailHeader}>
               <div className={styles.emailSubject}>{selectedEmail.subject}</div>
               <div>Von: {selectedEmail.from}</div>
             </div>
-            
-            <div className={styles.emailBody}>
-              {renderBody(selectedEmail.body)}
-            </div>
-            
+            <div className={styles.emailBody}>{renderBody(selectedEmail.body)}</div>
             <div className={styles.decisionFooter}>
-              <button className={`${styles.btnBase} ${styles.btnBack}`} onClick={handleCloseOverlay}>
-                Zurück
-              </button>
-              <button className={`${styles.btnBase} ${styles.btnLegit}`} onClick={() => handleVerdict("LEGIT")}>
-                ✅ Sicher
-              </button>
-              <button className={`${styles.btnBase} ${styles.btnPhish}`} onClick={() => handleVerdict("PHISHING")}>
-                ⚠️ Phishing Melden
-              </button>
+              <button className={`${styles.btnBase} ${styles.btnBack}`} onClick={handleCloseOverlay}>Zurück</button>
+              <button className={`${styles.btnBase} ${styles.btnLegit}`} onClick={() => handleVerdict("LEGIT")}>✅ Sicher</button>
+              <button className={`${styles.btnBase} ${styles.btnPhish}`} onClick={() => handleVerdict("PHISHING")}>⚠️ Phishing</button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* --- ANALYSE OVERLAY (Neu) --- */}
+      {selectedEmail && step === "ANALYZING" && (
+        <div className={styles.overlayBackdrop}>
+          <div className={styles.analysisModal}>
+            <h3>Warum ist das Phishing?</h3>
+            <p style={{fontSize: '0.9rem', marginBottom: '10px'}}>Markiere alle verdächtigen Merkmale:</p>
+            
+            {selectedEmail.options.map(opt => (
+              <label key={opt.id} className={styles.optionLabel}>
+                <input 
+                  type="checkbox" 
+                  className={styles.checkInput} 
+                  checked={currentSelection.includes(opt.id)} 
+                  onChange={() => toggleOption(opt.id)} 
+                />
+                {opt.text}
+              </label>
+            ))}
+            
+            <button className={`${styles.btnBase} ${styles.btnSubmit}`} onClick={handleSubmitAnalysis}>
+              Bestätigen
+            </button>
           </div>
         </div>
       )}
