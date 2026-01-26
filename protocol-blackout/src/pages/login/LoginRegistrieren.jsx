@@ -1,17 +1,26 @@
 import { useState } from "react";
 import "./LoginRegistrieren.css";
 
+// === API-Helper nutzen (Base-URL + JSON + Token) ===
+import { requestJson, setToken } from "../../services/api.js";
+
 function LoginRegister() {
   const [tab, setTab] = useState("login");
 
   // nur UI-State (ohne Backend)
+  // === Form-State === (ist ein Vorschlag von ChatGPT, nach Anpassung => Jenny fragen, ob ok)
   const [login, setLogin] = useState({ email: "", password: "" });
   const [register, setRegister] = useState({
     username: "",
     email: "",
     password: "",
-    passwordConfirm: "",
+    passwordConfirm: ""
   });
+
+  // === Status für Requests ===
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
 
   function onLoginChange(e) {
     const { name, value } = e.target;
@@ -23,6 +32,86 @@ function LoginRegister() {
     setRegister((prev) => ({ ...prev, [name]: value }));
   }
 
+  // === Login-Submit (POST /auth/login) ===
+  // Backend-Response: { message, token, user }
+  async function handleLoginSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+    setIsLoading(true);
+
+    try {
+      const data = await requestJson(
+        "/auth/login",
+        {
+          method: "POST",
+          body: JSON.stringify(login)
+        },
+        false
+      );
+
+      // FAKT: Token kommt als "token"
+      if (!data?.token) {
+        setError(
+          "Login erfolgreich, aber Token fehlt in der Antwort vom Server."
+        );
+        return;
+      }
+
+      setToken(data.token);
+      setMessage(data.message ?? "Login erfolgreich");
+    } catch (error) {
+      setError(error?.message ?? "Login fehlgeschlagen");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
+  // === Register-Submit (POST /auth/register) ===
+  // Backend-Response: { message, user } (kein Token)
+  async function handleRegisterSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setMessage("");
+
+    // Frontend-Check
+    if (register.password !== register.passwordConfirm) {
+      setError("Passwörter stimmen nicht überein");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      const payload = {
+        username: register.username,
+        email: register.email,
+        password: register.password
+      };
+
+      const data = await requestJson(
+        "/auth/register",
+        {
+          method: "POST",
+          body: JSON.stringify(payload)
+        },
+        false
+      );
+
+      const baseMessage = data.message ?? "Registrierung erfolgreich";
+      setMessage(
+        `${baseMessage} Bitte E-Mail verifizieren und dann einloggen.`
+      );
+
+      // UX: Nach Registrierung auf Login wechseln
+      setTab("login");
+    } catch (error) {
+      setError(error?.message ?? "Registrierung fehlgeschlagen");
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
     <main className="auth">
       <section className="auth-console">
@@ -31,7 +120,11 @@ function LoginRegister() {
           <span className="auth-console__dots">● ● ●</span>
         </header>
 
-        <div className="auth-tabs" role="tablist" aria-label="Login oder Registrieren">
+        <div
+          className="auth-tabs"
+          role="tablist"
+          aria-label="Login oder Registrieren"
+        >
           <button
             type="button"
             role="tab"
@@ -57,10 +150,16 @@ function LoginRegister() {
           {tab === "login" ? (
             <section role="tabpanel" className="auth-panel">
               <p className="auth-lead">
-                Bitte anmelden. (Nur Design – Verbindung kommt später.)
+                Bitte anmelden. (Login funktioniert nur nach
+                E-Mail-Verifizierung.)
               </p>
 
-              <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+              {/* === NEU: Statusausgabe (Fehler/Erfolg) === */}
+              {error ? <p className="auth-hint">{error}</p> : null}
+              {message ? <p className="auth-hint">{message}</p> : null}
+
+              {/* === GEÄNDERT: echter Submit-Handler (Login) === */}
+              <form className="auth-form" onSubmit={handleLoginSubmit}>
                 <label className="auth-field auth-field--full">
                   <span className="auth-label">E-MAIL</span>
                   <input
@@ -88,20 +187,33 @@ function LoginRegister() {
                 </label>
 
                 <div className="auth-actions">
-                  <button className="auth-btn" type="button">
-                    ANMELDEN
+                  {/* === GEÄNDERT: submit statt button === */}
+                  <button
+                    className="auth-btn"
+                    type="submit"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "..." : "ANMELDEN"}
                   </button>
-                  <p className="auth-hint">Kein Backend angeschlossen.</p>
+                  {/* === GEÄNDERT: Hint nicht mehr "Kein Backend angeschlossen"
+                  === */}
+                  <p className="auth-hint">
+                    {isLoading ? "Bitte warten..." : "Backend verbunden."}
+                  </p>
                 </div>
               </form>
             </section>
           ) : (
             <section role="tabpanel" className="auth-panel">
-              <p className="auth-lead">
-                Neues Konto erstellen. (Nur Design – Verbindung kommt später.)
-              </p>
+              {/* === GEÄNDERT: Text nicht mehr "Nur Design – Verbindung kommt später." === */}
+              <p className="auth-lead">Neues Konto erstellen.</p>
 
-              <form className="auth-form" onSubmit={(e) => e.preventDefault()}>
+              {/* === NEU: Statusausgabe (Fehler/Erfolg) === */}
+              {error ? <p className="auth-hint">{error}</p> : null}
+              {message ? <p className="auth-hint">{message}</p> : null}
+
+              {/* === GEÄNDERT: echter Submit-Handler (Register) === */}
+              <form className="auth-form" onSubmit={handleRegisterSubmit}>
                 <label className="auth-field">
                   <span className="auth-label">BENUTZERNAME</span>
                   <input
@@ -154,10 +266,21 @@ function LoginRegister() {
                 </label>
 
                 <div className="auth-actions">
-                  <button className="auth-btn" type="button">
-                    REGISTRIEREN
+                  {/* === GEÄNDERT: submit statt button === */}
+                  <button
+                    className="auth-btn"
+                    type="submit"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? "..." : "REGISTRIEREN"}
                   </button>
-                  <p className="auth-hint">Kein Backend angeschlossen.</p>
+
+                  {/* === GEÄNDERT: Hint nicht mehr "Kein Backend angeschlossen." === */}
+                  <p className="auth-hint">
+                    {isLoading
+                      ? "Bitte warten..."
+                      : "Nach Registrierung bitte Mail verifizieren."}
+                  </p>
                 </div>
               </form>
             </section>
