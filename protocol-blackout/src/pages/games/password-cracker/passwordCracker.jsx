@@ -2,60 +2,74 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./passwordCracker.module.css";
 
-// KONFIGURATION: Ziele & Lösungen (Version A)
-const TARGETS = [
-  {
-    id: "jenny",
-    name: "Jenny (Frontend)",
-    requiredKeywords: ["Gaming", "Batman"],
-    solved: false,
-    difficulty: "LOW",
-    color: "#00bfff", // Blau
-  },
-  {
-    id: "lulu",
-    name: "Lulu (Backend)",
-    requiredKeywords: ["Xara", "Berlin"],
-    solved: false,
-    difficulty: "MED",
-    color: "#ffaa00", // Orange
-  },
-  {
-    id: "bella",
-    name: "Bella (Gamedev)",
-    requiredKeywords: ["Slytherin", "2022"],
-    solved: false,
-    difficulty: "HIGH",
-    color: "#00ff41", // Grün
-  },
-];
-
 const PasswordCracker = ({ onBack }) => {
   const navigate = useNavigate();
-  
-  // Navigation Handler (Integration für Jennys Framework)
+
+  // Navigation Handler
   const handleBack = () => {
     if (typeof onBack === "function") {
       onBack();
     } else {
-      // Fallback, falls keine prop übergeben wurde
       navigate("/games");
     }
   };
 
-  const [selectedTargetId, setSelectedTargetId] = useState(TARGETS[0].id);
+  // --- STATES ---
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  
+  const [selectedTargetId, setSelectedTargetId] = useState(null);
+  const [targetsStatus, setTargetsStatus] = useState([]);
+  
   const [inputWord, setInputWord] = useState("");
   const [wordList, setWordList] = useState([]);
   const [log, setLog] = useState([]);
   const [isHacking, setIsHacking] = useState(false);
-  const [targetsStatus, setTargetsStatus] = useState(TARGETS);
   const [hackProgress, setHackProgress] = useState(0);
 
-  // Gameplay Mechanics (Version A: Trace & Lockout)
+  // Gameplay Mechanics
   const [traceLevel, setTraceLevel] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
-  
   const terminalBodyRef = useRef(null);
+
+  // --- DATEN LADEN (Backend Fetch) ---
+  useEffect(() => {
+    const fetchTargets = async () => {
+      try {
+        // HINWEIS: URL anpassen, falls euer Backend woanders läuft
+        const response = await fetch("http://localhost:3000/games/password-cracker/config");
+
+        if (!response.ok) {
+          throw new Error("Verbindung zum Server fehlgeschlagen");
+        }
+
+        const data = await response.json();
+
+        // Solved-Status initialisieren
+        const initializedTargets = data.targets.map((t) => ({
+          ...t,
+          solved: false,
+        }));
+
+        setTargetsStatus(initializedTargets);
+
+        // Erstes Ziel auswählen
+        if (initializedTargets.length > 0) {
+          setSelectedTargetId(initializedTargets[0].id);
+        }
+
+        setIsLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Fehler beim Laden der Zielsysteme. Ist das Backend gestartet?");
+        setIsLoading(false);
+      }
+    };
+
+    fetchTargets();
+  }, []);
+
+  // --- EFFECTS ---
 
   // Auto-Scroll Terminal
   useEffect(() => {
@@ -66,7 +80,7 @@ const PasswordCracker = ({ onBack }) => {
 
   // Reset Log on Target Switch
   useEffect(() => {
-    if (!isLocked) {
+    if (!isLocked && selectedTargetId) {
       setLog([
         `> Zielsystem: ${selectedTargetId.toUpperCase()}_PC`,
         "> Verbindung hergestellt...",
@@ -103,10 +117,11 @@ const PasswordCracker = ({ onBack }) => {
           ]);
         }
       }, 1000);
-      
       return () => clearInterval(interval);
     }
   }, [traceLevel, isLocked]);
+
+  // --- FUNKTIONEN ---
 
   const addLog = (text) => setLog((prev) => [...prev, text]);
 
@@ -123,7 +138,7 @@ const PasswordCracker = ({ onBack }) => {
   const handleAddWord = (e) => {
     e.preventDefault();
     if (isLocked || !inputWord.trim()) return;
-    
+
     if (!wordList.includes(inputWord.trim())) {
       setWordList([...wordList, inputWord.trim()]);
       addLog(`> Fragment geladen: "${inputWord}"`);
@@ -142,11 +157,11 @@ const PasswordCracker = ({ onBack }) => {
       addLog("> ERROR: Keine Fragmente. Abbruch.");
       return;
     }
+
     setIsHacking(true);
     setHackProgress(5);
     // Risiko steigt deutlich bei Attacke
     setTraceLevel((prev) => Math.min(prev + 15, 100));
-
     addLog("> Initialisiere Handshake...");
 
     // Animations-Phase
@@ -164,14 +179,23 @@ const PasswordCracker = ({ onBack }) => {
   };
 
   const finishHack = () => {
+    // Finde das aktuelle Target im State
     const currentTarget = targetsStatus.find((t) => t.id === selectedTargetId);
-    const userWordsLower = wordList.map((w) => w.toLowerCase());
     
-    // Check Keywords
+    // Falls (warum auch immer) kein Target gefunden wird -> Abbruch
+    if (!currentTarget) {
+        setIsHacking(false);
+        return;
+    }
+
+    const userWordsLower = wordList.map((w) => w.toLowerCase());
+
+    // Check Keywords (kamen vom Backend)
     const foundKeywords = currentTarget.requiredKeywords.filter((req) =>
       userWordsLower.includes(req.toLowerCase())
     );
-    const missingCount = currentTarget.requiredKeywords.length - foundKeywords.length;
+    const missingCount =
+      currentTarget.requiredKeywords.length - foundKeywords.length;
 
     if (missingCount === 0) {
       // SUCCESS
@@ -196,39 +220,78 @@ const PasswordCracker = ({ onBack }) => {
       setTraceLevel((prev) => Math.min(prev + 20, 100));
       addLog(`> WARNUNG: IDS Aktivität gestiegen!`);
     }
+
     setIsHacking(false);
   };
 
   // Helper to get color of current target
-  const activeColor = targetsStatus.find(t => t.id === selectedTargetId)?.color || "#00ff41";
+  const activeColor =
+    targetsStatus.find((t) => t.id === selectedTargetId)?.color || "#00ff41";
 
+  // --- RENDER: Lade-Zustand ---
+  if (isLoading) {
+    return (
+      <div className={styles.gameContainer}>
+        <div className={styles.headerRow}>
+          <button onClick={handleBack} className={styles.backBtn}>
+            &lt; Zurück
+          </button>
+          <h2 className={styles.title}>Verbindung wird aufgebaut...</h2>
+          <div className={styles.spacer}></div>
+        </div>
+        <div className={styles.terminal}>
+           <div className={styles.logLine}>{">"} Initiiere Uplink...</div>
+           <div className={styles.logLine}><span className={styles.cursor}>_</span></div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.gameContainer}>
+        <div className={styles.headerRow}>
+            <button onClick={handleBack} className={styles.backBtn}>
+                &lt; Zurück
+            </button>
+        </div>
+        <div className={styles.terminal} style={{ borderColor: 'red', color: 'red' }}>
+           <h3>VERBINDUNGSFEHLER</h3>
+           <p>{error}</p>
+           <button onClick={() => window.location.reload()} className={styles.hackBtn}>Neustart versuchen</button>
+        </div>
+      </div>
+    );
+  }
+
+  // --- RENDER: Spiel ---
   return (
-    <div className={styles.gameContainer} style={{ "--target-color": activeColor }}>
-      
-      {/* LOCKOUT OVERLAY */}
+    <div
+      className={styles.gameContainer}
+      style={{ "--target-color": activeColor }}
+    >
+      {/* Header */}
+      <div className={styles.headerRow}>
+        <button onClick={handleBack} className={styles.backBtn}>
+          &lt; Zurück
+        </button>
+        <h2 className={styles.title}>PASSWORD CRACKER v1.0</h2>
+        <div className={styles.spacer}></div>
+      </div>
+
+      {/* Lockout Overlay */}
       {isLocked && (
-        <div className={styles.lockedState}>
-          <div className={styles.lockOverlay}>
-            <h2>SYSTEM LOCKOUT</h2>
-            <p>Sicherheitsmaßnahmen aktiv.</p>
-            <p>IP wird neu geroutet...</p>
-          </div>
+        <div className={styles.lockOverlay}>
+          <h2>SYSTEM LOCKED</h2>
+          <p>Sicherheitsmaßnahmen aktiv.</p>
+          <p>IP wird neu geroutet...</p>
         </div>
       )}
 
-      {/* HEADER & NAV */}
-      <div className={styles.headerRow}>
-        <button onClick={handleBack} className={styles.backBtn}>
-          &lt; ZURÜCK
-        </button>
-        <h2 className={styles.title}>PASSWORD CRACKER v2.0</h2>
-        <div className={styles.spacer} /> {/* Für Zentrierung */}
-      </div>
-
-      {/* TRACE LEVEL BAR */}
+      {/* Trace Level Bar */}
       <div className={styles.traceContainer}>
         <div className={styles.traceLabels}>
-          <span>DETECTION RISK</span>
+          <span>TRACE LEVEL</span>
           <span>{traceLevel}%</span>
         </div>
         <div className={styles.traceBarBg}>
@@ -236,44 +299,44 @@ const PasswordCracker = ({ onBack }) => {
             className={styles.traceBarFill}
             style={{
               width: `${traceLevel}%`,
-              backgroundColor: traceLevel > 80 ? "red" : traceLevel > 50 ? "orange" : activeColor
+              backgroundColor: traceLevel > 80 ? "red" : activeColor,
             }}
-          />
+          ></div>
         </div>
       </div>
 
-      {/* TARGET SELECTOR */}
+      {/* Target Selection */}
       <div className={styles.targetSelect}>
         {targetsStatus.map((target) => (
           <button
             key={target.id}
-            onClick={() => setSelectedTargetId(target.id)}
             disabled={isLocked || isHacking}
+            onClick={() => setSelectedTargetId(target.id)}
             className={`${styles.targetBtn} ${
               selectedTargetId === target.id ? styles.active : ""
             } ${target.solved ? styles.solved : ""}`}
-            style={{ "--btn-color": target.color }}
+            style={{ "--target-color": target.color }}
           >
-            <span className={styles.targetName}>{target.name}</span>
-            <span className={styles.diffBadge}>{target.difficulty}</span>
-            {target.solved && <span className={styles.solvedIcon}>✓</span>}
+            <div className={styles.targetName}>{target.name}</div>
+            <div className={styles.diffBadge}>{target.difficulty}</div>
+            {target.solved && <div className={styles.solvedIcon}>🔓</div>}
           </button>
         ))}
       </div>
 
-      {/* WORKSPACE */}
+      {/* Main Workspace */}
       <div className={styles.workspace}>
-        {/* LEFT PANEL: INPUT */}
+        {/* Left Panel: Inputs */}
         <div className={styles.panel}>
           <div className={styles.instruction}>
-            Ziel: Finde die versteckten Passwörter durch Hinweise im Profil.
+             Sammle Fragmente (Keywords), um das Passwort zu rekonstruieren.
           </div>
-          
+
           <form onSubmit={handleAddWord} className={styles.inputGroup}>
             <input
-              className={styles.input}
               type="text"
-              placeholder="Code-Fragment eingeben..."
+              className={styles.input}
+              placeholder="Fragment eingeben..."
               value={inputWord}
               onChange={(e) => setInputWord(e.target.value)}
               disabled={isLocked || isHacking}
@@ -282,37 +345,43 @@ const PasswordCracker = ({ onBack }) => {
           </form>
 
           <div className={styles.wordList}>
-            {wordList.map((word, idx) => (
-              <span key={idx} className={styles.wordTag}>
-                {word}
-                {!isHacking && !isLocked && (
-                  <span
-                    className={styles.tagDel}
-                    onClick={() => handleDeleteWord(word)}
-                  >
-                    ×
-                  </span>
-                )}
-              </span>
-            ))}
             {wordList.length === 0 && (
-              <span className={styles.emptyInfo}>Keine Fragmente geladen...</span>
+              <span className={styles.emptyInfo}>
+                Keine Fragmente geladen.
+              </span>
             )}
+            {wordList.map((word, idx) => (
+              <div key={idx} className={styles.wordTag}>
+                {word}
+                <span
+                  className={styles.tagDel}
+                  onClick={() => !isHacking && handleDeleteWord(word)}
+                >
+                  ×
+                </span>
+              </div>
+            ))}
           </div>
 
           <button
             className={styles.hackBtn}
             onClick={startHack}
-            disabled={isLocked || isHacking || wordList.length === 0}
+            disabled={
+              isLocked || isHacking || wordList.length === 0 || targetsStatus.find(t => t.id === selectedTargetId)?.solved
+            }
           >
-            {isHacking ? `RUNNING... ${hackProgress}%` : "EXECUTE HACK"}
+            {isHacking
+              ? `HACKING... ${hackProgress}%`
+              : targetsStatus.find(t => t.id === selectedTargetId)?.solved
+              ? "SYSTEM GEKNACKT"
+              : "EXECUTE HACK_v1.exe"}
           </button>
         </div>
 
-        {/* RIGHT PANEL: TERMINAL */}
-        <div className={styles.terminal}>
+        {/* Right Panel: Terminal Log */}
+        <div className={styles.terminal} style={{ borderColor: activeColor }}>
           <div className={styles.terminalHeader}>
-            root@blackout:~/{selectedTargetId}_crack_tool.exe
+            root@kali-linux:~# tail -f /var/log/syslog
           </div>
           <div className={styles.terminalBody} ref={terminalBodyRef}>
             {log.map((line, i) => (
@@ -320,7 +389,7 @@ const PasswordCracker = ({ onBack }) => {
                 {line}
               </div>
             ))}
-            {isHacking && <div className={styles.cursor}>_</div>}
+            {!isLocked && <span className={styles.cursor}>_</span>}
           </div>
         </div>
       </div>
