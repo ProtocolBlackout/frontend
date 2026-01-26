@@ -3,7 +3,7 @@ import "./profil.css";
 
 const MOCK_USER = {
   username: "User",
-  avatar: "/images/defaultAvatar.png", // anpassen
+  avatar: "./images/defaultAvatar.png", // anpassen
   avatarAlt: "Profilbild",
   level: 7,
   xpNow: 420,
