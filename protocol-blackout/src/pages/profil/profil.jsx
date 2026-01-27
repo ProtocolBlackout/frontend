@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { requestJson, getToken, clearToken } from "../../services/api.js";
 import "./profil.css";
+import DeleteConfirmationModal from "../../components/DeleteConfirmationModal.jsx";
+import Button from "../../components/button.jsx";
 
 
 const MOCK_USER = {
@@ -66,6 +68,10 @@ export default function Profile() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // [NEU]: State für das Lösch-Modal
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+
   // Bestehender State bleibt, aber default bleibt aus MOCK_USER
   const [profilePublic, setProfilePublic] = useState(MOCK_USER.profilePublic);
 
@@ -79,6 +85,7 @@ export default function Profile() {
     let isActive = true;
 
     const token = getToken();
+
 
     // Kein Token => kein Profil für Gäste: Redirect zur Login-Seite, kein API-Call
     if (!token) {
@@ -137,6 +144,41 @@ export default function Profile() {
       isActive = false;
     };
   }, []);
+
+  // [NEU]: Die eigentliche Lösch-Logik
+  const handleDeleteAccount = async (password) => {
+    setDeleteError(""); // Reset error
+
+    // 1. Optional: Hier könnte man client-seitig prüfen, ob ein Passwort eingegeben wurde,
+    // aber das Modal erlaubt eh kein leeres Submit.
+
+    try {
+      // ACHTUNG: Dein Backend-Endpunkt "DELETE /auth/profile" erwartet aktuell 
+      // laut Dokumentation KEIN Passwort im Body. Er löscht einfach den eingeloggten User.
+      // Falls wir das Passwort prüfen wollen, müsste der Backend-Endpunkt angepasst werden.
+      // Für jetzt senden wir den Request so ab, wie das Backend ihn aktuell versteht.
+
+      // Wenn du Backend-Anpassung willst: Sag Bescheid. 
+      // Aktueller Stand Backend: Löscht direkt anhand des Tokens.
+      // Wir "simulieren" den Check hier oder senden es mit, falls das Backend es ignoriert ist es nicht schlimm.
+
+      await requestJson("/auth/profile", {
+        method: "DELETE",
+        // Falls Backend Password-Check unterstützt, würde man es so senden:
+        body: JSON.stringify({ password })
+      }, true);
+
+      // Erfolg:
+      clearToken();
+      setIsDeleteModalOpen(false);
+      navigate("/login"); // Oder auf eine "Goodbye"-Seite
+
+    } catch (err) {
+      console.error("Löschen fehlgeschlagen:", err);
+      setDeleteError(err.message || "Fehler beim Löschen des Accounts.");
+    }
+  };
+
 
   // UI-Daten: Identity kommt aus /auth/profile (username/email/id),
   // Progress kommt aus /profile/progress (level/xp/nextLevelXp).
@@ -293,6 +335,25 @@ export default function Profile() {
                 ))}
               </ul>
             </section>
+
+            {/* [NEU]: Gefahr-Zone unter dem Activity Feed */}
+            <section className="profile-section danger-zone" style={{ display: "flex", justifyContent: "center", marginTop: "3rem", borderTop: "1px solid #333", paddingTop: "1rem" }}>
+              <Button
+                className="btn-danger"
+                onClick={() => setIsDeleteModalOpen(true)}
+                style={{ width: "100%", maxWidth: 400 }} // Schön breit, aber nicht zu breit
+              >
+                ACCOUNT LÖSCHEN
+              </Button>
+            </section>
+            {/* [NEU]: Das Modal einbinden */}
+            <DeleteConfirmationModal
+              isOpen={isDeleteModalOpen}
+              onClose={() => setIsDeleteModalOpen(false)}
+              onConfirm={handleDeleteAccount}
+              errorMsg={deleteError}
+            />
+
           </div>
         </div>
       </section>
