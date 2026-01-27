@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { requestJson } from "../../../services/api.js";
 import styles from "./gameQuiz.module.css";
 
@@ -16,6 +16,47 @@ function GameQuiz() {
   const [loadError, setLoadError] = useState(null);
 
   // Theme wurde entfernt — statisches Aussehen
+
+     // --- NEU: RESULT HANDLING ---
+  useEffect(() => {
+    // Nur ausführen, wenn das Spiel zu Ende ist
+    if (isFinished) {
+      const saveResults = async () => {
+        // Hier holen wir Jennys Token
+        const token = localStorage.getItem("pbToken");
+
+        if (!token) {
+          console.warn("Kein Token gefunden! XP können nicht gespeichert werden.");
+          return;
+        }
+
+        try {
+          // POST Request ans Backend
+          const response = await fetch("http://localhost:3000/games/quiz-01/result", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              // Authentifizierung mit dem Token
+              "Authorization": `Bearer ${token}` 
+            },
+            // Hier senden wir die Punkte (Score)
+            body: JSON.stringify({ score: score }) 
+          });
+
+          if (response.ok) {
+            console.log("Erfolg: XP wurden gespeichert!");
+          } else {
+            console.error("Fehler vom Server beim Speichern:", await response.text());
+          }
+        } catch (error) {
+          console.error("Netzwerkfehler beim Speichern:", error);
+        }
+      };
+
+      saveResults();
+    }
+  }, [isFinished, score]); 
+
 
   // --- LOGIC: START & LOAD QUESTIONS ---
   const handleStart = async () => {
@@ -198,6 +239,8 @@ function GameQuiz() {
       </div>
     );
   };
+
+ 
 
   return (
     <div className={styles.gameContainer}>
