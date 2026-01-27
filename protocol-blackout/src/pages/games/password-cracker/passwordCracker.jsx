@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { requestJson } from "../../../services/api.js";
 import styles from "./passwordCracker.module.css";
 
 const PasswordCracker = ({ onBack }) => {
@@ -17,10 +18,10 @@ const PasswordCracker = ({ onBack }) => {
   // --- STATES ---
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const [selectedTargetId, setSelectedTargetId] = useState(null);
   const [targetsStatus, setTargetsStatus] = useState([]);
-  
+
   const [inputWord, setInputWord] = useState("");
   const [wordList, setWordList] = useState([]);
   const [log, setLog] = useState([]);
@@ -36,19 +37,13 @@ const PasswordCracker = ({ onBack }) => {
   useEffect(() => {
     const fetchTargets = async () => {
       try {
-        // HINWEIS: URL anpassen, falls euer Backend woanders läuft
-        const response = await fetch("http://localhost:3000/games/password-cracker/config");
-
-        if (!response.ok) {
-          throw new Error("Verbindung zum Server fehlgeschlagen");
-        }
-
-        const data = await response.json();
+        // Kein Fallback für PasswordCracker (nur Backend)
+        const data = await requestJson("/games/password-cracker/config");
 
         // Solved-Status initialisieren
         const initializedTargets = data.targets.map((t) => ({
           ...t,
-          solved: false,
+          solved: false
         }));
 
         setTargetsStatus(initializedTargets);
@@ -61,7 +56,9 @@ const PasswordCracker = ({ onBack }) => {
         setIsLoading(false);
       } catch (err) {
         console.error(err);
-        setError("Fehler beim Laden der Zielsysteme. Ist das Backend gestartet?");
+        setError(
+          "Fehler beim Laden der Zielsysteme. Server nicht erreichbar oder Konfiguration fehlt."
+        );
         setIsLoading(false);
       }
     };
@@ -84,7 +81,7 @@ const PasswordCracker = ({ onBack }) => {
       setLog([
         `> Zielsystem: ${selectedTargetId.toUpperCase()}_PC`,
         "> Verbindung hergestellt...",
-        "> Warte auf Input...",
+        "> Warte auf Input..."
       ]);
       setWordList([]);
       setHackProgress(0);
@@ -99,7 +96,7 @@ const PasswordCracker = ({ onBack }) => {
         ...prev,
         "!!! ALARM !!!",
         "!!! INTRUSION DETECTED !!!",
-        "!!! VERBINDUNG GETRENNT !!!",
+        "!!! VERBINDUNG GETRENNT !!!"
       ]);
 
       // Cooldown Timer (10s Strafe)
@@ -113,7 +110,7 @@ const PasswordCracker = ({ onBack }) => {
           setLog((prev) => [
             ...prev,
             "> Neue IP-Adresse generiert.",
-            "> System wieder bereit.",
+            "> System wieder bereit."
           ]);
         }
       }, 1000);
@@ -181,11 +178,11 @@ const PasswordCracker = ({ onBack }) => {
   const finishHack = () => {
     // Finde das aktuelle Target im State
     const currentTarget = targetsStatus.find((t) => t.id === selectedTargetId);
-    
+
     // Falls (warum auch immer) kein Target gefunden wird -> Abbruch
     if (!currentTarget) {
-        setIsHacking(false);
-        return;
+      setIsHacking(false);
+      return;
     }
 
     const userWordsLower = wordList.map((w) => w.toLowerCase());
@@ -240,8 +237,10 @@ const PasswordCracker = ({ onBack }) => {
           <div className={styles.spacer}></div>
         </div>
         <div className={styles.terminal}>
-           <div className={styles.logLine}>{">"} Initiiere Uplink...</div>
-           <div className={styles.logLine}><span className={styles.cursor}>_</span></div>
+          <div className={styles.logLine}>{">"} Initiiere Uplink...</div>
+          <div className={styles.logLine}>
+            <span className={styles.cursor}>_</span>
+          </div>
         </div>
       </div>
     );
@@ -251,14 +250,22 @@ const PasswordCracker = ({ onBack }) => {
     return (
       <div className={styles.gameContainer}>
         <div className={styles.headerRow}>
-            <button onClick={handleBack} className={styles.backBtn}>
-                &lt; Zurück
-            </button>
+          <button onClick={handleBack} className={styles.backBtn}>
+            &lt; Zurück
+          </button>
         </div>
-        <div className={styles.terminal} style={{ borderColor: 'red', color: 'red' }}>
-           <h3>VERBINDUNGSFEHLER</h3>
-           <p>{error}</p>
-           <button onClick={() => window.location.reload()} className={styles.hackBtn}>Neustart versuchen</button>
+        <div
+          className={styles.terminal}
+          style={{ borderColor: "red", color: "red" }}
+        >
+          <h3>VERBINDUNGSFEHLER</h3>
+          <p>{error}</p>
+          <button
+            onClick={() => window.location.reload()}
+            className={styles.hackBtn}
+          >
+            Neustart versuchen
+          </button>
         </div>
       </div>
     );
@@ -299,7 +306,7 @@ const PasswordCracker = ({ onBack }) => {
             className={styles.traceBarFill}
             style={{
               width: `${traceLevel}%`,
-              backgroundColor: traceLevel > 80 ? "red" : activeColor,
+              backgroundColor: traceLevel > 80 ? "red" : activeColor
             }}
           ></div>
         </div>
@@ -329,7 +336,7 @@ const PasswordCracker = ({ onBack }) => {
         {/* Left Panel: Inputs */}
         <div className={styles.panel}>
           <div className={styles.instruction}>
-             Sammle Fragmente (Keywords), um das Passwort zu rekonstruieren.
+            Sammle Fragmente (Keywords), um das Passwort zu rekonstruieren.
           </div>
 
           <form onSubmit={handleAddWord} className={styles.inputGroup}>
@@ -346,9 +353,7 @@ const PasswordCracker = ({ onBack }) => {
 
           <div className={styles.wordList}>
             {wordList.length === 0 && (
-              <span className={styles.emptyInfo}>
-                Keine Fragmente geladen.
-              </span>
+              <span className={styles.emptyInfo}>Keine Fragmente geladen.</span>
             )}
             {wordList.map((word, idx) => (
               <div key={idx} className={styles.wordTag}>
@@ -367,14 +372,17 @@ const PasswordCracker = ({ onBack }) => {
             className={styles.hackBtn}
             onClick={startHack}
             disabled={
-              isLocked || isHacking || wordList.length === 0 || targetsStatus.find(t => t.id === selectedTargetId)?.solved
+              isLocked ||
+              isHacking ||
+              wordList.length === 0 ||
+              targetsStatus.find((t) => t.id === selectedTargetId)?.solved
             }
           >
             {isHacking
               ? `HACKING... ${hackProgress}%`
-              : targetsStatus.find(t => t.id === selectedTargetId)?.solved
-              ? "SYSTEM GEKNACKT"
-              : "EXECUTE HACK_v1.exe"}
+              : targetsStatus.find((t) => t.id === selectedTargetId)?.solved
+                ? "SYSTEM GEKNACKT"
+                : "EXECUTE HACK_v1.exe"}
           </button>
         </div>
 

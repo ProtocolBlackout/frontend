@@ -1,11 +1,11 @@
 import { useState } from "react";
+import { requestJson } from "../../../services/api.js";
 import styles from "./gameQuiz.module.css";
 
 // Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
 // Falls nicht, greift der automatische Fallback auf './questions.js'.
 
 function GameQuiz() {
-
   // --- STATE ---
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -30,26 +30,19 @@ function GameQuiz() {
 
     try {
       // 1. Versuch: Backend abfragen
-      const res = await fetch(`/games/quiz-01/questions`);
+      const data = await requestJson("/games/quiz-01/questions");
 
-      // Prüfen, ob die Antwort wirklich valide und JSON ist
-      const contentType = res.headers.get("content-type");
-      if (res.ok && contentType && contentType.includes("application/json")) {
-        const data = await res.json();
-
-        // Mappe Backend-Daten auf unser Frontend-Format
-        const mapped = data.map((q) => ({
-          question: q.questionText || q.question || "",
-          answers: q.answers || q.options || [],
-          correctIndex: typeof q.correctIndex === "number"
+      // Mappe Backend-Daten auf unser Frontend-Format
+      const mapped = data.map((q) => ({
+        question: q.questionText || q.question || "",
+        answers: q.answers || q.options || [],
+        correctIndex:
+          typeof q.correctIndex === "number"
             ? q.correctIndex
-            : (q.answers || q.options || []).indexOf(q.answer),
-        }));
-        loadedQuestions = mapped;
-      } else {
-        throw new Error("Backend nicht erreichbar oder liefert kein JSON");
-      }
+            : (q.answers || q.options || []).indexOf(q.answer)
+      }));
 
+      loadedQuestions = mapped;
     } catch (err) {
       console.warn("Backend-Load fehlgeschlagen, nutze Fallback:", err.message);
 
@@ -62,13 +55,17 @@ function GameQuiz() {
         const mappedFallback = rawQuestions.map((q) => ({
           question: q.question || q.questionText || "",
           answers: q.options || q.answers || [],
-          correctIndex: typeof q.correctIndex === "number"
-            ? q.correctIndex
-            : (q.options || q.answers || []).indexOf(q.answer),
+          correctIndex:
+            typeof q.correctIndex === "number"
+              ? q.correctIndex
+              : (q.options || q.answers || []).indexOf(q.answer)
         }));
         loadedQuestions = mappedFallback;
       } catch (e) {
-        console.error("Kritischer Fehler: Auch Fallback konnte nicht geladen werden", e);
+        console.error(
+          "Kritischer Fehler: Auch Fallback konnte nicht geladen werden",
+          e
+        );
         setLoadError("Systemfehler: Keine Fragen verfügbar.");
       }
     }
@@ -76,12 +73,14 @@ function GameQuiz() {
     // Abschluss-Logik: Mischen & Setzen
     if (loadedQuestions.length > 0) {
       // Zufällig mischen und auf maximal 10 Fragen begrenzen
-      const shuffled = loadedQuestions.sort(() => Math.random() - 0.5).slice(0, 10);
+      const shuffled = loadedQuestions
+        .sort(() => Math.random() - 0.5)
+        .slice(0, 10);
       setQuestions(shuffled);
       // Wichtig: Fehler löschen, da wir ja jetzt Fragen haben (der Fallback hat funktioniert)
       setLoadError(null);
     } else {
-      if (!loadError) setLoadError("Keine Fragen gefunden.");
+      setLoadError("Keine Fragen gefunden.");
     }
 
     setLoadingQuestions(false);
@@ -119,17 +118,16 @@ function GameQuiz() {
   const renderStartScreen = () => (
     <div className={styles.contentArea}>
       <p className={styles.introText}>
-        &gt; SYSTEM_LOGIN REQUIRED<br /><br />
-        Fordern Sie Zugriff auf das Sicherheits-Quiz an.<br />
+        &gt; SYSTEM_LOGIN REQUIRED
+        <br />
+        <br />
+        Fordern Sie Zugriff auf das Sicherheits-Quiz an.
+        <br />
         10 Fragen. 10 Chancen.
       </p>
 
       {/* Zeige Fehler nur an, wenn wir WIRKLICH keine Fragen laden konnten (auch nicht lokal) */}
-      {loadError && (
-        <div className={styles.errorMsg}>
-          ERROR: {loadError}
-        </div>
-      )}
+      {loadError && <div className={styles.errorMsg}>ERROR: {loadError}</div>}
 
       {loadingQuestions ? (
         <p className={styles.introText}>&gt; Lade Module...</p>
@@ -169,13 +167,22 @@ function GameQuiz() {
 
     return (
       <div className={styles.contentArea}>
-        <div style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginBottom: '10px', color: '#666', fontSize: '0.8rem' }}>
-          <span>FRAGE {currentIndex + 1} / {questions.length}</span>
+        <div
+          style={{
+            width: "100%",
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: "10px",
+            color: "#666",
+            fontSize: "0.8rem"
+          }}
+        >
+          <span>
+            FRAGE {currentIndex + 1} / {questions.length}
+          </span>
         </div>
 
-        <h3 className={styles.questionText}>
-          {currentQuestion.question}
-        </h3>
+        <h3 className={styles.questionText}>{currentQuestion.question}</h3>
 
         <div className={styles.answersContainer}>
           {currentQuestion.answers.map((answer, idx) => (
