@@ -74,6 +74,46 @@ function LoginRegister() {
   // === Register-Submit (POST /auth/register) ===
   // Backend-Response: { message, user } (kein Token)
   async function handleRegisterSubmit(e) {
+
+      try {
+      const payload = {
+        username: register.username,
+        email: register.email,
+        password: register.password
+      };
+
+      const data = await requestJson(
+        "/auth/register",
+        {
+          method: "POST",
+          body: JSON.stringify(payload)
+        },
+        false
+      );
+
+      const baseMessage = data.message ?? "Registrierung erfolgreich";
+      setMessage(
+        `${baseMessage} Bitte E-Mail verifizieren und dann einloggen.`
+      );
+
+      // UX: Nach Registrierung auf Login wechseln
+      setTab("login");
+
+      // === NEU: Registrierungsformular leeren ===
+      setRegister({
+        username: "",
+        email: "",
+        password: "",
+        passwordConfirm: ""
+      });
+      // ==========================================
+
+    } catch (err) {
+      setError(err?.message ?? "Registrierung fehlgeschlagen");
+    } finally {
+      setIsLoading(false);
+    }
+    
     e.preventDefault();
     setError("");
     setMessage("");
