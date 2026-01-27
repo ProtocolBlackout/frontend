@@ -2,10 +2,17 @@ import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styles from "./passwordCracker.module.css";
 
+// HINWEISE: Statisch im Frontend hinterlegt
+const TARGET_HINTS = {
+  jenny: "Jenny, Baujahr 1992, ist der kreative Kopf mit einem Faible für Fantasie und Technik gleichermaßen. Als leidenschaftliche Zockerin und überzeugter A Day to Remember-Fan liebt sie alles, was Herz, Action und Emotion vereint – ob im Game, beim Schreiben oder im Code. Mit ihrem Hintergrund in der Altenpflege bringt sie nicht nur Empathie und Geduld mit, sondern auch die Fähigkeit, Probleme strukturiert und mit ruhiger Hand zu lösen. Doch wer denkt, sie wäre nur ruhig und analytisch, irrt: Wenn sie über Batman oder ihre selbstgeschriebene Fantasy-Trilogie spricht, sprüht sie vor Begeisterung. Zwischen Blau, Rot und Lila findet sie ihre kreative Balance – und im Team sorgt sie mit ihrem Humor, ihrer Hartnäckigkeit und einem guten Schuss Fantasie dafür, dass selbst komplexe Ideen lebendig werden.",
+  lulu: "Lulu, Baujahr 1988, bringt Punkrock, Idealismus und jede Menge Herzblut ins Team. Aufgewachsen in der ehemaligen DDR hat sie ein starkes Bewusstsein für Freiheit, Gerechtigkeit und Selbstbestimmung entwickelt – Werte, die sie in allem, was sie tut, verteidigt und lebt. In ihr steckt ein echtes Naturkind mit einem Sinn für das Wesentliche: frische Luft, ehrliche Worte und kreative Energie. Ihr treuer Hund Xara begleitet sie dabei auf Schritt und Tritt – ob bei langen Spaziergängen im Wald oder beim kreativen Handwerken, das sie als Ausgleich zu Kopf- und Bildschirmarbeit liebt. Trotz (oder gerade wegen) ihrer 1,50 m ist sie im Team als unser „Terrorzwerg“ bekannt – ein Wirbelwind, der nicht aufzuhalten ist, wenn sie sich für eine Idee begeistert. Mit Punkrock im Ohr, einem frischen Blick auf Probleme und einem unerschütterlichen Idealismus schafft sie es, kreative Prozesse in Bewegung zu bringen, wo andere stehen bleiben. Lulu ist unsere Stimme der Freiheit, unser Herz für Authentizität und ein Energiebündel, das jede Routine sprengt.",
+  bella: "Bella, Baujahr 1993, ist unsere leidenschaftliche Slytherin mit einem Herzen für Fantasie und Emotionen. Sie ist die, die Struktur und Gefühl mit einer beeindruckenden Leichtigkeit vereint. Zwischen Kita-Alltag, Code und Dark-Romance-Romanen schafft sie es, rational zu denken und gleichzeitig mit dem Herzen zu führen. Wenn sie sich in ein Projekt stürzt, dann mit voller Leidenschaft – und wenn die Emotionen hochkochen, entstehen daraus oft kleine Explosionen voller Kreativität und Inspiration, die das ganze Team anstecken. Ihre Lieblingsfarbe Grün und die Zahl Sieben begleiten sie wie ein roter Faden – Symbole für Harmonie, Wachstum und Glück. Musikalisch lässt sie sich von Saltatio Mortis und Versengold tragen, die ihren Sinn für Tiefe, Geschichte und Melancholie perfekt widerspiegeln. Im Team bringt Bella Empathie, Organisationstalent und emotionale Tiefe zusammen – und sorgt damit dafür, dass jedes Projekt nicht nur funktioniert, sondern sich auch richtig anfühlt.",
+};
+
 const PasswordCracker = ({ onBack }) => {
   const navigate = useNavigate();
 
-  // Navigation Handler
+  // Navigation Handler (Definition bleibt, wird aber nicht gerendert, da Button entfernt)
   const handleBack = () => {
     if (typeof onBack === "function") {
       onBack();
@@ -32,11 +39,13 @@ const PasswordCracker = ({ onBack }) => {
   const [isLocked, setIsLocked] = useState(false);
   const terminalBodyRef = useRef(null);
 
+  // NEU: Hint-State
+  const [isHintOpen, setIsHintOpen] = useState(false);
+
   // --- DATEN LADEN (Backend Fetch) ---
   useEffect(() => {
     const fetchTargets = async () => {
       try {
-        // HINWEIS: URL anpassen, falls euer Backend woanders läuft
         const response = await fetch("http://localhost:3000/games/password-cracker/config");
 
         if (!response.ok) {
@@ -102,7 +111,6 @@ const PasswordCracker = ({ onBack }) => {
         "!!! VERBINDUNG GETRENNT !!!",
       ]);
 
-      // Cooldown Timer (10s Strafe)
       let countdown = 10;
       const interval = setInterval(() => {
         countdown -= 1;
@@ -142,7 +150,6 @@ const PasswordCracker = ({ onBack }) => {
     if (!wordList.includes(inputWord.trim())) {
       setWordList([...wordList, inputWord.trim()]);
       addLog(`> Fragment geladen: "${inputWord}"`);
-      // Risiko steigt leicht bei jeder Aktion
       setTraceLevel((prev) => Math.min(prev + 5, 100));
     }
     setInputWord("");
@@ -160,11 +167,9 @@ const PasswordCracker = ({ onBack }) => {
 
     setIsHacking(true);
     setHackProgress(5);
-    // Risiko steigt deutlich bei Attacke
     setTraceLevel((prev) => Math.min(prev + 15, 100));
     addLog("> Initialisiere Handshake...");
 
-    // Animations-Phase
     let steps = 0;
     const hexInterval = setInterval(() => {
       steps++;
@@ -179,10 +184,8 @@ const PasswordCracker = ({ onBack }) => {
   };
 
   const finishHack = () => {
-    // Finde das aktuelle Target im State
     const currentTarget = targetsStatus.find((t) => t.id === selectedTargetId);
     
-    // Falls (warum auch immer) kein Target gefunden wird -> Abbruch
     if (!currentTarget) {
         setIsHacking(false);
         return;
@@ -190,7 +193,6 @@ const PasswordCracker = ({ onBack }) => {
 
     const userWordsLower = wordList.map((w) => w.toLowerCase());
 
-    // Check Keywords (kamen vom Backend)
     const foundKeywords = currentTarget.requiredKeywords.filter((req) =>
       userWordsLower.includes(req.toLowerCase())
     );
@@ -202,7 +204,6 @@ const PasswordCracker = ({ onBack }) => {
       setHackProgress(100);
       addLog(`> ACCESS GRANTED.`);
       addLog(`> Credentials extrahiert.`);
-      // Risiko sinkt bei Erfolg
       setTraceLevel(0);
       setTargetsStatus((prev) =>
         prev.map((t) =>
@@ -216,7 +217,6 @@ const PasswordCracker = ({ onBack }) => {
       if (foundKeywords.length > 0) {
         addLog(`> Teilerfolg: ${foundKeywords.length} Segmente verifiziert.`);
       }
-      // Strafe: Trace Level steigt massiv
       setTraceLevel((prev) => Math.min(prev + 20, 100));
       addLog(`> WARNUNG: IDS Aktivität gestiegen!`);
     }
@@ -224,9 +224,13 @@ const PasswordCracker = ({ onBack }) => {
     setIsHacking(false);
   };
 
-  // Helper to get color of current target
   const activeColor =
     targetsStatus.find((t) => t.id === selectedTargetId)?.color || "#00ff41";
+
+  // Helper: Hint Text
+  const hintText = selectedTargetId 
+    ? (TARGET_HINTS[selectedTargetId] || "Kein Hinweis verfügbar.")
+    : "";
 
   // --- RENDER: Lade-Zustand ---
   if (isLoading) {
@@ -247,7 +251,6 @@ const PasswordCracker = ({ onBack }) => {
   if (error) {
     return (
       <div className={styles.gameContainer}>
-       
         <div className={styles.terminal} style={{ borderColor: 'red', color: 'red' }}>
            <h3>VERBINDUNGSFEHLER</h3>
            <p>{error}</p>
@@ -263,9 +266,22 @@ const PasswordCracker = ({ onBack }) => {
       className={styles.gameContainer}
       style={{ "--target-color": activeColor }}
     >
-      {/* Header */}
+      {/* Header OHNE Zurück-Button, aber MIT Hint-Button */}
       <div className={styles.headerRow}>
-        <h2 className={styles.title}>PASSWORD CRACKER v1.0</h2>
+        <h2 className={styles.title}>
+            PASSWORD CRACKER v2.0
+            <span className={styles.hintArea}>
+              <button
+                type="button"
+                className={styles.hintBtn}
+                onClick={() => setIsHintOpen(true)}
+                disabled={isLocked || isHacking}
+                aria-label="Hinweis anzeigen"
+              >
+                ?
+              </button>
+            </span>
+        </h2>
         <div className={styles.spacer}></div>
       </div>
 
@@ -383,6 +399,27 @@ const PasswordCracker = ({ onBack }) => {
           </div>
         </div>
       </div>
+
+      {/* Hint Overlay */}
+      <aside className={styles.hintArea}>
+        {isHintOpen && (
+          <div className={styles.hintOverlay}>
+            <div className={styles.hintOverlayBox}>
+              <button
+                className={styles.hintOverlayClose}
+                onClick={() => setIsHintOpen(false)}
+                aria-label="Overlay schließen"
+              >
+                ×
+              </button>
+              <div className={styles.hintOverlayTitle}>
+                Hinweis: {selectedTargetId?.toUpperCase()}
+              </div>
+              <div className={styles.hintOverlayText}>{hintText}</div>
+            </div>
+          </div>
+        )}
+      </aside>
     </div>
   );
 };
