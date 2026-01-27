@@ -1,37 +1,167 @@
-/* src/components/Header.css */
+/* src/components/header.css */
+
+/* === MOBILE FIRST (Standard: kleine Bildschirme) === */
+
 .pb-header {
   height: 64px;
-  padding: 0 3rem;
+  padding: 0 1.5rem; 
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: space-between; /* Logo links, Hamburger rechts */
   background: var(--bg-dark);
   color: var(--text-white);
   font-family: var(--pb-font-mono);
+  position: relative; 
+  z-index: 1000;
 }
 
 .pb-header__logo {
   font-weight: 600;
   letter-spacing: 0.04em;
   font-family: var(--pb-font-header);
+  text-decoration: none;
+  color: inherit;
+  font-size: 1.2rem;
 }
 
+/* === HAMBURGER BUTTON (Mobile) === */
+.pb-header__hamburger {
+  display: flex; /* Sichtbar auf Mobile */
+  flex-direction: column;
+  gap: 6px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 5px;
+  z-index: 1001;
+}
+
+.pb-header__bar {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: var(--text-white);
+  transition: all 0.3s ease-in-out;
+}
+
+/* Animation X */
+.pb-header__bar.open:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.pb-header__bar.open:nth-child(2) {
+  opacity: 0;
+}
+.pb-header__bar.open:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* === NAVIGATION (Mobile Dropdown) === */
 .pb-header__nav {
-  display: flex;
-  gap: 1.5rem;
-  font-size: 0.9rem;
+  position: absolute;
+  top: 64px;
+  left: 0;
+  width: 100%;
+  background: var(--bg-dark);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  
+  display: none; /* Versteckt */
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 1rem;
 }
 
-.pb-header__nav a,
-.pb-header__nav a:visited,
-.pb-header__nav .nav-link {
+.pb-header__nav.active {
+  display: flex; /* Sichtbar */
+}
+
+/* Links auf Mobile */
+.pb-header__nav a {
   color: inherit;
   text-decoration: none;
   opacity: 0.8;
+  font-size: 1rem;
+  padding: 1rem;
+  width: 100%;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.pb-header__nav a:hover,
-.pb-header__nav .nav-link:hover {
+.pb-header__nav a:hover {
   opacity: 1;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+/* Der Logout Button ist jetzt im Header, aber auf Mobile soll er 
+   vermutlich auch ins Menü? Oder oben sichtbar bleiben? 
+   Meistens will man ihn auf Mobile IM Menü haben.
+   Da du ihn jetzt rausgenommen hast, ist er auf Mobile IMMER sichtbar (neben Hamburger).
+   Das ist okay, aber wenn du ihn verstecken willst, brauchst du media queries. */
+   
+
+/* Mobile Anpassung */
+.pb-header__auth-btn {
+  display: block; /* Immer sichtbar */
+  margin-right: 1rem; /* Etwas Abstand zum Hamburger */
+
+}
+
+
+/* === DESKTOP STYLES (ab 1200px) === */
+@media (min-width: 1200px) {
+  
+  .pb-header {
+    padding: 0 3rem;
+    /* GRID LAYOUT: Die magische Lösung für perfekte Ausrichtung */
+    display: grid;
+    /* 3 Spalten: 
+       1. Logo (so breit wie nötig)
+       2. Navi (1fr = restlicher Platz, perfekt mittig)
+       3. Button (so breit wie nötig) 
+    */
+    grid-template-columns: auto 1fr auto; 
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* Hamburger weg */
+  .pb-header__hamburger {
+    display: none;
+  }
+
+  /* Button wieder sichtbar machen */
+  .pb-header__auth-btn {
+    display: block;
+    margin: 0;
+  }
+
+  /* Navigation Styling */
+  .pb-header__nav {
+    display: flex;
+    position: static;
+    width: auto;
+    border: none;
+    background: transparent;
+    padding: 0;
+    
+    /* ZENTRIERUNG: */
+    flex-direction: row;
+    justify-content: center; /* Links schön mittig im mittleren Grid-Bereich */
+    gap: 2rem; /* Abstand zwischen Links */
+  }
+
+  .pb-header__nav a {
+    width: auto;
+    padding: 0;
+    border: none;
+    font-size: 0.9rem;
+    text-align: center;
+    white-space: nowrap;
+  }
+  
+  .pb-header__nav a:hover {
+    background: transparent;
+    opacity: 1;
+    color: #fff;
+  }
 }
