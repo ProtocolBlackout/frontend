@@ -1,56 +1,84 @@
 import "./header.css";
 import Button from "./button.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getToken, clearToken } from "../services/api.js"
+import { getToken, clearToken } from "../services/api.js";
 import { useEffect, useState } from "react";
 
 function Header() {
   const navigate = useNavigate();
-  const location = useLocation(); //Reagiert auf Seitenwechsel
+  const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  
-  //Prüft bei jedem Seitenwechsel ob eine Token da ist 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   useEffect(() => {
     const token = getToken();
-    setIsLoggedIn(!!token); //!! konvertiert String/null zu <true />
-    <false></false>
+    setIsLoggedIn(!!token);
   }, [location]);
 
-  //Handler für den Button (Login oder Logout)
-   const handleAuthClick = () => {
+  // Wenn sich der Pfad ändert (Navi-Klick erfolgreich), Menü IMMER schließen
+  // Das ist der "Backup"-Mechanismus, falls onClick versagt.
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location]); 
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const closeMenu = () => {
+    console.log("Menü wird geschlossen"); // Debugging
+    setIsMenuOpen(false);
+  };
+
+  const handleAuthClick = () => {
     if (isLoggedIn) {
-      // Wenn eingeloggt -> Token löschen + Redirect zum Login
       clearToken();
       setIsLoggedIn(false);
       navigate("/login");
     } else {
-      // Wenn ausgeloggt -> Zur Login-Seite
       navigate("/login");
     }
+    // closeMenu wird hier nicht zwingend gebraucht, 
+    // da navigate() den location-useEffect (oben) auslöst.
   };
 
   return (
     <header className="pb-header">
-      <div className="pb-header__logo">Protocol Blackout</div>
+      <div className="pb-header__logo-container">
+        <Link to="/home" className="pb-header__logo" onClick={closeMenu}>
+          Protocol Blackout
+        </Link>
+      </div>
 
-      <nav className="pb-header__nav">
-        <Link to="/home">Startseite</Link>
-        <Link to="/history">Geschichte</Link>
-        <Link to="/ethics">Ethisches Hacken</Link>
-        <Link to="/games">Spiele</Link>
-        {/*<Link to="/login">Login</Link>*/}
-        <Link to="/about">Über uns</Link>
-        <Link to="/contact">Kontakt & Impressum</Link>
-        <Link to="/profil">Profil</Link>
-    
+      <button 
+        className="pb-header__hamburger" 
+        onClick={toggleMenu}
+        aria-label="Menü öffnen"
+      >
+        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
+        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
+        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
+      </button>
+
+      {/* Navigation */}
+      <nav className={`pb-header__nav ${isMenuOpen ? "active" : ""}`}>
+        
+        {/* Wir schreiben das onClick explizit an jeden Link */}
+        <Link to="/home" onClick={closeMenu}>Startseite</Link>
+        <Link to="/history" onClick={closeMenu}>Geschichte</Link>
+        <Link to="/ethics" onClick={closeMenu}>Ethisches Hacken</Link>
+        <Link to="/games" onClick={closeMenu}>Spiele</Link>
+        <Link to="/about" onClick={closeMenu}>Über uns</Link>
+        <Link to="/contact" onClick={closeMenu}>Kontakt & Impressum</Link>
+        <Link to="/profil" onClick={closeMenu}>Profil</Link>
+
       </nav>
-
-      {/* Dynamischer Button: Zeigt LOGIN oder LOGOUT */}
-      <Button onClick={handleAuthClick}>
-        {isLoggedIn ? "LOGOUT" : "LOGIN"}
-      </Button>
-      
+        <div className="pb-header__auth-btn">
+            {/* Hier kein onClick am Div nötig, der Button hat seinen Handler */}
+            <Button onClick={handleAuthClick}>
+              {isLoggedIn ? "Logout" : "Login"}
+            </Button>
+        </div>
     </header>
   );
 }
