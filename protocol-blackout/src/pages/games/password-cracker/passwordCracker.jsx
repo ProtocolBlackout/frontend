@@ -233,9 +233,6 @@ const PasswordCracker = ({ onBack }) => {
     return (
       <div className={styles.gameContainer}>
         <div className={styles.headerRow}>
-          <button onClick={handleBack} className={styles.backBtn}>
-            &lt; Zurück
-          </button>
           <h2 className={styles.title}>Verbindung wird aufgebaut...</h2>
           <div className={styles.spacer}></div>
         </div>
@@ -250,11 +247,7 @@ const PasswordCracker = ({ onBack }) => {
   if (error) {
     return (
       <div className={styles.gameContainer}>
-        <div className={styles.headerRow}>
-            <button onClick={handleBack} className={styles.backBtn}>
-                &lt; Zurück
-            </button>
-        </div>
+       
         <div className={styles.terminal} style={{ borderColor: 'red', color: 'red' }}>
            <h3>VERBINDUNGSFEHLER</h3>
            <p>{error}</p>
@@ -272,9 +265,6 @@ const PasswordCracker = ({ onBack }) => {
     >
       {/* Header */}
       <div className={styles.headerRow}>
-        <button onClick={handleBack} className={styles.backBtn}>
-          &lt; Zurück
-        </button>
         <h2 className={styles.title}>PASSWORD CRACKER v1.0</h2>
         <div className={styles.spacer}></div>
       </div>
