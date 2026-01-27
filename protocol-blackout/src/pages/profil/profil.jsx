@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { requestJson, getToken, clearToken } from "../../services/api.js";
 import "./profil.css";
 
+
 const MOCK_USER = {
   username: "User",
   avatar: "./images/defaultAvatar.png", // anpassen
@@ -67,6 +68,11 @@ export default function Profile() {
 
   // Bestehender State bleibt, aber default bleibt aus MOCK_USER
   const [profilePublic, setProfilePublic] = useState(MOCK_USER.profilePublic);
+
+  const handleLogout = () => {
+    clearToken();         // 1. Token aus dem Speicher löschen (aus api.js)
+    navigate("/login");   // 2. Zur Login-Seite navigieren
+  };
 
   // [NEU]: Profil beim Laden abrufen (oder Redirect zur Login-Seite)
   useEffect(() => {
@@ -164,6 +170,8 @@ export default function Profile() {
     return Math.max(0, Math.min(100, Math.round(p)));
   }, [uiUser.xpNow, uiUser.xpMax]);
 
+
+
   return (
     <main className="profile">
       <section className="terminal">
@@ -199,6 +207,8 @@ export default function Profile() {
             {/* Identity */}
             <section className="panel">
               <div className="panel__title">IDENTITY</div>
+
+
 
               <div className="identity">
                 <img

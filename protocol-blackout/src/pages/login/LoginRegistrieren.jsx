@@ -1,11 +1,13 @@
 import { useState } from "react";
 import "./LoginRegistrieren.css";
+import { useNavigate } from "react-router-dom";
 
 // === API-Helper nutzen (Base-URL + JSON + Token) ===
 import { requestJson, setToken } from "../../services/api.js";
 
 function LoginRegister() {
   const [tab, setTab] = useState("login");
+  const navigate = useNavigate();
 
   // nur UI-State (ohne Backend)
   // === Form-State === (ist ein Vorschlag von ChatGPT, nach Anpassung => Jenny fragen, ob ok)
@@ -59,6 +61,9 @@ function LoginRegister() {
       }
 
       setToken(data.token);
+
+      navigate("/profil", { replace: true});
+      
       setMessage(data.message ?? "Login erfolgreich");
     } catch (error) {
       setError(error?.message ?? "Login fehlgeschlagen");
