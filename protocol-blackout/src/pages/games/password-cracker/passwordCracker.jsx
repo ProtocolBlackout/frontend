@@ -5,9 +5,11 @@ import styles from "./passwordCracker.module.css";
 
 // HINWEISE: Statisch im Frontend hinterlegt
 const TARGET_HINTS = {
-  jenny: "Jenny, Baujahr 1992, ist der kreative Kopf mit einem Faible für Fantasie und Technik gleichermaßen. Als leidenschaftliche Zockerin und überzeugter A Day to Remember-Fan liebt sie alles, was Herz, Action und Emotion vereint – ob im Game, beim Schreiben oder im Code. Mit ihrem Hintergrund in der Altenpflege bringt sie nicht nur Empathie und Geduld mit, sondern auch die Fähigkeit, Probleme strukturiert und mit ruhiger Hand zu lösen. Doch wer denkt, sie wäre nur ruhig und analytisch, irrt: Wenn sie über Batman oder ihre selbstgeschriebene Fantasy-Trilogie spricht, sprüht sie vor Begeisterung. Zwischen Blau, Rot und Lila findet sie ihre kreative Balance – und im Team sorgt sie mit ihrem Humor, ihrer Hartnäckigkeit und einem guten Schuss Fantasie dafür, dass selbst komplexe Ideen lebendig werden.",
+  jenny:
+    "Jenny, Baujahr 1992, ist der kreative Kopf mit einem Faible für Fantasie und Technik gleichermaßen. Als leidenschaftliche Zockerin und überzeugter A Day to Remember-Fan liebt sie alles, was Herz, Action und Emotion vereint – ob im Game, beim Schreiben oder im Code. Mit ihrem Hintergrund in der Altenpflege bringt sie nicht nur Empathie und Geduld mit, sondern auch die Fähigkeit, Probleme strukturiert und mit ruhiger Hand zu lösen. Doch wer denkt, sie wäre nur ruhig und analytisch, irrt: Wenn sie über Batman oder ihre selbstgeschriebene Fantasy-Trilogie spricht, sprüht sie vor Begeisterung. Zwischen Blau, Rot und Lila findet sie ihre kreative Balance – und im Team sorgt sie mit ihrem Humor, ihrer Hartnäckigkeit und einem guten Schuss Fantasie dafür, dass selbst komplexe Ideen lebendig werden.",
   lulu: "Lulu, Baujahr 1988, bringt Punkrock, Idealismus und jede Menge Herzblut ins Team. Aufgewachsen in der ehemaligen DDR hat sie ein starkes Bewusstsein für Freiheit, Gerechtigkeit und Selbstbestimmung entwickelt – Werte, die sie in allem, was sie tut, verteidigt und lebt. In ihr steckt ein echtes Naturkind mit einem Sinn für das Wesentliche: frische Luft, ehrliche Worte und kreative Energie. Ihr treuer Hund Xara begleitet sie dabei auf Schritt und Tritt – ob bei langen Spaziergängen im Wald oder beim kreativen Handwerken, das sie als Ausgleich zu Kopf- und Bildschirmarbeit liebt. Trotz (oder gerade wegen) ihrer 1,50 m ist sie im Team als unser „Terrorzwerg“ bekannt – ein Wirbelwind, der nicht aufzuhalten ist, wenn sie sich für eine Idee begeistert. Mit Punkrock im Ohr, einem frischen Blick auf Probleme und einem unerschütterlichen Idealismus schafft sie es, kreative Prozesse in Bewegung zu bringen, wo andere stehen bleiben. Lulu ist unsere Stimme der Freiheit, unser Herz für Authentizität und ein Energiebündel, das jede Routine sprengt.",
-  bella: "Bella, Baujahr 1993, ist unsere leidenschaftliche Slytherin mit einem Herzen für Fantasie und Emotionen. Sie ist die, die Struktur und Gefühl mit einer beeindruckenden Leichtigkeit vereint. Zwischen Kita-Alltag, Code und Dark-Romance-Romanen schafft sie es, rational zu denken und gleichzeitig mit dem Herzen zu führen. Wenn sie sich in ein Projekt stürzt, dann mit voller Leidenschaft – und wenn die Emotionen hochkochen, entstehen daraus oft kleine Explosionen voller Kreativität und Inspiration, die das ganze Team anstecken. Ihre Lieblingsfarbe Grün und die Zahl Sieben begleiten sie wie ein roter Faden – Symbole für Harmonie, Wachstum und Glück. Musikalisch lässt sie sich von Saltatio Mortis und Versengold tragen, die ihren Sinn für Tiefe, Geschichte und Melancholie perfekt widerspiegeln. Im Team bringt Bella Empathie, Organisationstalent und emotionale Tiefe zusammen – und sorgt damit dafür, dass jedes Projekt nicht nur funktioniert, sondern sich auch richtig anfühlt.",
+  bella:
+    "Bella, Baujahr 1993, ist unsere leidenschaftliche Slytherin mit einem Herzen für Fantasie und Emotionen. Sie ist die, die Struktur und Gefühl mit einer beeindruckenden Leichtigkeit vereint. Zwischen Kita-Alltag, Code und Dark-Romance-Romanen schafft sie es, rational zu denken und gleichzeitig mit dem Herzen zu führen. Wenn sie sich in ein Projekt stürzt, dann mit voller Leidenschaft – und wenn die Emotionen hochkochen, entstehen daraus oft kleine Explosionen voller Kreativität und Inspiration, die das ganze Team anstecken. Ihre Lieblingsfarbe Grün und die Zahl Sieben begleiten sie wie ein roter Faden – Symbole für Harmonie, Wachstum und Glück. Musikalisch lässt sie sich von Saltatio Mortis und Versengold tragen, die ihren Sinn für Tiefe, Geschichte und Melancholie perfekt widerspiegeln. Im Team bringt Bella Empathie, Organisationstalent und emotionale Tiefe zusammen – und sorgt damit dafür, dass jedes Projekt nicht nur funktioniert, sondern sich auch richtig anfühlt."
 };
 
 const PasswordCracker = ({ onBack }) => {
@@ -35,6 +37,9 @@ const PasswordCracker = ({ onBack }) => {
   const [isHacking, setIsHacking] = useState(false);
   const [hackProgress, setHackProgress] = useState(0);
 
+  // Ergebnis nur einmal pro Seiten-Session speichern (verhindert Mehrfach-POSTs durch useEffect)
+  const [hasSavedResult, setHasSavedResult] = useState(false);
+
   // Gameplay Mechanics
   const [traceLevel, setTraceLevel] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
@@ -57,6 +62,9 @@ const PasswordCracker = ({ onBack }) => {
 
         setTargetsStatus(initializedTargets);
 
+        // Beim Neuladen der Targets das Save-Flag zurücksetzen
+        setHasSavedResult(false);
+
         if (initializedTargets.length > 0) {
           setSelectedTargetId(initializedTargets[0].id);
         }
@@ -73,6 +81,42 @@ const PasswordCracker = ({ onBack }) => {
 
     fetchTargets();
   }, []);
+
+  // Ergebnis speichern, sobald alle Targets gelöst sind
+  useEffect(() => {
+    // Nur speichern, wenn:
+    // - Daten geladen sind
+    // - noch nicht gespeichert wurde
+    // - überhaupt Targets vorhanden sind
+    if (hasSavedResult) return;
+    if (isLoading) return;
+    if (targetsStatus.length === 0) return;
+
+    const solvedCount = targetsStatus.filter((t) => t.solved).length;
+    const allSolved = solvedCount === targetsStatus.length;
+
+    if (!allSolved) return;
+
+    const saveResult = async () => {
+      try {
+        await requestJson(
+          "/games/cracker/result",
+          {
+            method: "POST",
+            body: JSON.stringify({ score: solvedCount })
+          },
+          true
+        );
+
+        setHasSavedResult(true);
+        console.log("Erfolg: XP wurden gespeichert!");
+      } catch (error) {
+        console.error("Fehler beim Speichern:", error.message);
+      }
+    };
+
+    saveResult();
+  }, [targetsStatus, isLoading, hasSavedResult]);
 
   // --- EFFECTS ---
 
@@ -180,7 +224,7 @@ const PasswordCracker = ({ onBack }) => {
 
   const finishHack = () => {
     const currentTarget = targetsStatus.find((t) => t.id === selectedTargetId);
-    
+
     if (!currentTarget) {
       setIsHacking(false);
       return;
@@ -222,8 +266,8 @@ const PasswordCracker = ({ onBack }) => {
   const activeColor =
     targetsStatus.find((t) => t.id === selectedTargetId)?.color || "#00ff41";
 
-  const hintText = selectedTargetId 
-    ? (TARGET_HINTS[selectedTargetId] || "Kein Hinweis verfügbar.")
+  const hintText = selectedTargetId
+    ? TARGET_HINTS[selectedTargetId] || "Kein Hinweis verfügbar."
     : "";
 
   // --- RENDER: Lade-Zustand ---
@@ -277,18 +321,18 @@ const PasswordCracker = ({ onBack }) => {
     >
       <div className={styles.headerRow}>
         <h2 className={styles.title}>
-            PASSWORD CRACKER v4.3
-            <span className={styles.hintArea}>
-              <button
-                type="button"
-                className={styles.hintBtn}
-                onClick={() => setIsHintOpen(true)}
-                disabled={isLocked || isHacking}
-                aria-label="Hinweis anzeigen"
-              >
-                ?
-              </button>
-            </span>
+          PASSWORD CRACKER v4.3
+          <span className={styles.hintArea}>
+            <button
+              type="button"
+              className={styles.hintBtn}
+              onClick={() => setIsHintOpen(true)}
+              disabled={isLocked || isHacking}
+              aria-label="Hinweis anzeigen"
+            >
+              ?
+            </button>
+          </span>
         </h2>
         <div className={styles.spacer}></div>
       </div>
@@ -318,13 +362,13 @@ const PasswordCracker = ({ onBack }) => {
       </div>
 
       {/* --- ÄNDERUNG HIER: Layout angepasst --- */}
-      <div 
+      <div
         className={styles.targetSelect}
-        style={{ 
-          display: "flex", 
-          width: "100%", 
-          gap: "15px", 
-          justifyContent: "space-between" 
+        style={{
+          display: "flex",
+          width: "100%",
+          gap: "15px",
+          justifyContent: "space-between"
         }}
       >
         {targetsStatus.map((target) => (
@@ -335,10 +379,10 @@ const PasswordCracker = ({ onBack }) => {
             className={`${styles.targetBtn} ${
               selectedTargetId === target.id ? styles.active : ""
             } ${target.solved ? styles.solved : ""}`}
-            style={{ 
+            style={{
               "--target-color": target.color,
-              flex: 1,           // Verteilt Platz gleichmäßig
-              minHeight: "80px"  // Macht Button höher
+              flex: 1, // Verteilt Platz gleichmäßig
+              minHeight: "80px" // Macht Button höher
             }}
           >
             <div className={styles.targetName}>{target.name}</div>
