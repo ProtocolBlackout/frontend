@@ -39,6 +39,16 @@ async function requestJson(path, options = {}, needsAuth = false) {
   const data = await response.json().catch(() => ({}));
 
   if (!response.ok) {
+    if (needsAuth && response.status === 401) {
+      clearToken();
+      window.location.href = "/login";
+
+      const error = new Error("Nicht autorisiert");
+      error.status = 401;
+      error.data = data;
+      throw error;
+    }
+
     const message = data?.message ?? "Request fehlgeschlagen";
     const error = new Error(message);
     error.status = response.status;

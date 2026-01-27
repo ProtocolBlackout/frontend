@@ -10,7 +10,7 @@ function LoginRegister() {
   const navigate = useNavigate();
 
   // nur UI-State (ohne Backend)
-  // === Form-State === (ist ein Vorschlag von ChatGPT, nach Anpassung => Jenny fragen, ob ok)
+  // === Form-State ===
   const [login, setLogin] = useState({ email: "", password: "" });
   const [register, setRegister] = useState({
     username: "",
@@ -62,11 +62,10 @@ function LoginRegister() {
 
       setToken(data.token);
 
-      navigate("/profil", { replace: true});
-      
       setMessage(data.message ?? "Login erfolgreich");
-    } catch (error) {
-      setError(error?.message ?? "Login fehlgeschlagen");
+      navigate("/profil", { replace: true });
+    } catch (err) {
+      setError(err?.message ?? "Login fehlgeschlagen");
     } finally {
       setIsLoading(false);
     }
@@ -110,8 +109,8 @@ function LoginRegister() {
 
       // UX: Nach Registrierung auf Login wechseln
       setTab("login");
-    } catch (error) {
-      setError(error?.message ?? "Registrierung fehlgeschlagen");
+    } catch (err) {
+      setError(err?.message ?? "Registrierung fehlgeschlagen");
     } finally {
       setIsLoading(false);
     }
@@ -135,6 +134,7 @@ function LoginRegister() {
             role="tab"
             aria-selected={tab === "login"}
             className={`auth-tab ${tab === "login" ? "auth-tab--active" : ""}`}
+            disabled={isLoading}
             onClick={() => setTab("login")}
           >
             Login
@@ -145,6 +145,7 @@ function LoginRegister() {
             role="tab"
             aria-selected={tab === "register"}
             className={`auth-tab ${tab === "register" ? "auth-tab--active" : ""}`}
+            disabled={isLoading}
             onClick={() => setTab("register")}
           >
             Registrieren
@@ -174,7 +175,8 @@ function LoginRegister() {
                     value={login.email}
                     onChange={onLoginChange}
                     placeholder="dein.name@mail.de"
-                    autoComplete="username"
+                    autoComplete="email"
+                    required
                   />
                 </label>
 
@@ -188,6 +190,7 @@ function LoginRegister() {
                     onChange={onLoginChange}
                     placeholder="••••••••"
                     autoComplete="current-password"
+                    required
                   />
                 </label>
 
@@ -228,6 +231,7 @@ function LoginRegister() {
                     onChange={onRegisterChange}
                     placeholder="username"
                     autoComplete="username"
+                    required
                   />
                 </label>
 
@@ -241,6 +245,7 @@ function LoginRegister() {
                     onChange={onRegisterChange}
                     placeholder="dein.name@mail.de"
                     autoComplete="email"
+                    required
                   />
                 </label>
 
@@ -254,6 +259,7 @@ function LoginRegister() {
                     onChange={onRegisterChange}
                     placeholder="Neues Passwort"
                     autoComplete="new-password"
+                    required
                   />
                 </label>
 
@@ -267,6 +273,7 @@ function LoginRegister() {
                     onChange={onRegisterChange}
                     placeholder="Nochmal eingeben"
                     autoComplete="new-password"
+                    required
                   />
                 </label>
 

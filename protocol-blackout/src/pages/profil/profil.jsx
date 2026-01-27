@@ -1,7 +1,7 @@
 // === Import: useEffect kommt dazu + API-Helper ===
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { requestJson, getToken, clearToken } from "../../services/api.js";
+import { requestJson, getToken } from "../../services/api.js";
 import "./profil.css";
 
 
@@ -82,6 +82,7 @@ export default function Profile() {
 
     // Kein Token => kein Profil für Gäste: Redirect zur Login-Seite, kein API-Call
     if (!token) {
+      setIsLoading(false);
       navigate("/login");
       return () => {
         isActive = false;
@@ -93,7 +94,7 @@ export default function Profile() {
         if (!isActive) {
           return null;
         }
-        setAuthUser(data.user);
+        setAuthUser(data?.user ?? null);
         setError("");
 
         // [NEU]: Danach Progress laden
@@ -114,15 +115,6 @@ export default function Profile() {
           return;
         }
 
-        // 401 => Token invalid/abgelaufen: Token löschen und Redirect zur Login-Seite
-        if (err?.status === 401) {
-          clearToken();
-          setAuthUser(null);
-          setProgress(null);
-          navigate("/login");
-          return;
-        }
-
         setError(err?.message ?? "Profil konnte nicht geladen werden");
       })
 
@@ -136,7 +128,7 @@ export default function Profile() {
     return () => {
       isActive = false;
     };
-  }, []);
+  }, [navigate]);
 
   // UI-Daten: Identity kommt aus /auth/profile (username/email/id),
   // Progress kommt aus /profile/progress (level/xp/nextLevelXp).
