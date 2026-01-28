@@ -10,6 +10,7 @@ import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
 import Ethics from "./pages/ethik/EthischesHacken.jsx";
 import Login from "./pages/login/LoginRegistrieren.jsx";
+import VerifyEmail from "./pages/login/VerifyEmail.jsx";
 import PasswordResetForm from "./pages/password-reset/PasswordResetForm.jsx";
 import Profil from "./pages/profil/profil.jsx";
 
@@ -224,6 +225,7 @@ function App() {
         <Route path="/ethics" element={<Ethics />} />
         <Route path="/games" element={<Gamespage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/auth/verify-email" element={<VerifyEmail />} />
         <Route path="/password-reset" element={<PasswordResetForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
