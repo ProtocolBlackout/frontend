@@ -1,6 +1,6 @@
 import { useState } from "react";
 import "./LoginRegistrieren.css";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // === API-Helper nutzen (Base-URL + JSON + Token) ===
 import { requestJson, setToken } from "../../services/api.js";
@@ -144,7 +144,11 @@ function LoginRegister() {
             aria-selected={tab === "login"}
             className={`auth-tab ${tab === "login" ? "auth-tab--active" : ""}`}
             disabled={isLoading}
-            onClick={() => setTab("login")}
+            onClick={() => {
+              setTab("login");
+              setError("");
+              setMessage("");
+            }}
           >
             Login
           </button>
@@ -155,7 +159,11 @@ function LoginRegister() {
             aria-selected={tab === "register"}
             className={`auth-tab ${tab === "register" ? "auth-tab--active" : ""}`}
             disabled={isLoading}
-            onClick={() => setTab("register")}
+            onClick={() => {
+              setTab("register");
+              setError("");
+              setMessage("");
+            }}
           >
             Registrieren
           </button>
@@ -204,7 +212,6 @@ function LoginRegister() {
                 </label>
 
                 <div className="auth-actions">
-                  {/* === GEÄNDERT: submit statt button === */}
                   <button
                     className="auth-btn"
                     type="submit"
@@ -212,11 +219,15 @@ function LoginRegister() {
                   >
                     {isLoading ? "..." : "ANMELDEN"}
                   </button>
-                  {/* === GEÄNDERT: Hint nicht mehr "Kein Backend angeschlossen"
-                  === */}
+
                   <p className="auth-hint">
-                    {isLoading ? "Bitte warten..." : "Backend verbunden."}
+                    {isLoading ? "Bitte warten..." : " "}
                   </p>
+
+                  {/* Passwort-Reset (nur Link, Styling kann Frontend später machen) */}
+                  <Link to="/password-reset" className="auth-link">
+                    Passwort vergessen?
+                  </Link>
                 </div>
               </form>
             </section>
