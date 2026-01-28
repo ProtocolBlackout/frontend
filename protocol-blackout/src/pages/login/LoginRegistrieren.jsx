@@ -74,8 +74,19 @@ function LoginRegister() {
   // === Register-Submit (POST /auth/register) ===
   // Backend-Response: { message, user } (kein Token)
   async function handleRegisterSubmit(e) {
+    e.preventDefault();
+    setError("");
+    setMessage("");
 
-      try {
+    // Front-Check
+    if (register.password !== register.passwordConfirm) {
+      setError("Passwörter stimmen nicht überein");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
       const payload = {
         username: register.username,
         email: register.email,
@@ -107,48 +118,6 @@ function LoginRegister() {
         passwordConfirm: ""
       });
       // ==========================================
-
-    } catch (err) {
-      setError(err?.message ?? "Registrierung fehlgeschlagen");
-    } finally {
-      setIsLoading(false);
-    }
-    
-    e.preventDefault();
-    setError("");
-    setMessage("");
-
-    // Frontend-Check
-    if (register.password !== register.passwordConfirm) {
-      setError("Passwörter stimmen nicht überein");
-      return;
-    }
-
-    setIsLoading(true);
-
-    try {
-      const payload = {
-        username: register.username,
-        email: register.email,
-        password: register.password
-      };
-
-      const data = await requestJson(
-        "/auth/register",
-        {
-          method: "POST",
-          body: JSON.stringify(payload)
-        },
-        false
-      );
-
-      const baseMessage = data.message ?? "Registrierung erfolgreich";
-      setMessage(
-        `${baseMessage} Bitte E-Mail verifizieren und dann einloggen.`
-      );
-
-      // UX: Nach Registrierung auf Login wechseln
-      setTab("login");
     } catch (err) {
       setError(err?.message ?? "Registrierung fehlgeschlagen");
     } finally {
@@ -261,7 +230,11 @@ function LoginRegister() {
               {message ? <p className="auth-hint">{message}</p> : null}
 
               {/* === GEÄNDERT: echter Submit-Handler (Register) === */}
-              <form className="auth-form" onSubmit={handleRegisterSubmit}>
+              <form
+                className="auth-form"
+                onSubmit={handleRegisterSubmit}
+                method="post"
+              >
                 <label className="auth-field">
                   <span className="auth-label">BENUTZERNAME</span>
                   <input
