@@ -10,6 +10,7 @@ import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
 import History from "./pages/geschichte/Geschichte.jsx";
 import Ethics from "./pages/ethik/EthischesHacken.jsx";
 import Login from "./pages/login/LoginRegistrieren.jsx";
+import PasswordResetForm from "./pages/password-reset/PasswordResetForm.jsx";
 import Profil from "./pages/profil/profil.jsx";
 
 import { useEffect, useState } from "react";
@@ -87,27 +88,27 @@ function Home() {
     {
       src: "/images/team.png",
       alt: "Slide 1",
-      caption: "Protocol Blackout – deploying ideas since 03:00 AM.",
+      caption: "Protocol Blackout – deploying ideas since 03:00 AM."
     },
     {
       src: "/images/quote1.png",
       alt: "Slide 2",
-      caption: "Matrix Lines Graphic",
+      caption: "Matrix Lines Graphic"
     },
     {
       src: "/images/quote2.png",
       alt: "Slide 3",
-      caption: "Data stream / scan view",
+      caption: "Data stream / scan view"
     },
     {
       src: "/images/quote3.png",
       alt: "Slide 4",
-      caption: "Terminal simulation",
+      caption: "Terminal simulation"
     },
     { src: "/images/quote4.png", alt: "Slide 5", caption: "Network map" },
     { src: "/images/quote5.png", alt: "Slide 6", caption: "Security alert" },
     { src: "/images/quote6.png", alt: "Slide 7", caption: "Log analysis" },
-    { src: "/images/quote7.png", alt: "Slide 8", caption: "Firewall / rules" },
+    { src: "/images/quote7.png", alt: "Slide 8", caption: "Firewall / rules" }
   ];
 
   return (
@@ -223,6 +224,7 @@ function App() {
         <Route path="/ethics" element={<Ethics />} />
         <Route path="/games" element={<Gamespage />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/password-reset" element={<PasswordResetForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/profil" element={<Profil />} />
