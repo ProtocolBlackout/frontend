@@ -218,19 +218,21 @@ function App() {
     <div className="app">
       <Header />
 
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/history" element={<History />} />
-        <Route path="/ethics" element={<Ethics />} />
-        <Route path="/games" element={<Gamespage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/auth/verify-email" element={<VerifyEmail />} />
-        <Route path="/password-reset" element={<PasswordResetForm />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/profil" element={<Profil />} />
-      </Routes>
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/history" element={<History />} />
+          <Route path="/ethics" element={<Ethics />} />
+          <Route path="/games" element={<Gamespage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/auth/verify-email" element={<VerifyEmail />} />
+          <Route path="/password-reset" element={<PasswordResetForm />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/profil" element={<Profil />} />
+        </Routes>
+      </main>
 
       <Footer />
     </div>
