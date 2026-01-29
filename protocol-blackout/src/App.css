@@ -1,5 +1,31 @@
 /* ========= Landing im Ethics-Console Look ========= */
 
+html,
+body {
+  height: 100%;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.app > main {
+  flex: 1;
+}
+
+#root {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1;
+}
+
+
 .home {
   max-width: 1120px;
   margin: 0 auto;
