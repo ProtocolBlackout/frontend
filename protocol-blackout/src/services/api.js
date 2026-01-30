@@ -30,13 +30,34 @@ async function requestJson(path, options = {}, needsAuth = false) {
       headers.Authorization = `Bearer ${token}`;
     }
   }
+  // =======================================================
+  let response;
 
-  const response = await fetch(`${backendBaseUrl}${path}`, {
-    ...options,
-    headers
-  });
+  try {
+    response = await fetch(`${backendBaseUrl}${path}`, {
+      ...options,
+      headers
+    });
+  } catch (err) {
+    // Netzwerk/Cold-Start (render): Fetch kann komplett fehlschlagen (kein HTTP-Status vorhanden)
+    const error = new Error(
+      "Netzwerkfehler - Server nicht erreichbar (ggf. Render Cold Start)"
+    );
+    error.cause = err;
+    throw error;
+  }
 
-  const data = await response.json().catch(() => ({}));
+  const contentType = response.headers.get("content-type") ?? "";
+
+  let data = {};
+  let rawText = "";
+
+  if (contentType.includes("application/json")) {
+    data = await response.json().catch(() => ({}));
+  } else {
+    // Manchmal kommt HTML/Text statt JSON (z.B. bei Server-/Plattformfehlern)
+    rawText = await response.text().catch(() => "");
+  }
 
   if (!response.ok) {
     if (needsAuth && response.status === 401) {
@@ -49,7 +70,18 @@ async function requestJson(path, options = {}, needsAuth = false) {
       throw error;
     }
 
-    const message = data?.message ?? "Request fehlgeschlagen";
+    const fallbackMessage =
+      response.status >= 500
+        ? `Serverfehler (HTTP ${response.status}) - ggf. Render Cold Start`
+        : `Request fehlgeschlagen (HTTP ${response.status})`;
+
+    const textMessage =
+      rawText && !rawText.trim().startsWith("<")
+        ? rawText.trim().slice(0, 140)
+        : "";
+
+    const message = data?.message || textMessage || fallbackMessage;
+
     const error = new Error(message);
     error.status = response.status;
     error.data = data;
