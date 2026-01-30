@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import { requestJson } from "../../../services/api.js";
+import { requestJson, getToken } from "../../../services/api.js";
 import styles from "./gameQuiz.module.css";
+
+const PENDING_RESULT_KEY = "pbPendingGameResult";
 
 // Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
 // Falls nicht, greift der automatische Fallback auf './questions.js'.
@@ -22,6 +24,22 @@ function GameQuiz() {
     // Nur ausführen, wenn das Spiel zu Ende ist
     if (!isFinished) return;
 
+    // Gastmodus: Wenn kein Token da ist, Ergebnis zwischenspeichern
+    // und NICHT speichern (sonst werden Gäste nach Spielende automatisch zur Login-Seite geschickt).
+    const token = getToken();
+
+    if (!token) {
+      sessionStorage.setItem(
+        PENDING_RESULT_KEY,
+        JSON.stringify({
+          gameId: "quiz",
+          score,
+          createdAt: Date.now()
+        })
+      );
+      return;
+    }
+
     const saveResults = async () => {
       try {
         // Wichtig:
@@ -40,9 +58,7 @@ function GameQuiz() {
 
         console.log("Erfolg: XP wurden gespeichert!");
       } catch (error) {
-        // Wenn User nicht eingeloggt ist, passiert meist:
-        // - Backend antwortet 401
-        // - requestJson handled Redirect /login bereits
+        // Falls Speichern fehlschlägt (z. B. Netzwerk/Backend nicht erreichbar oder Token abgelaufen)
         console.error("Fehler beim Speichern:", error.message);
       }
     };

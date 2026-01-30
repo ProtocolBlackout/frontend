@@ -1,11 +1,10 @@
 // === Import: useEffect kommt dazu + API-Helper ===
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { requestJson, getToken } from "../../services/api.js";
+import { requestJson, getToken, clearToken } from "../../services/api.js";
 import "./profil.css";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal.jsx";
 import Button from "../../components/button.jsx";
-
 
 const MOCK_USER = {
   username: "User",
@@ -76,16 +75,15 @@ export default function Profile() {
   const [profilePublic, setProfilePublic] = useState(MOCK_USER.profilePublic);
 
   const handleLogout = () => {
-    clearToken();         // 1. Token aus dem Speicher löschen (aus api.js)
-    navigate("/login");   // 2. Zur Login-Seite navigieren
+    clearToken(); // 1. Token aus dem Speicher löschen (aus api.js)
+    navigate("/login"); // 2. Zur Login-Seite navigieren
   };
 
-  // [NEU]: Profil beim Laden abrufen (oder Redirect zur Login-Seite)
+  // Profil beim Laden abrufen (oder Redirect zur Login-Seite)
   useEffect(() => {
     let isActive = true;
 
     const token = getToken();
-
 
     // Kein Token => kein Profil für Gäste: Redirect zur Login-Seite, kein API-Call
     if (!token) {
@@ -145,32 +143,34 @@ export default function Profile() {
     // aber das Modal erlaubt eh kein leeres Submit.
 
     try {
-      // ACHTUNG: Dein Backend-Endpunkt "DELETE /auth/profile" erwartet aktuell 
+      // ACHTUNG: Dein Backend-Endpunkt "DELETE /auth/profile" erwartet aktuell
       // laut Dokumentation KEIN Passwort im Body. Er löscht einfach den eingeloggten User.
       // Falls wir das Passwort prüfen wollen, müsste der Backend-Endpunkt angepasst werden.
       // Für jetzt senden wir den Request so ab, wie das Backend ihn aktuell versteht.
 
-      // Wenn du Backend-Anpassung willst: Sag Bescheid. 
+      // Wenn du Backend-Anpassung willst: Sag Bescheid.
       // Aktueller Stand Backend: Löscht direkt anhand des Tokens.
       // Wir "simulieren" den Check hier oder senden es mit, falls das Backend es ignoriert ist es nicht schlimm.
 
-      await requestJson("/auth/profile", {
-        method: "DELETE",
-        // Falls Backend Password-Check unterstützt, würde man es so senden:
-        body: JSON.stringify({ password })
-      }, true);
+      await requestJson(
+        "/auth/profile",
+        {
+          method: "DELETE",
+          // Falls Backend Password-Check unterstützt, würde man es so senden:
+          body: JSON.stringify({ password })
+        },
+        true
+      );
 
       // Erfolg:
       clearToken();
       setIsDeleteModalOpen(false);
       navigate("/login"); // Oder auf eine "Goodbye"-Seite
-
     } catch (err) {
       console.error("Löschen fehlgeschlagen:", err);
       setDeleteError(err.message || "Fehler beim Löschen des Accounts.");
     }
   };
-
 
   // UI-Daten: Identity kommt aus /auth/profile (username/email/id),
   // Progress kommt aus /profile/progress (level/xp/nextLevelXp).
@@ -203,8 +203,6 @@ export default function Profile() {
     const p = (uiUser.xpNow / uiUser.xpMax) * 100;
     return Math.max(0, Math.min(100, Math.round(p)));
   }, [uiUser.xpNow, uiUser.xpMax]);
-
-
 
   return (
     <main className="profile">
@@ -241,8 +239,6 @@ export default function Profile() {
             {/* Identity */}
             <section className="panel">
               <div className="panel__title">IDENTITY</div>
-
-
 
               <div className="identity">
                 <img
@@ -329,7 +325,16 @@ export default function Profile() {
             </section>
 
             {/* [NEU]: Gefahr-Zone unter dem Activity Feed */}
-            <section className="profile-section danger-zone" style={{ display: "flex", justifyContent: "center", marginTop: "3rem", borderTop: "1px solid #333", paddingTop: "1rem" }}>
+            <section
+              className="profile-section danger-zone"
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginTop: "3rem",
+                borderTop: "1px solid #333",
+                paddingTop: "1rem"
+              }}
+            >
               <Button
                 className="btn-danger"
                 onClick={() => setIsDeleteModalOpen(true)}
@@ -345,7 +350,6 @@ export default function Profile() {
               onConfirm={handleDeleteAccount}
               errorMsg={deleteError}
             />
-
           </div>
         </div>
       </section>
