@@ -1,7 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { requestJson } from "../../../services/api.js";
+import { requestJson, getToken } from "../../../services/api.js";
 import styles from "./passwordCracker.module.css";
+
+const PENDING_RESULT_KEY = "pbPendingGameResult";
 
 // HINWEISE: Statisch im Frontend hinterlegt
 const TARGET_HINTS = {
@@ -97,6 +99,22 @@ const PasswordCracker = ({ onBack }) => {
 
     if (!allSolved) return;
 
+    // Gastmodus: Wenn kein Token da ist, Ergebnis zwischenspeichern und Retry verhindern.
+    // Sonst würde requestJson beim Speichern scheitern und Gäste würden auf /login umgeleitet.
+    const token = getToken();
+    if (!token) {
+      sessionStorage.setItem(
+        PENDING_RESULT_KEY,
+        JSON.stringify({
+          gameId: "cracker",
+          score: solvedCount,
+          createdAt: Date.now()
+        })
+      );
+      setHasSavedResult(true);
+      return;
+    }
+
     const saveResult = async () => {
       try {
         await requestJson(
@@ -111,6 +129,7 @@ const PasswordCracker = ({ onBack }) => {
         setHasSavedResult(true);
         console.log("Erfolg: XP wurden gespeichert!");
       } catch (error) {
+        // Falls Speichern fehlschlägt (z. B. Netzwerk/Backend nicht erreichbar oder Token abgelaufen)
         console.error("Fehler beim Speichern:", error.message);
       }
     };

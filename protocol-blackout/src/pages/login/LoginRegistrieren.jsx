@@ -5,6 +5,8 @@ import { Link, useNavigate } from "react-router-dom";
 // === API-Helper nutzen (Base-URL + JSON + Token) ===
 import { requestJson, setToken } from "../../services/api.js";
 
+const PENDING_RESULT_KEY = "pbPendingGameResult";
+
 function LoginRegister() {
   const [tab, setTab] = useState("login");
   const navigate = useNavigate();
@@ -34,6 +36,66 @@ function LoginRegister() {
     setRegister((prev) => ({ ...prev, [name]: value }));
   }
 
+  async function submitPendingGameResult() {
+    const raw = sessionStorage.getItem(PENDING_RESULT_KEY);
+    if (!raw) return;
+
+    let pending = null;
+
+    try {
+      pending = JSON.parse(raw);
+    } catch (err) {
+      // Falls Müll drin steht, aufräumen
+      sessionStorage.removeItem(PENDING_RESULT_KEY);
+      return;
+    }
+
+    // Minimal-Validierung (damit nichts kaputt geht)
+    const scoreNumber = Number(pending?.score);
+    const createdAt = Number(pending?.createdAt);
+
+    if (!Number.isFinite(scoreNumber) || scoreNumber < 0) {
+      sessionStorage.removeItem(PENDING_RESULT_KEY);
+      return;
+    }
+
+    // Pending nach 1 Stunde verwerfen (verhindert uralte "Leichen")
+    if (Number.isFinite(createdAt) && Date.now() - createdAt > 60 * 60 * 1000) {
+      sessionStorage.removeItem(PENDING_RESULT_KEY);
+      return;
+    }
+
+    let path = "";
+
+    if (pending?.gameId === "quiz") path = "/games/quiz/result";
+    if (pending?.gameId === "cracker") path = "/games/cracker/result";
+
+    if (!path) {
+      sessionStorage.removeItem(PENDING_RESULT_KEY);
+      return;
+    }
+
+    try {
+      await requestJson(
+        path,
+        {
+          method: "POST",
+          body: JSON.stringify({ score: scoreNumber })
+        },
+        true
+      );
+
+      // Nur löschen, wenn das Speichern wirklich geklappt hat
+      sessionStorage.removeItem(PENDING_RESULT_KEY);
+    } catch (err) {
+      // Login soll trotzdem funktionieren -> pending bleibt drin und kann nochmal versucht werden
+      console.warn(
+        "Pending-Ergebnis konnte nach Login nicht gespeichert werden:",
+        err?.message
+      );
+    }
+  }
+
   // === Login-Submit (POST /auth/login) ===
   // Backend-Response: { message, token, user }
   async function handleLoginSubmit(e) {
@@ -61,6 +123,9 @@ function LoginRegister() {
       }
 
       setToken(data.token);
+
+      // Falls der User als Gast ein Spiel beendet hat, Ergebnis jetzt nachträglich speichern
+      await submitPendingGameResult();
 
       setMessage(data.message ?? "Login erfolgreich");
       navigate("/profil", { replace: true });
@@ -241,11 +306,7 @@ function LoginRegister() {
               {message ? <p className="auth-hint">{message}</p> : null}
 
               {/* === GEÄNDERT: echter Submit-Handler (Register) === */}
-              <form
-                className="auth-form"
-                onSubmit={handleRegisterSubmit}
-                method="post"
-              >
+              <form className="auth-form" onSubmit={handleRegisterSubmit}>
                 <label className="auth-field">
                   <span className="auth-label">BENUTZERNAME</span>
                   <input
