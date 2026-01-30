@@ -4,15 +4,15 @@
 
 .pb-header {
   height: 64px;
-  padding: 0 1.5rem; 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 1.5rem;
+  border-bottom: 1px solid var(--accent-border-soft);
   display: flex;
   align-items: center;
   justify-content: space-between; /* Logo links, Hamburger rechts */
   background: var(--bg-dark);
   color: var(--text-white);
   font-family: var(--pb-font-mono);
-  position: relative; 
+  position: relative;
   z-index: 1000;
 }
 
@@ -26,6 +26,7 @@
 }
 
 /* === HAMBURGER BUTTON (Mobile) === */
+
 .pb-header__hamburger {
   display: flex; /* Sichtbar auf Mobile */
   flex-direction: column;
@@ -49,22 +50,24 @@
 .pb-header__bar.open:nth-child(1) {
   transform: translateY(8px) rotate(45deg);
 }
+
 .pb-header__bar.open:nth-child(2) {
   opacity: 0;
 }
+
 .pb-header__bar.open:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
 }
 
 /* === NAVIGATION (Mobile Dropdown) === */
+
 .pb-header__nav {
   position: absolute;
   top: 64px;
   left: 0;
   width: 100%;
   background: var(--bg-dark);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  
+  border-bottom: 1px solid var(--accent-border-soft);
   display: none; /* Versteckt */
   flex-direction: column;
   align-items: center;
@@ -84,42 +87,34 @@
   padding: 1rem;
   width: 100%;
   text-align: center;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--accent-border-softer);
 }
 
 .pb-header__nav a:hover {
   opacity: 1;
-  background-color: rgba(255, 255, 255, 0.05);
+  background-color: var(--surface-4);
 }
-
-/* Der Logout Button ist jetzt im Header, aber auf Mobile soll er 
-   vermutlich auch ins Menü? Oder oben sichtbar bleiben? 
-   Meistens will man ihn auf Mobile IM Menü haben.
-   Da du ihn jetzt rausgenommen hast, ist er auf Mobile IMMER sichtbar (neben Hamburger).
-   Das ist okay, aber wenn du ihn verstecken willst, brauchst du media queries. */
-   
 
 /* Mobile Anpassung */
 .pb-header__auth-btn {
   display: block; /* Immer sichtbar */
   margin-right: 1rem; /* Etwas Abstand zum Hamburger */
-
 }
-
 
 /* === DESKTOP STYLES (ab 1200px) === */
 @media (min-width: 1200px) {
-  
   .pb-header {
     padding: 0 3rem;
+
     /* GRID LAYOUT: Die magische Lösung für perfekte Ausrichtung */
     display: grid;
-    /* 3 Spalten: 
-       1. Logo (so breit wie nötig)
-       2. Navi (1fr = restlicher Platz, perfekt mittig)
-       3. Button (so breit wie nötig) 
+
+    /* 3 Spalten:
+      1. Logo (so breit wie nötig)
+      2. Navi (1fr = restlicher Platz, perfekt mittig)
+      3. Button (so breit wie nötig)
     */
-    grid-template-columns: auto 1fr auto; 
+    grid-template-columns: auto 1fr auto;
     align-items: center;
     gap: 2rem;
   }
@@ -143,7 +138,7 @@
     border: none;
     background: transparent;
     padding: 0;
-    
+
     /* ZENTRIERUNG: */
     flex-direction: row;
     justify-content: center; /* Links schön mittig im mittleren Grid-Bereich */
@@ -158,10 +153,10 @@
     text-align: center;
     white-space: nowrap;
   }
-  
+
   .pb-header__nav a:hover {
     background: transparent;
     opacity: 1;
-    color: #fff;
+    color: var(--text-white);
   }
 }
