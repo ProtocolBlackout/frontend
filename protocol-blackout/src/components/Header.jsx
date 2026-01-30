@@ -3,6 +3,7 @@ import Button from "./button.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getToken, clearToken } from "../services/api.js";
 import { useEffect, useState } from "react";
+import ThemeToggle from "./ThemeToggle.jsx"
 
 function Header() {
   const navigate = useNavigate();
@@ -79,6 +80,7 @@ function Header() {
               {isLoggedIn ? "Logout" : "Login"}
             </Button>
         </div>
+        <ThemeToggle />
     </header>
   );
 }
