@@ -12,16 +12,10 @@
 .auth-console {
   max-width: 720px;
   margin: 0 auto;
-  border: 1px solid rgba(0, 255, 208, 0.4);
-  background: radial-gradient(
-      circle at 0 0,
-      rgba(0, 255, 208, 0.09),
-      transparent 60%
-    ),
-    #050505;
-  box-shadow:
-    0 0 0 1px rgba(0, 255, 208, 0.15),
-    0 0 40px rgba(0, 255, 208, 0.16);
+  border: 1px solid var(--accent-border);
+  background: radial-gradient(circle at 0 0, rgba(0, 255, 208, 0.09), transparent 60%),
+    var(--surface-1);
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.15), 0 0 40px rgba(0, 255, 208, 0.16);
 }
 
 .auth-console__header {
@@ -29,8 +23,8 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.55rem 0.8rem;
-  border-bottom: 1px solid rgba(0, 255, 208, 0.25);
-  background: rgba(0, 0, 0, 0.9);
+  border-bottom: 1px solid var(--accent-border-soft);
+  background: var(--surface-2);
 }
 
 .auth-console__title {
@@ -42,7 +36,7 @@
 .auth-console__dots {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
-  color: rgba(244, 244, 255, 0.55);
+  color: var(--text-muted-2);
 }
 
 .auth-console__body {
@@ -55,14 +49,14 @@
   display: flex;
   gap: 0.4rem;
   padding: 0.6rem 0.8rem;
-  border-bottom: 1px solid rgba(0, 255, 208, 0.18);
-  background: rgba(0, 0, 0, 0.75);
+  border-bottom: 1px solid var(--accent-border-softer);
+  background: var(--surface-3);
 }
 
 .auth-tab {
   border: 1px solid rgba(244, 244, 255, 0.14);
   background: transparent;
-  color: rgba(244, 244, 255, 0.8);
+  color: var(--text-muted);
   font-family: var(--pb-font-mono);
   font-size: 0.78rem;
   letter-spacing: 0.14em;
@@ -75,7 +69,7 @@
 
 .auth-tab:hover {
   transform: translateY(-1px);
-  border-color: rgba(0, 255, 208, 0.35);
+  border-color: var(--accent-border);
 }
 
 .auth-tab--active {
@@ -92,7 +86,7 @@
 
 .auth-lead {
   margin: 0 0 1rem;
-  color: rgba(244, 244, 255, 0.75);
+  color: var(--text-muted);
 }
 
 /* ===== Form (terminal style) ===== */
@@ -127,7 +121,7 @@
   outline: none;
   border-bottom: 1px solid rgba(0, 255, 208, 0.55);
   background: transparent;
-  color: rgba(244, 244, 255, 0.9);
+  color: var(--text-white);
   padding: 0.5rem 0.1rem;
   font-family: var(--pb-font-mono);
   transition: border-color 0.12s ease, box-shadow 0.12s ease;
@@ -139,7 +133,7 @@
 }
 
 .auth-input::placeholder {
-  color: rgba(244, 244, 255, 0.45);
+  color: var(--text-muted-2);
 }
 
 /* Actions */
@@ -175,7 +169,7 @@
 .auth-hint {
   margin: 0;
   font-size: 0.9rem;
-  color: rgba(244, 244, 255, 0.6);
+  color: var(--text-muted-2);
 }
 
 /* Responsive */

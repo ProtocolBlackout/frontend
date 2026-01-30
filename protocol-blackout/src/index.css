@@ -1,8 +1,8 @@
 /* Pixelify Sans (Variable) */
 @font-face {
   font-family: "Pixelify Sans";
-  src: url("/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf")
-    format("truetype");
+  src: url("/fonts/Pixelify_Sans/PixelifySans-VariableFont_wght.ttf") 
+  format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -11,8 +11,8 @@
 /* Roboto (Variable) */
 @font-face {
   font-family: "Roboto";
-  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf")
-    format("truetype");
+  src: url("/fonts/Roboto/Roboto-VariableFont_wdth,wght.ttf") 
+  format("truetype");
   font-style: normal;
   font-weight: 100 1000;
   font-display: swap;
@@ -20,8 +20,8 @@
 
 @font-face {
   font-family: "Roboto";
-  src: url("/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf")
-    format("truetype");
+  src: url("/fonts/Roboto/Roboto-Italic-VariableFont_wdth,wght.ttf") 
+  format("truetype");
   font-style: italic;
   font-weight: 100 1000;
   font-display: swap;
@@ -30,8 +30,8 @@
 /* Roboto Mono (Variable) */
 @font-face {
   font-family: "Roboto Mono";
-  src: url("/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf")
-    format("truetype");
+  src: url("/fonts/Roboto_Mono/RobotoMono-VariableFont_wght.ttf") 
+  format("truetype");
   font-style: normal;
   font-weight: 100 900;
   font-display: swap;
@@ -40,26 +40,18 @@
 @font-face {
   font-family: "Roboto Mono";
   src: url("/fonts/Roboto_Mono/RobotoMono-Italic-VariableFont_wght.ttf")
-    format("truetype");
+   format("truetype");
   font-style: italic;
   font-weight: 100 900;
   font-display: swap;
 }
 
 :root {
- 
   --pb-font-content: "Roboto";
   --pb-font-header: "Pixelify Sans", var(--pb-font-content);
-  --pb-font-mono: "Roboto Mono",
-    ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Monaco,
-    Consolas,
-    "Liberation Mono",
-    monospace;
+  --pb-font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", monospace;
 
-  
   --bg-dark: #111111;
   --green-neon: #00ff00;
   --blue-deep: #0033aa;
@@ -67,6 +59,46 @@
   --purple-alt: #a42db4;
   --cyan-neon: #00ffd0;
   --text-white: #f4f4ff;
+}
+
+:root[data-theme="dark"] {
+  --surface-1: #050505;
+  --surface-2: rgba(0, 0, 0, 0.9);
+  --surface-3: rgba(0, 0, 0, 0.75);
+  --surface-4: rgba(0, 0, 0, 0.35);
+  --surface-5: rgba(0, 0, 0, 0.65);
+
+  --accent-border: rgba(0, 255, 208, 0.4);
+  --accent-border-soft: rgba(0, 255, 208, 0.25);
+  --accent-border-softer: rgba(0, 255, 208, 0.2);
+
+  --text-muted: rgba(244, 244, 255, 0.85);
+  --text-muted-2: rgba(244, 244, 255, 0.55);
+
+  /* Optional: im Dark Theme bleiben diese 3 wie du sie schon hattest */
+  --bg-dark: #111111;
+  --text-white: #f4f4ff;
+  --cyan-neon: #00ffd0;
+}
+
+:root[data-theme="light"] {
+  --surface-1: #ffffff;
+  --surface-2: rgba(255, 255, 255, 0.9);
+  --surface-3: rgba(255, 255, 255, 0.8);
+  --surface-4: rgba(0, 0, 0, 0.06);
+  --surface-5: rgba(0, 0, 0, 0.12);
+
+  --accent-border: rgba(0, 122, 103, 0.35);
+  --accent-border-soft: rgba(0, 122, 103, 0.22);
+  --accent-border-softer: rgba(0, 122, 103, 0.16);
+
+  --text-muted: rgba(17, 17, 17, 0.82);
+  --text-muted-2: rgba(17, 17, 17, 0.55);
+
+  /* Light Theme Overrides (wie bei dir) */
+  --bg-dark: #f4f4ff;
+  --text-white: #111111;
+  --cyan-neon: #007a67;
 }
 
 body {
