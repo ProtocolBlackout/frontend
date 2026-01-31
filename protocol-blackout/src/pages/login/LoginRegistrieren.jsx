@@ -67,7 +67,9 @@ function LoginRegister() {
 
     let path = "";
 
-    if (pending?.gameId === "quiz") path = "/games/quiz/result";
+    if (pending?.gameId === "quiz" || pending?.gameId === "quiz-01") {
+      path = "/games/quiz/result";
+    }
     if (pending?.gameId === "cracker") path = "/games/cracker/result";
 
     if (!path) {

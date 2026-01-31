@@ -17,6 +17,21 @@ function GameQuiz() {
   const [loadingQuestions, setLoadingQuestions] = useState(false);
   const [loadError, setLoadError] = useState(null);
 
+  // --- RESULT UI STATE (Speicherstatus + Progress) ---
+  // ERKLÄRUNG saveStatus:
+  // Dieser State steuert, was im UI nach Spielende angezeigt wird.
+  // Wir zeigen damit an, ob das Ergebnis gespeichert wurde und ob der Progress aktualisiert wurde.
+  //
+  // Mögliche Werte:
+  // idle  = noch nichts passiert (Standard)
+  // guest = nicht eingeloggt (Ergebnis wird nur als pending in sessionStorage gespeichert)
+  // saving = Ergebnis wird gerade ans Backend gesendet (POST /games/quiz/result)
+  // saved = Ergebnis gespeichert + Progress erfolgreich neu geladen (GET /profile/progress)
+  // error = Speichern oder Progress-Laden fehlgeschlagen
+  const [saveStatus, setSaveStatus] = useState("idle");
+  const [saveError, setSaveError] = useState("");
+  const [progressAfterSave, setProgressAfterSave] = useState(null);
+
   // Theme wurde entfernt — statisches Aussehen
 
   // --- RESULT HANDLING (Ergebnis speichern) ---
@@ -37,11 +52,22 @@ function GameQuiz() {
           createdAt: Date.now()
         })
       );
+
+      // UI-Status setzen, damit wir dem User eine klare Info geben können
+      setSaveStatus("guest");
+      setSaveError("");
+      setProgressAfterSave(null);
+
       return;
     }
 
     const saveResults = async () => {
       try {
+        // UI: Speichervorgang startet
+        setSaveStatus("saving");
+        setSaveError("");
+        setProgressAfterSave(null);
+
         // Wichtig:
         // - KEIN hardcoded localhost
         // - KEIN manuelles Token-Handling
@@ -56,10 +82,20 @@ function GameQuiz() {
           true
         );
 
-        console.log("Erfolg: XP wurden gespeichert!");
+        // Nach dem Speichern direkt den aktuellen Progress neu vom Backend holen,
+        // damit der User sofort sieht, dass XP/Level wirklich angekommen sind.
+        const progressData = await requestJson(
+          "/profile/progress",
+          { method: "GET" },
+          true
+        );
+
+        // UI: Progress anzeigen + Status auf "saved"
+        setProgressAfterSave(progressData?.progress ?? null);
+        setSaveStatus("saved");
       } catch (error) {
-        // Falls Speichern fehlschlägt (z. B. Netzwerk/Backend nicht erreichbar oder Token abgelaufen)
-        console.error("Fehler beim Speichern:", error.message);
+        setSaveStatus("error");
+        setSaveError(error?.message ?? "Fehler beim Speichern");
       }
     };
 
@@ -74,6 +110,11 @@ function GameQuiz() {
     setScore(0);
     setLoadingQuestions(true);
     setLoadError(null);
+
+    // Save-UI zurücksetzen (falls User direkt nochmal startet)
+    setSaveStatus("idle");
+    setSaveError("");
+    setProgressAfterSave(null);
 
     let loadedQuestions = [];
 
@@ -159,6 +200,11 @@ function GameQuiz() {
     setCurrentIndex(0);
     setScore(0);
     setQuestions([]);
+
+    // Save-UI zurücksetzen
+    setSaveStatus("idle");
+    setSaveError("");
+    setProgressAfterSave(null);
   };
 
   // --- RENDER HELPERS ---
@@ -202,6 +248,32 @@ function GameQuiz() {
           ? "> ZUGRIFF GEWÄHRT. Systemintegrität bestätigt."
           : "> ZUGRIFF VERWEIGERT. Sicherheitslücken erkannt."}
       </p>
+
+      {/* Speichern/Progress-Status im gleichen Terminal-Stil anzeigen */}
+      {saveStatus === "guest" && (
+        <p className={styles.resultText}>
+          &gt; Gastmodus: Logge dich ein, um XP zu speichern.
+        </p>
+      )}
+
+      {saveStatus === "saving" && (
+        <p className={styles.resultText}>
+          &gt; Speichere Ergebnis und aktualisiere Fortschritt…
+        </p>
+      )}
+
+      {saveStatus === "saved" && progressAfterSave && (
+        <p className={styles.resultText}>
+          &gt; Fortschritt aktualisiert: Level {progressAfterSave.level} | XP{" "}
+          {progressAfterSave.xp}
+        </p>
+      )}
+
+      {saveStatus === "error" && (
+        <p className={styles.resultText}>
+          &gt; Speichern fehlgeschlagen: {saveError}
+        </p>
+      )}
 
       <button className={styles.actionBtn} onClick={handleRestart}>
         [ NEUSTART ]
