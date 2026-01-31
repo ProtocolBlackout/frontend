@@ -97,7 +97,8 @@ export default function Gamespage() {
 
   // Falls Backend-IDs von lokalen IDs abweichen, mappen wir sie hier
   const aliasMap = {
-    "password-cracker": "cracker"
+    "password-cracker": "cracker",
+    "quiz-01": "quiz"
   };
 
   // Backend liefert Metadaten, Frontend liefert weiterhin die Render-Implementierung

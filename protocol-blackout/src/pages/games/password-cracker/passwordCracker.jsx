@@ -42,6 +42,20 @@ const PasswordCracker = ({ onBack }) => {
   // Ergebnis nur einmal pro Seiten-Session speichern (verhindert Mehrfach-POSTs durch useEffect)
   const [hasSavedResult, setHasSavedResult] = useState(false);
 
+  // RESULT UI STATE (Speicherstatus + Progress)
+  // ERKLÄRUNG saveStatus:
+  // Dieser State steuert, was im UI angezeigt wird, wenn das Ergebnis gespeichert wurde.
+  //
+  // Mögliche Werte:
+  // idle  = noch nichts passiert (Standard)
+  // guest = nicht eingeloggt (pending in sessionStorage)
+  // saving = Ergebnis wird gerade ans Backend gesendet
+  // saved = Ergebnis gespeichert + Progress neu geladen
+  // error = Speichern oder Progress-Laden fehlgeschlagen
+  const [saveStatus, setSaveStatus] = useState("idle");
+  const [saveError, setSaveError] = useState("");
+  const [progressAfterSave, setProgressAfterSave] = useState(null);
+
   // Gameplay Mechanics
   const [traceLevel, setTraceLevel] = useState(0);
   const [isLocked, setIsLocked] = useState(false);
@@ -66,6 +80,11 @@ const PasswordCracker = ({ onBack }) => {
 
         // Beim Neuladen der Targets das Save-Flag zurücksetzen
         setHasSavedResult(false);
+
+        // Save-UI zurücksetzen (wenn Config neu geladen wird)
+        setSaveStatus("idle");
+        setSaveError("");
+        setProgressAfterSave(null);
 
         if (initializedTargets.length > 0) {
           setSelectedTargetId(initializedTargets[0].id);
@@ -111,12 +130,23 @@ const PasswordCracker = ({ onBack }) => {
           createdAt: Date.now()
         })
       );
+
+      // UI-Status setzen (Gastmodus)
+      setSaveStatus("guest");
+      setSaveError("");
+      setProgressAfterSave(null);
+
       setHasSavedResult(true);
       return;
     }
 
     const saveResult = async () => {
       try {
+        // UI: Speichervorgang startet
+        setSaveStatus("saving");
+        setSaveError("");
+        setProgressAfterSave(null);
+
         await requestJson(
           "/games/cracker/result",
           {
@@ -126,11 +156,21 @@ const PasswordCracker = ({ onBack }) => {
           true
         );
 
+        // Nach dem Speichern direkt Progress neu laden (XP/Level sofort sichtbar)
+        const progressData = await requestJson(
+          "/profile/progress",
+          { method: "GET" },
+          true
+        );
+
+        setProgressAfterSave(progressData?.progress ?? null);
+        setSaveStatus("saved");
+
         setHasSavedResult(true);
         console.log("Erfolg: XP wurden gespeichert!");
       } catch (error) {
-        // Falls Speichern fehlschlägt (z. B. Netzwerk/Backend nicht erreichbar oder Token abgelaufen)
-        console.error("Fehler beim Speichern:", error.message);
+        setSaveStatus("error");
+        setSaveError(error?.message ?? "Fehler beim Speichern");
       }
     };
 
@@ -416,6 +456,32 @@ const PasswordCracker = ({ onBack }) => {
           <div className={styles.instruction}>
             Sammle Fragmente (Keywords), um das Passwort zu rekonstruieren.
           </div>
+
+          {/* Speichern/Progress-Status */}
+          {saveStatus === "guest" && (
+            <div className={styles.instruction}>
+              &gt; Gastmodus: Logge dich ein, um XP zu speichern.
+            </div>
+          )}
+
+          {saveStatus === "saving" && (
+            <div className={styles.instruction}>
+              &gt; Speichere Ergebnis und aktualisiere Fortschritt…
+            </div>
+          )}
+
+          {saveStatus === "saved" && progressAfterSave && (
+            <div className={styles.instruction}>
+              &gt; Fortschritt aktualisiert: Level {progressAfterSave.level} |
+              XP {progressAfterSave.xp}
+            </div>
+          )}
+
+          {saveStatus === "error" && (
+            <div className={styles.instruction}>
+              &gt; Speichern fehlgeschlagen: {saveError}
+            </div>
+          )}
 
           <form onSubmit={handleAddWord} className={styles.inputGroup}>
             <input
