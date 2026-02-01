@@ -1,4 +1,4 @@
-// === Import: useEffect kommt dazu + API-Helper ===
+// === Imports: React Hooks + Routing + API-Helper ===
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { requestJson, getToken, clearToken } from "../../services/api.js";
