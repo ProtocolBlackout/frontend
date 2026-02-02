@@ -79,6 +79,8 @@
   --bg-dark: #111111;
   --text-white: #f4f4ff;
   --cyan-neon: #00ffd0;
+
+   --about-flipcard-text: var(--green-neon);
 }
 
 :root[data-theme="light"] {
@@ -99,6 +101,8 @@
   --bg-dark: #f4f4ff;
   --text-white: #111111;
   --cyan-neon: #007a67;
+
+  --about-flipcard-text: var(--blue-deep);
 }
 
 body {

@@ -45,28 +45,34 @@ export const ThemeProvider = ({ children }) => {
   }, [theme]);
 
   const toggleTheme = async () => {
-    const current = theme;
-    const next = current === "dark" ? "light" : "dark";
+  const current = theme;
+  const next = current === "dark" ? "light" : "dark";
 
-    setTheme(next);
+  setTheme(next);
 
-    const token = getToken();
-    if (!token) return;
+  const token = getToken();
+  if (!token) return;
 
-    try {
-      await updatePreferredTheme(next);
-    } catch (err) {
-      setTheme(current);
-      throw err;
-    }
-  };
+  try {
+    await updatePreferredTheme(next);
+  } catch (err) {
+    setTheme(current);
+    throw err;
+  }
+};
+
 
   const value = useMemo(
     () => ({ theme, toggleTheme, isSyncing }),
     [theme, isSyncing]
   );
 
-  return <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>;
+  return (
+  <ThemeContext.Provider value={value}>
+    {children}
+  </ThemeContext.Provider>
+);
+
 };
 
 export const useTheme = () => {
