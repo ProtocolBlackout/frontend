@@ -51,3 +51,18 @@
   --text-muted: rgba(17, 17, 17, 0.82);
   --text-muted-2: rgba(17, 17, 17, 0.55);
 }
+
+/* Dark */
+:root[data-theme="dark"] .flipCard__bio,
+:root[data-theme="dark"] .flipCard__role,
+:root[data-theme="dark"] .tag {
+  color: var(--green-neon);
+}
+
+/* Light */
+:root[data-theme="light"] .flipCard__bio,
+:root[data-theme="light"] .flipCard__role,
+:root[data-theme="light"] .tag {
+  color: var(--blue-deep);
+}
+
