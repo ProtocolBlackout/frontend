@@ -20,7 +20,7 @@ function Header() {
   // Das ist der "Backup"-Mechanismus, falls onClick versagt.
   useEffect(() => {
     setIsMenuOpen(false);
-  }, [location]); 
+  }, [location]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -51,8 +51,8 @@ function Header() {
         </Link>
       </div>
 
-      <button 
-        className="pb-header__hamburger" 
+      <button
+        className="pb-header__hamburger"
         onClick={toggleMenu}
         aria-label="Menü öffnen"
       >
@@ -63,7 +63,7 @@ function Header() {
 
       {/* Navigation */}
       <nav className={`pb-header__nav ${isMenuOpen ? "active" : ""}`}>
-        
+
         {/* Wir schreiben das onClick explizit an jeden Link */}
         <Link to="/home" onClick={closeMenu}>Startseite</Link>
         <Link to="/history" onClick={closeMenu}>Geschichte</Link>
@@ -74,13 +74,15 @@ function Header() {
         <Link to="/profil" onClick={closeMenu}>Profil</Link>
 
       </nav>
-        <div className="pb-header__auth-btn">
-            {/* Hier kein onClick am Div nötig, der Button hat seinen Handler */}
-            <Button onClick={handleAuthClick}>
-              {isLoggedIn ? "Logout" : "Login"}
-            </Button>
-        </div>
+      <div className="pb-header__right">
         <ThemeToggle />
+
+        <div className="pb-header__auth-btn">
+          <Button onClick={handleAuthClick}>
+            {isLoggedIn ? "Logout" : "Login"}
+          </Button>
+        </div>
+      </div>
     </header>
   );
 }

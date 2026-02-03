@@ -159,4 +159,19 @@
     opacity: 1;
     color: var(--text-white);
   }
+
+ 
+  .pb-header__right {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px; /* Abstand Toggle <-> Login */
+  }
+
+  /* Optional: verhindert Zeilenumbruch rechts */
+  .pb-header__right {
+    white-space: nowrap;
+  }
 }
+
+
