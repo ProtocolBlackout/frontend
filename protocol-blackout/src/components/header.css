@@ -6,14 +6,17 @@
   height: 64px;
   padding: 0 1.5rem;
   border-bottom: 1px solid var(--accent-border-soft);
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Logo links, Hamburger rechts */
   background: var(--bg-dark);
   color: var(--text-white);
   font-family: var(--pb-font-mono);
   position: relative;
   z-index: 1000;
+
+  /* FIX: Grid, damit Mitte wirklich Mitte ist */
+  display: grid;
+  grid-template-columns: auto 1fr auto; /* Logo | Hamburger | Right */
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .pb-header__logo {
@@ -36,6 +39,9 @@
   cursor: pointer;
   padding: 5px;
   z-index: 1001;
+
+  /* FIX: mittig im Grid */
+  justify-self: center;
 }
 
 .pb-header__bar {
@@ -57,6 +63,25 @@
 
 .pb-header__bar.open:nth-child(3) {
   transform: translateY(-8px) rotate(-45deg);
+}
+
+/* === RIGHT SIDE (ThemeToggle + Login/Logout) === */
+
+.pb-header__right {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  white-space: nowrap;
+
+  /* FIX: rechts im Grid */
+  justify-self: end;
+}
+
+/* Mobile Anpassung (Auth Button Container) */
+.pb-header__auth-btn {
+  display: block; /* Immer sichtbar */
+  margin-right: 0; /* FIX: kein Push Richtung Hamburger */
 }
 
 /* === NAVIGATION (Mobile Dropdown) === */
@@ -95,13 +120,8 @@
   background-color: var(--surface-4);
 }
 
-/* Mobile Anpassung */
-.pb-header__auth-btn {
-  display: block; /* Immer sichtbar */
-  margin-right: 1rem; /* Etwas Abstand zum Hamburger */
-}
-
 /* === DESKTOP STYLES (ab 1200px) === */
+
 @media (min-width: 1200px) {
   .pb-header {
     padding: 0 3rem;
@@ -110,9 +130,9 @@
     display: grid;
 
     /* 3 Spalten:
-      1. Logo (so breit wie nötig)
-      2. Navi (1fr = restlicher Platz, perfekt mittig)
-      3. Button (so breit wie nötig)
+       1. Logo (so breit wie nötig)
+       2. Navi (1fr = restlicher Platz, perfekt mittig)
+       3. Button/Right (so breit wie nötig)
     */
     grid-template-columns: auto 1fr auto;
     align-items: center;
@@ -160,18 +180,11 @@
     color: var(--text-white);
   }
 
- 
   .pb-header__right {
     display: inline-flex;
     align-items: center;
     justify-content: flex-end;
     gap: 12px; /* Abstand Toggle <-> Login */
-  }
-
-  /* Optional: verhindert Zeilenumbruch rechts */
-  .pb-header__right {
-    white-space: nowrap;
+    white-space: nowrap; /* Optional: verhindert Zeilenumbruch rechts */
   }
 }
-
-
