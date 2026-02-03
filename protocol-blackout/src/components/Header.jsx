@@ -4,6 +4,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getToken, clearToken } from "../services/api.js";
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle.jsx"
+import AccountDeletedPage from "../pages/goodbye/Goodbye.jsx";
 
 function Header() {
   const navigate = useNavigate();
@@ -72,6 +73,9 @@ function Header() {
         <Link to="/about" onClick={closeMenu}>Über uns</Link>
         <Link to="/contact" onClick={closeMenu}>Kontakt & Impressum</Link>
         <Link to="/profil" onClick={closeMenu}>Profil</Link>
+        
+        {/* Link zur Goodybyeseite kann zu Testzwecken wieder einegtragen werden */}
+        {/* <Link to="/account-deleted">Goodbye (Test)</Link> */}
 
       </nav>
       <div className="pb-header__right">

@@ -13,6 +13,7 @@ import Login from "./pages/login/LoginRegistrieren.jsx";
 import VerifyEmail from "./pages/login/VerifyEmail.jsx";
 import PasswordResetForm from "./pages/password-reset/PasswordResetForm.jsx";
 import Profil from "./pages/profil/profil.jsx";
+import AccountDeletedPage from "./pages/goodbye/Goodbye.jsx";
 
 import { useEffect, useState } from "react";
 
@@ -231,6 +232,10 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/profil" element={<Profil />} />
+
+            {/* Route zur Goodybyeseite kann zu Testzwecken wieder einegtragen werden */}
+          <Route path="/goodbye" element={<AccountDeletedPage />} />
+
         </Routes>
       </main>
 
