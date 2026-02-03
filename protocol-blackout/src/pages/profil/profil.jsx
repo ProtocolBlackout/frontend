@@ -152,7 +152,7 @@ export default function Profile() {
       // Aktueller Stand Backend: Löscht direkt anhand des Tokens.
       // Wir "simulieren" den Check hier oder senden es mit, falls das Backend es ignoriert ist es nicht schlimm.
 
-      await requestJson(
+      const result = await requestJson(
         "/auth/profile",
         {
           method: "DELETE",
@@ -165,7 +165,7 @@ export default function Profile() {
       // Erfolg:
       clearToken();
       setIsDeleteModalOpen(false);
-      navigate("/login"); // Oder auf eine "Goodbye"-Seite
+     navigate(result?.nextPath ?? "/goodbye"); // Oder auf eine "Goodbye"-Seite
     } catch (err) {
       console.error("Löschen fehlgeschlagen:", err);
       setDeleteError(err.message || "Fehler beim Löschen des Accounts.");
