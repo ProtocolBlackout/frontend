@@ -1,0 +1,63 @@
+.wrapper {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Icon-Button im retroBtn-Stil (cyan default) */
+.toggle {
+  /* gleiche Variablen-Strategie wie .retroBtn */
+  --btn-color: var(--cyan-neon);
+  --btn-bg-hover: rgba(0, 255, 208, 0.14);
+  --btn-glow: rgba(0, 255, 208, 0.45);
+
+  border-radius: 0;
+  border: 1px solid var(--btn-color);
+  background: transparent;
+  color: var(--btn-color);
+
+  width: 42px;
+  height: 36px;
+  padding: 0;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: var(--pb-font-mono);
+  cursor: pointer;
+
+  transition: background 0.12s ease, box-shadow 0.12s ease, transform 0.12s ease;
+}
+
+.toggle:hover {
+  background: var(--btn-bg-hover);
+  box-shadow: 0 0 18px var(--btn-glow);
+  transform: translateY(-1px);
+}
+
+.toggle:active {
+  transform: translateY(0);
+}
+
+.toggle:focus-visible {
+  outline: 2px solid var(--btn-color);
+  outline-offset: 3px;
+}
+
+.toggle:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.icon {
+  font-size: 16px;
+  line-height: 1;
+}
+
+.error {
+  margin: 0;
+  font-size: 12px;
+  color: #ff5a5a;
+}
