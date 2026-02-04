@@ -17,6 +17,9 @@ import AccountDeletedPage from "./pages/goodbye/Goodbye.jsx";
 
 import { useEffect, useState } from "react";
 
+// Wakeup-Call (Render Cold Start)
+import { requestJson } from "./services/api.js";
+
 function ImageSlideshow({ images, autoPlay = true, interval = 20000 }) {
   const [index, setIndex] = useState(0);
 
@@ -215,9 +218,55 @@ function Home() {
 }
 
 function App() {
+  // Render Cold Start: Hinweis erst nach kurzer Wartezeit zeigen
+  const [isWakingUp, setIsWakingUp] = useState(false);
+  const [showColdStartHint, setShowColdStartHint] = useState(false);
+
+  useEffect(() => {
+    // Pro Tab nur einmal wecken (kein nerviges Dauer-Pingen)
+    const alreadyWarmed = sessionStorage.getItem("pbBackendWarmed") === "1";
+    if (alreadyWarmed) return;
+
+    sessionStorage.setItem("pbBackendWarmed", "1");
+
+    let isDone = false;
+    setIsWakingUp(true);
+
+    // Hinweis erst nach 2.5s anzeigen, wenn es wirklich dauert
+    const hintTimerId = setTimeout(() => {
+      if (!isDone) setShowColdStartHint(true);
+    }, 2500);
+
+    // Wakeup-Call ans Backend
+    requestJson("/health")
+      .catch(() => {
+        // Absichtlich still: UI-Hinweis deckt das ab
+      })
+      .finally(() => {
+        isDone = true;
+        clearTimeout(hintTimerId);
+        setShowColdStartHint(false);
+        setIsWakingUp(false);
+      });
+
+    return () => clearTimeout(hintTimerId);
+  }, []);
+
   return (
     <div className="app">
       <Header />
+
+      {/* Freundlicher Hinweis nur wenn der Wakeup wirklich dauert (Text angepasst) */}
+      {isWakingUp && showColdStartHint ? (
+        <div className="coldStartBanner" role="status" aria-live="polite">
+          <strong>Einen Moment bitte:</strong> Wir starten den Server gerade.
+          Das kann bis zu 1–2 Minuten dauern – bitte kurz dranbleiben.
+          <span className="coldStartBanner__note">
+            Wenn du die Seite eine Weile nicht nutzt, kann das später nochmal
+            passieren.
+          </span>
+        </div>
+      ) : null}
 
       <main>
         <Routes>
@@ -233,9 +282,8 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/profil" element={<Profil />} />
 
-            {/* Route zur Goodybyeseite kann zu Testzwecken wieder einegtragen werden */}
+          {/* Route zur Goodybyeseite kann zu Testzwecken wieder einegtragen werden */}
           <Route path="/goodbye" element={<AccountDeletedPage />} />
-
         </Routes>
       </main>
 
