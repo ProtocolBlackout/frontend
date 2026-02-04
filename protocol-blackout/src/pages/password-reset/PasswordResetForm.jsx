@@ -156,7 +156,7 @@ function PasswordResetForm() {
                     {isLoading ? "..." : "LINK ANFORDERN"}
                   </button>
 
-                  <Link to="/login" className="auth-link">
+                  <Link to="/login" className="auth-link retroBtn auth-forgotBtn">
                     Zurück zum Login
                   </Link>
                 </div>

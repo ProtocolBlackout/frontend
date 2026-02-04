@@ -78,6 +78,9 @@
   box-shadow: 0 0 16px rgba(0, 255, 208, 0.25);
 }
 
+.auth-forgotBtn {
+  text-decoration: none;
+ }
 /* ===== Panel ===== */
 
 .auth-panel {
@@ -171,6 +174,7 @@
   font-size: 0.9rem;
   color: var(--text-muted-2);
 }
+
 
 /* Responsive */
 
