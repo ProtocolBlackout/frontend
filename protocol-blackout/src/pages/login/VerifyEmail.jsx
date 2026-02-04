@@ -90,7 +90,7 @@ function VerifyEmail() {
             {message ? <p className="auth-hint">{message}</p> : null}
 
             <div className="auth-actions">
-              <Link to="/login" className="auth-link">
+              <Link to="/login" className="auth-link retroBtn">
                 Zurück zum Login
               </Link>
             </div>
