@@ -1,0 +1,366 @@
+.about {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: clamp(2rem, 4vw, 4rem) clamp(1rem, 3vw, 2rem);
+  color: var(--text-white);
+  background: var(--bg-dark);
+  font-family: var(--pb-font-content);
+}
+
+.about__header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+}
+
+.about__header h1 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  letter-spacing: 0.1em;
+  font-family: var(--pb-font-mono);
+  text-transform: uppercase;
+  color: var(--text-white);
+}
+
+.about__header p {
+  margin: 0 auto;
+  max-width: 70ch;
+  color: var(--text-muted);
+}
+
+.about__team h2 {
+  margin: 0 0 1rem;
+  font-family: var(--pb-font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 1rem;
+  color: var(--text-muted);
+}
+
+.teamGrid {
+  display: grid;
+  gap: 1.1rem;
+  grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+}
+
+.memberTile {
+  border: 1px solid var(--accent-border-soft);
+  border-radius: 0;
+  overflow: hidden;
+  background: radial-gradient(
+      circle at 0 0,
+      rgba(0, 255, 208, 0.1),
+      transparent 60%
+    ),
+    var(--surface-3);
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.12s ease, border-color 0.12s ease,
+    box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.memberTile:hover {
+  transform: translateY(-1px);
+  border-color: var(--accent-border);
+  box-shadow: 0 0 18px rgba(0, 255, 208, 0.18);
+}
+
+.memberTile__avatar {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  display: block;
+  background: var(--surface-1);
+}
+
+.memberTile__meta {
+  padding: 0.9rem 1rem 1.05rem;
+}
+
+.memberTile__name {
+  font-family: var(--pb-font-mono);
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+  color: var(--text-white);
+}
+
+.memberTile__role {
+  font-family: var(--pb-font-content);
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  line-height: 1.35;
+}
+
+/* Modal */
+.aboutModal {
+  width: min(1100px, calc(100vw - 2rem));
+  padding: 0;
+  border: 1px solid var(--accent-border);
+  border-radius: 0;
+  color: var(--text-white);
+  background: var(--surface-2);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.1), 0 0 40px rgba(0, 255, 208, 0.12);
+}
+
+.aboutModal::backdrop {
+  background: rgba(0, 0, 0, 0.72);
+}
+
+.aboutModal::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.1;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(244, 244, 255, 0.08) 0px,
+    rgba(244, 244, 255, 0.08) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.aboutModal__content {
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.aboutModal__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.9rem;
+}
+
+.aboutModal__title {
+  font-family: var(--pb-font-mono);
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-white);
+}
+
+.aboutModal__close {
+  border-radius: 0;
+  border: 1px solid rgba(244, 244, 255, 0.18);
+  background: rgba(255, 255, 255, 0.06);
+  color: inherit;
+  padding: 0.45rem 0.8rem;
+  cursor: pointer;
+}
+
+/* Flip Card */
+.flipCard {
+  perspective: 1400px;
+  -webkit-perspective: 1400px;
+}
+
+.flipCard__inner {
+  position: relative;
+  width: 100%;
+  min-height: clamp(420px, 72vh, 760px);
+  border-radius: 0;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  transition: transform 650ms ease;
+}
+
+.flipCard__inner.isFlipped {
+  transform: rotateY(180deg);
+}
+
+.flipCard__face {
+  position: absolute;
+  inset: 0;
+  border-radius: 0;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* FRONT */
+.flipCard__front {
+  transform: rotateY(0deg);
+  border: 1px solid var(--accent-border-soft);
+  background: var(--surface-1);
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.1), 0 0 30px rgba(0, 255, 208, 0.14);
+}
+
+.flipCard__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  filter: contrast(1.08) saturate(1.05) brightness(0.95);
+}
+
+.flipCard__front::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(
+      ellipse at center,
+      transparent 55%,
+      rgba(0, 0, 0, 0.6) 100%
+    ),
+    radial-gradient(circle at 0 0, rgba(0, 255, 208, 0.1), transparent 55%);
+  opacity: 0.95;
+}
+
+.flipCard__front::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.14;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.08) 0px,
+    rgba(255, 255, 255, 0.08) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+/* BACK: Terminal */
+.flipCard__back {
+  transform: rotateY(180deg);
+  background: var(--surface-1);
+  border: 1px solid var(--accent-border);
+  overflow: hidden;
+  font-family: var(--pb-font-mono);
+  color: var(--green-neon);
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.1), 0 0 36px rgba(0, 255, 208, 0.12);
+}
+
+/* overlays dürfen KEINE clicks fressen */
+.flipCard__back::before,
+.flipCard__back::after {
+  pointer-events: none; /* <- Fix: Klick geht durch zum Button/Text */
+}
+
+.flipCard__back::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.16;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(0, 255, 0, 0.1) 0px,
+    rgba(0, 255, 0, 0.1) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+}
+
+.flipCard__back::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.9;
+}
+
+.flipCard__text {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  height: 100%;
+  padding: 0;
+}
+
+/* Terminal Header */
+.flipCard__text::before {
+  content: "pb://about-us -- user=guest -- shell=zsh";
+  display: block;
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid var(--accent-border-soft);
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 255, 208, 0.1),
+    rgba(0, 0, 0, 0) 
+  );
+  color: var(--blue-deep);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-size: 0.78rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.flipCard__role,
+.flipCard__bio,
+.flipCard__tags {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.flipCard__role {
+  padding-top: 1rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+ color: var(--about-flipcard-text);
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.12);
+}
+
+.flipCard__bio {
+  margin: 0.8rem 0 0;
+  padding-bottom: 0.8rem;
+  line-height: 1.7;
+color: var(--about-flipcard-text);
+  text-shadow: 0 0 10px rgba(0, 255, 0, 0.08);
+}
+
+.flipCard__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: center;
+  padding-bottom: 3.4rem;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  border-radius: 0;
+  border: 1px solid rgba(0, 255, 0, 0.22);
+  background: rgba(0, 255, 0, 0.05);
+ color: var(--about-flipcard-text);
+  font-size: 0.78rem;
+  line-height: 1;
+  font-family: var(--pb-font-mono);
+}
+
+/* Button muss über allem liegen */
+.flipCard__hint {
+  position: absolute;
+  left: 50%;
+  bottom: 0.75rem;
+  transform: translateX(-50%);
+  z-index: 5; /* <- Fix: sicher über Text/Overlays */
+  padding: 0.35rem 1.1rem;
+  border-radius: 0;
+  border: 1px solid rgba(0, 255, 0, 0.35);
+  background: rgba(0, 0, 0, 0.85);
+  color: var(--green-neon);
+  font-family: var(--pb-font-mono);
+  font-size: 0.85rem;
+  cursor: pointer;
+  box-shadow: 0 0 0 1px rgba(0, 255, 0, 0.08), 0 0 18px rgba(0, 255, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipCard__inner {
+    transition: none;
+  }
+}

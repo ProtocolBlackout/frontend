@@ -1,0 +1,227 @@
+/* Ethisches Hacking – eine Konsole mit drei Blöcken */
+
+.ethics {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 4rem 2rem 5rem;
+  color: var(--text-white);
+  background: var(--bg-dark);
+  font-family: var(--pb-font-mono);
+}
+
+/* Console */
+
+.ethics-console {
+  max-width: 920px;
+  margin: 0 auto;
+  border: 1px solid var(--accent-border);
+  background: radial-gradient(circle at 0 0, rgba(0, 255, 208, 0.09), transparent 60%),
+    var(--surface-1);
+  box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.15), 0 0 40px rgba(0, 255, 208, 0.16);
+}
+
+/* Header */
+
+.ethics-console__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.55rem 0.8rem;
+  border-bottom: 1px solid var(--accent-border-soft);
+  background: var(--surface-2);
+}
+
+.ethics-console__title {
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  color: var(--cyan-neon);
+}
+
+.ethics-console__dots {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  color: var(--text-muted-2);
+}
+
+/* Body */
+
+.ethics-console__body {
+  padding: 1.4rem 1.2rem 1.4rem;
+}
+
+/* Blöcke innerhalb der Konsole */
+
+.ethics-block + .ethics-block {
+  margin-top: 1.8rem;
+  padding-top: 1.2rem;
+  border-top: 1px solid var(--accent-border-softer);
+}
+
+.ethics-block__heading {
+  margin: 0 0 0.7rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+/* Overview-Zeilen */
+
+.ethics-console__row + .ethics-console__row {
+  margin-top: 1.1rem;
+}
+
+.ethics-console__label {
+  display: block;
+  font-size: 0.8rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+  margin-bottom: 0.25rem;
+}
+
+.ethics-console__value {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--accent-border);
+}
+
+/* Core-Principles-Liste */
+
+.ethics-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.ethics-list li + li {
+  margin-top: 0.6rem;
+}
+
+.ethics-list__key {
+  display: inline-block;
+  min-width: 220px;
+  margin-right: 0.8rem; /* Abstand zum Value */
+  font-size: 0.78rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+.ethics-list__value {
+  display: inline-block;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Do / Don't Split */
+
+.ethics-block--split {
+  margin-top: 2rem;
+}
+
+.ethics-split {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.6rem;
+  margin-top: 0.6rem;
+}
+
+.ethics-split__column {
+  border: 1px solid rgba(244, 244, 255, 0.12);
+  padding: 0.8rem 0.9rem 0.75rem;
+  background: var(--surface-3);
+  position: relative;
+  overflow: hidden;
+}
+
+/* schmale Neon-Linie oben für beide Spalten */
+
+.ethics-split__column::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -20%;
+  width: 140%;
+  height: 2px;
+  opacity: 0.8;
+}
+
+/* Do-Seite: Grün (--green-neon) */
+
+.ethics-split__column--do {
+  border-color: var(--green-neon);
+  background: radial-gradient(circle at 0 0, rgba(0, 255, 0, 0.22), transparent 60%),
+    var(--surface-2);
+}
+
+.ethics-split__column--do::before {
+  background: linear-gradient(
+    90deg,
+    rgba(0, 255, 0, 0),
+    rgba(0, 255, 0, 0.9),
+    rgba(0, 255, 0, 0)
+  );
+}
+
+/* Don't-Seite: Orange (#ffb000) */
+
+.ethics-split__column--dont {
+  border-color: #ffb000;
+  background: radial-gradient(circle at 0 0, rgba(255, 176, 0, 0.3), transparent 60%),
+    var(--surface-2);
+}
+
+.ethics-split__column--dont::before {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 176, 0, 0),
+    rgba(255, 176, 0, 0.9),
+    rgba(255, 176, 0, 0)
+  );
+}
+
+.ethics-split__heading {
+  margin: 0 0 0.4rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--cyan-neon);
+}
+
+.ethics-split__list {
+  margin: 0;
+  padding-left: 1.1rem;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+.ethics-split__list li + li {
+  margin-top: 0.25rem;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .ethics {
+    padding: 3.5rem 1.4rem 4.5rem;
+  }
+
+  .ethics-console {
+    max-width: 100%;
+  }
+
+  .ethics-list__key {
+    min-width: 0;
+    display: block;
+    margin-right: 0; /* auf Mobile kein extra Abstand */
+  }
+}
+
+@media (max-width: 700px) {
+  .ethics-split {
+    grid-template-columns: 1fr;
+  }
+}

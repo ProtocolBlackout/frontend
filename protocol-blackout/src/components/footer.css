@@ -1,0 +1,11 @@
+.pb-footer {
+  border-top: 1px solid var(--accent-border-soft);
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  font-size: 0.85rem;
+  background: var(--bg-dark);
+  color: var(--text-white);
+  height: fit-content;
+}
