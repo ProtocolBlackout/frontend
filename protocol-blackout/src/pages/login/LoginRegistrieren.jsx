@@ -292,7 +292,7 @@ function LoginRegister() {
                   </p>
 
                   {/* Passwort-Reset (nur Link, Styling kann Frontend später machen) */}
-                  <Link to="/password-reset" className="auth-link">
+                  <Link to="/password-reset" className="auth-link retroBtn auth-forgotBtn">
                     Passwort vergessen?
                   </Link>
                 </div>
