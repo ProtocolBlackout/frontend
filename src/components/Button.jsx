@@ -1,14 +1,13 @@
-// src/components/Button.jsx
 import "./button.css";
 
-function Button({
+const Button = ({
   children,
   onClick,
   type = "button",
   className = "",
   disabled = false,
   ...rest
-}) {
+}) => {
   return (
     <button
       type={type}
@@ -20,6 +19,6 @@ function Button({
       {children}
     </button>
   );
-}
+};
 
 export default Button;

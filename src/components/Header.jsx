@@ -1,10 +1,9 @@
 import "./header.css";
-import Button from "./button.jsx";
+import Button from "./Button.jsx";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getToken, clearToken } from "../services/api.js";
 import { useEffect, useState } from "react";
-import ThemeToggle from "./ThemeToggle.jsx"
-import AccountDeletedPage from "../pages/goodbye/Goodbye.jsx";
+import ThemeToggle from "./ThemeToggle.jsx";
 
 function Header() {
   const navigate = useNavigate();

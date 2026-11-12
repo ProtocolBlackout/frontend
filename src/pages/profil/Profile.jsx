@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { requestJson, getToken, clearToken } from "../../services/api.js";
 import "./profil.css";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal.jsx";
-import Button from "../../components/button.jsx";
+import Button from "../../components/Button.jsx";
 
 const MOCK_USER = {
   username: "User",
@@ -56,7 +56,7 @@ const MOCK_USER = {
   ]
 };
 
-export default function Profile() {
+const Profile = () => {
   const navigate = useNavigate();
 
   // [NEU]: Backend-User (kommt von GET /auth/profile)
@@ -355,4 +355,6 @@ export default function Profile() {
       </section>
     </main>
   );
-}
+};
+
+export default Profile;
