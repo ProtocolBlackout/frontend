@@ -1,6 +1,6 @@
-import styles from "./EthischesHacken.module.css";
+import styles from "./EthicalHacking.module.css";
 
-const EthischesHacken = () => {
+const EthicalHacking = () => {
   return (
     <div className={styles.ethics}>
       {/* Console: Overview */}
@@ -148,4 +148,4 @@ const EthischesHacken = () => {
   );
 };
 
-export default EthischesHacken;
+export default EthicalHacking;

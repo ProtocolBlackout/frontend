@@ -1,8 +1,8 @@
 import { useRef, useState } from "react";
-import styles from "./KontaktImpressum.module.css";
+import styles from "./ContactLegal.module.css";
 import { requestJson } from "../../services/api.js";
 
-const KontaktImpressum = () => {
+const ContactLegal = () => {
   const [tab, setTab] = useState("kontakt");
 
   // Controlled form inputs
@@ -316,4 +316,4 @@ const KontaktImpressum = () => {
   );
 };
 
-export default KontaktImpressum;
+export default ContactLegal;

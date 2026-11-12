@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import styles from "./Auth.module.css";
+import styles from "./AuthPage.module.css";
 import { requestJson, setToken } from "../../services/api.js";
 
 const PENDING_RESULT_KEY = "pbPendingGameResult";
 
-const LoginRegister = () => {
+const AuthPage = () => {
   const [tab, setTab] = useState("login");
   const navigate = useNavigate();
 
@@ -358,4 +358,4 @@ const LoginRegister = () => {
   );
 };
 
-export default LoginRegister;
+export default AuthPage;

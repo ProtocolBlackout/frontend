@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import styles from "./Auth.module.css";
+import styles from "./AuthPage.module.css";
 import { requestJson } from "../../services/api.js";
 
 const VerifyEmail = () => {

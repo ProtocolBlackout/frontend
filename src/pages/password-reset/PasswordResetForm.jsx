@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import styles from "../login/Auth.module.css";
+import styles from "../login/AuthPage.module.css";
 import { requestJson } from "../../services/api.js";
 
 const PasswordResetForm = () => {

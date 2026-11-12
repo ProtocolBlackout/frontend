@@ -1,5 +1,5 @@
 import { useState } from "react";
-import styles from "./Geschichte.module.css";
+import styles from "./HistoryPage.module.css";
 
 const MAIN_TIMELINE = [
   {
@@ -168,7 +168,7 @@ const MILESTONE_TIMELINE = [
   }
 ];
 
-const Geschichte = () => {
+const HistoryPage = () => {
   const [openMainId, setOpenMainId] = useState(null);
   const [openMilestoneId, setOpenMilestoneId] = useState(null);
 
@@ -282,4 +282,4 @@ const Geschichte = () => {
   );
 };
 
-export default Geschichte;
+export default HistoryPage;
