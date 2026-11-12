@@ -1,41 +1,29 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-// Wir nutzen das bestehende Auth-Layout/CSS vom Login
-import "./LoginRegistrieren.css";
-
-// Zentraler API-Helper (Base-URL + JSON + Fehlerhandling)
+import { Link, useSearchParams } from "react-router-dom";
+import styles from "./Auth.module.css";
 import { requestJson } from "../../services/api.js";
 
-function VerifyEmail() {
-  const [token, setToken] = useState("");
+const VerifyEmail = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
 
-  // UI-Status
+  // UI status
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isDone, setIsDone] = useState(false);
 
-  // Token aus URL lesen: /auth/verify-email?token=...
   useEffect(() => {
-    const urlToken = new URLSearchParams(window.location.search).get("token");
-    setToken(urlToken ?? "");
-    setIsDone(false);
-  }, []);
-
-  // Wenn Token vorhanden ist: Backend-Verifizierung ausführen
-  useEffect(() => {
-    async function verify() {
-      if (!token) {
-        // Wenn wir gerade erfolgreich waren, ist "Token fehlt" nach dem URL-Cleanup normal
-        if (isDone) {
-          return;
-        }
-
+    if (!token) {
+      if (!isDone) {
         setError("Token fehlt.");
-        return;
       }
+      return;
+    }
 
+    let isMounted = true;
+
+    const verify = async () => {
       setError("");
       setMessage("");
       setIsLoading(true);
@@ -43,39 +31,43 @@ function VerifyEmail() {
       try {
         const data = await requestJson(
           `/auth/verify-email?token=${encodeURIComponent(token)}`,
-          {
-            method: "GET"
-          },
+          { method: "GET" },
           false
         );
 
+        if (!isMounted) return;
         setMessage(data?.message ?? "E-Mail erfolgreich verifiziert");
         setIsDone(true);
-
-        // Token aus der URL entfernen, damit man nicht versehentlich erneut verifiziert
-        window.history.replaceState(null, "", "/auth/verify-email");
-        setToken("");
+        // Clear token from search params without full page reload
+        setSearchParams({}, { replace: true });
       } catch (err) {
+        if (!isMounted) return;
         setError(err?.message ?? "Fehler bei der Verifizierung.");
       } finally {
-        setIsLoading(false);
+        if (isMounted) {
+          setIsLoading(false);
+        }
       }
-    }
+    };
 
     verify();
-  }, [token, isDone]);
+
+    return () => {
+      isMounted = false;
+    };
+  }, [token, isDone, setSearchParams]);
 
   return (
-    <main className="auth">
-      <section className="auth-console">
-        <header className="auth-console__header">
-          <span className="auth-console__title">SYSTEM // VERIFY_EMAIL</span>
-          <span className="auth-console__dots">● ● ●</span>
+    <div className={styles.auth}>
+      <section className={styles.authConsole}>
+        <header className={styles.authConsoleHeader}>
+          <span className={styles.authConsoleTitle}>SYSTEM // VERIFY_EMAIL</span>
+          <span className={styles.authConsoleDots}>● ● ●</span>
         </header>
 
-        <div className="auth-console__body">
-          <section className="auth-panel">
-            <p className="auth-lead">
+        <div className={styles.authConsoleBody}>
+          <section className={styles.authPanel}>
+            <p className={styles.authLead}>
               {isDone
                 ? "Deine E-Mail wurde verifiziert."
                 : error
@@ -84,21 +76,21 @@ function VerifyEmail() {
             </p>
 
             {isLoading ? (
-              <p className="auth-hint">Verifizierung läuft...</p>
+              <p className={styles.authHint}>Verifizierung läuft...</p>
             ) : null}
-            {error ? <p className="auth-hint">{error}</p> : null}
-            {message ? <p className="auth-hint">{message}</p> : null}
+            {error ? <p className={styles.authHint}>{error}</p> : null}
+            {message ? <p className={styles.authHint}>{message}</p> : null}
 
-            <div className="auth-actions">
-              <Link to="/login" className="auth-link retroBtn">
+            <div className={styles.authActions}>
+              <Link to="/login" className={styles.authLink}>
                 Zurück zum Login
               </Link>
             </div>
           </section>
         </div>
       </section>
-    </main>
+    </div>
   );
-}
+};
 
 export default VerifyEmail;

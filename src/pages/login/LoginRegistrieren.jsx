@@ -1,18 +1,15 @@
 import { useState } from "react";
-import "./LoginRegistrieren.css";
 import { Link, useNavigate } from "react-router-dom";
-
-// === API-Helper nutzen (Base-URL + JSON + Token) ===
+import styles from "./Auth.module.css";
 import { requestJson, setToken } from "../../services/api.js";
 
 const PENDING_RESULT_KEY = "pbPendingGameResult";
 
-function LoginRegister() {
+const LoginRegister = () => {
   const [tab, setTab] = useState("login");
   const navigate = useNavigate();
 
-  // nur UI-State (ohne Backend)
-  // === Form-State ===
+  // Form states
   const [login, setLogin] = useState({ email: "", password: "" });
   const [register, setRegister] = useState({
     username: "",
@@ -21,22 +18,22 @@ function LoginRegister() {
     passwordConfirm: ""
   });
 
-  // === Status für Requests ===
+  // Request status
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
-  function onLoginChange(e) {
+  const onLoginChange = (e) => {
     const { name, value } = e.target;
     setLogin((prev) => ({ ...prev, [name]: value }));
-  }
+  };
 
-  function onRegisterChange(e) {
+  const onRegisterChange = (e) => {
     const { name, value } = e.target;
     setRegister((prev) => ({ ...prev, [name]: value }));
-  }
+  };
 
-  async function submitPendingGameResult() {
+  const submitPendingGameResult = async () => {
     const raw = sessionStorage.getItem(PENDING_RESULT_KEY);
     if (!raw) return;
 
@@ -44,13 +41,11 @@ function LoginRegister() {
 
     try {
       pending = JSON.parse(raw);
-    } catch (err) {
-      // Falls Müll drin steht, aufräumen
+    } catch {
       sessionStorage.removeItem(PENDING_RESULT_KEY);
       return;
     }
 
-    // Minimal-Validierung (damit nichts kaputt geht)
     const scoreNumber = Number(pending?.score);
     const createdAt = Number(pending?.createdAt);
 
@@ -59,18 +54,19 @@ function LoginRegister() {
       return;
     }
 
-    // Pending nach 1 Stunde verwerfen (verhindert uralte "Leichen")
+    // Discard pending results older than 1 hour
     if (Number.isFinite(createdAt) && Date.now() - createdAt > 60 * 60 * 1000) {
       sessionStorage.removeItem(PENDING_RESULT_KEY);
       return;
     }
 
     let path = "";
-
     if (pending?.gameId === "quiz" || pending?.gameId === "quiz-01") {
       path = "/games/quiz/result";
     }
-    if (pending?.gameId === "cracker") path = "/games/cracker/result";
+    if (pending?.gameId === "cracker") {
+      path = "/games/cracker/result";
+    }
 
     if (!path) {
       sessionStorage.removeItem(PENDING_RESULT_KEY);
@@ -86,21 +82,13 @@ function LoginRegister() {
         },
         true
       );
-
-      // Nur löschen, wenn das Speichern wirklich geklappt hat
       sessionStorage.removeItem(PENDING_RESULT_KEY);
     } catch (err) {
-      // Login soll trotzdem funktionieren -> pending bleibt drin und kann nochmal versucht werden
-      console.warn(
-        "Pending-Ergebnis konnte nach Login nicht gespeichert werden:",
-        err?.message
-      );
+      console.warn("Could not save pending game result after login:", err?.message);
     }
-  }
+  };
 
-  // === Login-Submit (POST /auth/login) ===
-  // Backend-Response: { message, token, user }
-  async function handleLoginSubmit(e) {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
@@ -116,17 +104,12 @@ function LoginRegister() {
         false
       );
 
-      // FAKT: Token kommt als "token"
       if (!data?.token) {
-        setError(
-          "Login erfolgreich, aber Token fehlt in der Antwort vom Server."
-        );
+        setError("Login erfolgreich, aber Token fehlt in der Antwort vom Server.");
         return;
       }
 
       setToken(data.token);
-
-      // Falls der User als Gast ein Spiel beendet hat, Ergebnis jetzt nachträglich speichern
       await submitPendingGameResult();
 
       setMessage(data.message ?? "Login erfolgreich");
@@ -136,16 +119,13 @@ function LoginRegister() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
-  // === Register-Submit (POST /auth/register) ===
-  // Backend-Response: { message, user } (kein Token)
-  async function handleRegisterSubmit(e) {
+  const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
 
-    // Front-Check
     if (register.password !== register.passwordConfirm) {
       setError("Passwörter stimmen nicht überein");
       return;
@@ -170,38 +150,31 @@ function LoginRegister() {
       );
 
       const baseMessage = data.message ?? "Registrierung erfolgreich";
-      setMessage(
-        `${baseMessage} Bitte E-Mail verifizieren und dann einloggen.`
-      );
-
-      // UX: Nach Registrierung auf Login wechseln
+      setMessage(`${baseMessage} Bitte E-Mail verifizieren und dann einloggen.`);
       setTab("login");
-
-      // === NEU: Registrierungsformular leeren ===
       setRegister({
         username: "",
         email: "",
         password: "",
         passwordConfirm: ""
       });
-      // ==========================================
     } catch (err) {
       setError(err?.message ?? "Registrierung fehlgeschlagen");
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <main className="auth">
-      <section className="auth-console">
-        <header className="auth-console__header">
-          <span className="auth-console__title">AUTH_TERMINAL</span>
-          <span className="auth-console__dots">● ● ●</span>
+    <div className={styles.auth}>
+      <section className={styles.authConsole}>
+        <header className={styles.authConsoleHeader}>
+          <span className={styles.authConsoleTitle}>AUTH_TERMINAL</span>
+          <span className={styles.authConsoleDots}>● ● ●</span>
         </header>
 
         <div
-          className="auth-tabs"
+          className={styles.authTabs}
           role="tablist"
           aria-label="Login oder Registrieren"
         >
@@ -209,7 +182,7 @@ function LoginRegister() {
             type="button"
             role="tab"
             aria-selected={tab === "login"}
-            className={`auth-tab ${tab === "login" ? "auth-tab--active" : ""}`}
+            className={`${styles.authTab} ${tab === "login" ? styles.authTabActive : ""}`}
             disabled={isLoading}
             onClick={() => {
               setTab("login");
@@ -224,7 +197,7 @@ function LoginRegister() {
             type="button"
             role="tab"
             aria-selected={tab === "register"}
-            className={`auth-tab ${tab === "register" ? "auth-tab--active" : ""}`}
+            className={`${styles.authTab} ${tab === "register" ? styles.authTabActive : ""}`}
             disabled={isLoading}
             onClick={() => {
               setTab("register");
@@ -236,24 +209,22 @@ function LoginRegister() {
           </button>
         </div>
 
-        <div className="auth-console__body">
+        <div className={styles.authConsoleBody}>
           {tab === "login" ? (
-            <section role="tabpanel" className="auth-panel">
-              <p className="auth-lead">
+            <section role="tabpanel" className={styles.authPanel}>
+              <p className={styles.authLead}>
                 Bitte anmelden. (Login funktioniert nur nach
                 E-Mail-Verifizierung.)
               </p>
 
-              {/* === NEU: Statusausgabe (Fehler/Erfolg) === */}
-              {error ? <p className="auth-hint">{error}</p> : null}
-              {message ? <p className="auth-hint">{message}</p> : null}
+              {error ? <p className={styles.authHint}>{error}</p> : null}
+              {message ? <p className={styles.authHint}>{message}</p> : null}
 
-              {/* === GEÄNDERT: echter Submit-Handler (Login) === */}
-              <form className="auth-form" onSubmit={handleLoginSubmit}>
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">E-MAIL</span>
+              <form className={styles.authForm} onSubmit={handleLoginSubmit}>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>E-MAIL</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="email"
                     type="email"
                     value={login.email}
@@ -264,10 +235,10 @@ function LoginRegister() {
                   />
                 </label>
 
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">PASSWORT</span>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>PASSWORT</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="password"
                     type="password"
                     value={login.password}
@@ -278,41 +249,40 @@ function LoginRegister() {
                   />
                 </label>
 
-                <div className="auth-actions">
+                <div className={styles.authActions}>
                   <button
-                    className="auth-btn"
+                    className={styles.authBtn}
                     type="submit"
                     disabled={isLoading}
                   >
                     {isLoading ? "..." : "ANMELDEN"}
                   </button>
 
-                  <p className="auth-hint">
+                  <p className={styles.authHint}>
                     {isLoading ? "Bitte warten..." : " "}
                   </p>
 
-                  {/* Passwort-Reset (nur Link, Styling kann Frontend später machen) */}
-                  <Link to="/password-reset" className="auth-link retroBtn auth-forgotBtn">
+                  <Link
+                    to="/password-reset"
+                    className={`${styles.authLink} ${styles.authForgotBtn}`}
+                  >
                     Passwort vergessen?
                   </Link>
                 </div>
               </form>
             </section>
           ) : (
-            <section role="tabpanel" className="auth-panel">
-              {/* === GEÄNDERT: Text nicht mehr "Nur Design – Verbindung kommt später." === */}
-              <p className="auth-lead">Neues Konto erstellen.</p>
+            <section role="tabpanel" className={styles.authPanel}>
+              <p className={styles.authLead}>Neues Konto erstellen.</p>
 
-              {/* === NEU: Statusausgabe (Fehler/Erfolg) === */}
-              {error ? <p className="auth-hint">{error}</p> : null}
-              {message ? <p className="auth-hint">{message}</p> : null}
+              {error ? <p className={styles.authHint}>{error}</p> : null}
+              {message ? <p className={styles.authHint}>{message}</p> : null}
 
-              {/* === GEÄNDERT: echter Submit-Handler (Register) === */}
-              <form className="auth-form" onSubmit={handleRegisterSubmit}>
-                <label className="auth-field">
-                  <span className="auth-label">BENUTZERNAME</span>
+              <form className={styles.authForm} onSubmit={handleRegisterSubmit}>
+                <label className={styles.authField}>
+                  <span className={styles.authLabel}>BENUTZERNAME</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="username"
                     value={register.username}
                     onChange={onRegisterChange}
@@ -322,10 +292,10 @@ function LoginRegister() {
                   />
                 </label>
 
-                <label className="auth-field">
-                  <span className="auth-label">E-MAIL</span>
+                <label className={styles.authField}>
+                  <span className={styles.authLabel}>E-MAIL</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="email"
                     type="email"
                     value={register.email}
@@ -336,10 +306,10 @@ function LoginRegister() {
                   />
                 </label>
 
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">PASSWORT</span>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>PASSWORT</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="password"
                     type="password"
                     value={register.password}
@@ -350,10 +320,10 @@ function LoginRegister() {
                   />
                 </label>
 
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">PASSWORT BESTÄTIGEN</span>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>PASSWORT BESTÄTIGEN</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     name="passwordConfirm"
                     type="password"
                     value={register.passwordConfirm}
@@ -364,18 +334,16 @@ function LoginRegister() {
                   />
                 </label>
 
-                <div className="auth-actions">
-                  {/* === GEÄNDERT: submit statt button === */}
+                <div className={styles.authActions}>
                   <button
-                    className="auth-btn"
+                    className={styles.authBtn}
                     type="submit"
                     disabled={isLoading}
                   >
                     {isLoading ? "..." : "REGISTRIEREN"}
                   </button>
 
-                  {/* === GEÄNDERT: Hint nicht mehr "Kein Backend angeschlossen." === */}
-                  <p className="auth-hint">
+                  <p className={styles.authHint}>
                     {isLoading
                       ? "Bitte warten..."
                       : "Nach Registrierung bitte Mail verifizieren."}
@@ -386,8 +354,8 @@ function LoginRegister() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
-}
+};
 
 export default LoginRegister;
