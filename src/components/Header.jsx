@@ -1,11 +1,11 @@
-import "./header.css";
-import Button from "./Button.jsx";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { getToken, clearToken } from "../services/api.js";
 import { useEffect, useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import Button from "./Button.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
+import { getToken, clearToken } from "../services/api.js";
+import styles from "./Header.module.css";
 
-function Header() {
+const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -13,21 +13,19 @@ function Header() {
 
   useEffect(() => {
     const token = getToken();
-    setIsLoggedIn(!!token);
+    setIsLoggedIn(Boolean(token));
   }, [location]);
 
-  // Wenn sich der Pfad ändert (Navi-Klick erfolgreich), Menü IMMER schließen
-  // Das ist der "Backup"-Mechanismus, falls onClick versagt.
+  // Close mobile navigation drawer whenever route location changes
   useEffect(() => {
     setIsMenuOpen(false);
   }, [location]);
 
   const toggleMenu = () => {
-    setIsMenuOpen(!isMenuOpen);
+    setIsMenuOpen((prev) => !prev);
   };
 
   const closeMenu = () => {
-    console.log("Menü wird geschlossen"); // Debugging
     setIsMenuOpen(false);
   };
 
@@ -39,32 +37,30 @@ function Header() {
     } else {
       navigate("/login");
     }
-    // closeMenu wird hier nicht zwingend gebraucht, 
-    // da navigate() den location-useEffect (oben) auslöst.
   };
 
   return (
-    <header className="pb-header">
-      <div className="pb-header__logo-container">
-        <Link to="/home" className="pb-header__logo" onClick={closeMenu}>
+    <header className={styles.header}>
+      <div className={styles.logoContainer}>
+        <Link to="/home" className={styles.logo} onClick={closeMenu}>
           Protocol Blackout
         </Link>
       </div>
 
       <button
-        className="pb-header__hamburger"
+        className={styles.hamburger}
         onClick={toggleMenu}
-        aria-label="Menü öffnen"
+        aria-label={isMenuOpen ? "Menü schließen" : "Menü öffnen"}
+        aria-expanded={isMenuOpen}
+        type="button"
       >
-        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
-        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
-        <span className={isMenuOpen ? "pb-header__bar open" : "pb-header__bar"}></span>
+        <span className={`${styles.bar} ${isMenuOpen ? styles.open : ""}`} />
+        <span className={`${styles.bar} ${isMenuOpen ? styles.open : ""}`} />
+        <span className={`${styles.bar} ${isMenuOpen ? styles.open : ""}`} />
       </button>
 
       {/* Navigation */}
-      <nav className={`pb-header__nav ${isMenuOpen ? "active" : ""}`}>
-
-        {/* Wir schreiben das onClick explizit an jeden Link */}
+      <nav className={`${styles.nav} ${isMenuOpen ? styles.active : ""}`}>
         <Link to="/home" onClick={closeMenu}>Startseite</Link>
         <Link to="/history" onClick={closeMenu}>Geschichte</Link>
         <Link to="/ethics" onClick={closeMenu}>Ethisches Hacken</Link>
@@ -72,15 +68,12 @@ function Header() {
         <Link to="/about" onClick={closeMenu}>Über uns</Link>
         <Link to="/contact" onClick={closeMenu}>Kontakt & Impressum</Link>
         <Link to="/profil" onClick={closeMenu}>Profil</Link>
-        
-        {/* Link zur Goodybyeseite kann zu Testzwecken wieder einegtragen werden */}
-        {/* <Link to="/account-deleted">Goodbye (Test)</Link> */}
-
       </nav>
-      <div className="pb-header__right">
+
+      <div className={styles.right}>
         <ThemeToggle />
 
-        <div className="pb-header__auth-btn">
+        <div className={styles.authBtn}>
           <Button onClick={handleAuthClick}>
             {isLoggedIn ? "Logout" : "Login"}
           </Button>
@@ -88,6 +81,6 @@ function Header() {
       </div>
     </header>
   );
-}
+};
 
 export default Header;
