@@ -40,8 +40,9 @@ export default function Gamespage() {
         setGamesError(err.message ?? "Fehler beim Laden der Games-Liste");
         setGamesFromBackend([]);
       } finally {
-        if (!isMounted) return;
-        setGamesLoading(false);
+        if (isMounted) {
+          setGamesLoading(false);
+        }
       }
     };
 
@@ -176,8 +177,6 @@ export default function Gamespage() {
                   className={styles.navLeft}
                   onClick={() => {
                     if (!current) return;
-                    const instrCount = (current.instructions || []).length;
-                    const total = instrCount + 1; // last page is Highscore
                     setModalPageIndex((i) => Math.max(0, i - 1));
                   }}
                   aria-label="Vorherige Seite"

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button.jsx";
 import ThemeToggle from "./ThemeToggle.jsx";
@@ -8,18 +8,15 @@ import styles from "./Header.module.css";
 const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [prevLocationKey, setPrevLocationKey] = useState(location.key);
 
-  useEffect(() => {
-    const token = getToken();
-    setIsLoggedIn(Boolean(token));
-  }, [location]);
-
-  // Close mobile navigation drawer whenever route location changes
-  useEffect(() => {
+  if (prevLocationKey !== location.key) {
+    setPrevLocationKey(location.key);
     setIsMenuOpen(false);
-  }, [location]);
+  }
+
+  const isLoggedIn = Boolean(getToken());
 
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
@@ -32,11 +29,8 @@ const Header = () => {
   const handleAuthClick = () => {
     if (isLoggedIn) {
       clearToken();
-      setIsLoggedIn(false);
-      navigate("/login");
-    } else {
-      navigate("/login");
     }
+    navigate("/login");
   };
 
   return (

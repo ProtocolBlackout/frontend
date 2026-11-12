@@ -18,7 +18,9 @@ import "./App.css";
 
 const App = () => {
   // Render Cold Start: Show friendly banner if server wake-up takes longer
-  const [isWakingUp, setIsWakingUp] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(() => {
+    return sessionStorage.getItem("pbBackendWarmed") !== "1";
+  });
   const [showColdStartHint, setShowColdStartHint] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,6 @@ const App = () => {
     sessionStorage.setItem("pbBackendWarmed", "1");
 
     let isDone = false;
-    setIsWakingUp(true);
 
     // Show notice only if cold start takes longer than 2.5s
     const hintTimerId = setTimeout(() => {
