@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import "./AboutUs.css";
+import styles from "./AboutUs.module.css";
 
 const TEAM = [
   {
@@ -74,7 +74,7 @@ const TEAM = [
   }
 ];
 
-export default function AboutUs() {
+const AboutUs = () => {
   const [activeId, setActiveId] = useState(null);
   const [flipped, setFlipped] = useState(false);
 
@@ -107,8 +107,8 @@ export default function AboutUs() {
   }, [activeId]);
 
   return (
-    <main className="about">
-      <header className="about__header">
+    <div className={styles.about}>
+      <header className={styles.aboutHeader}>
         <h1>Über uns</h1>
         <p>
           Drei Köpfe, eine Vision. Wir sind Bella, Lulu und Jenny – drei kreative
@@ -117,21 +117,25 @@ export default function AboutUs() {
         </p>
       </header>
 
-      <section className="about__team">
+      <section className={styles.aboutTeam}>
         <h2>Team Members</h2>
 
-        <div className="teamGrid">
+        <div className={styles.teamGrid}>
           {TEAM.map((m) => (
             <button
               key={m.id}
               type="button"
-              className="memberTile"
+              className={styles.memberTile}
               onClick={() => open(m.id)}
             >
-              <img className="memberTile__avatar" src={m.avatar} alt={m.avatarAlt} />
-              <div className="memberTile__meta">
-                <div className="memberTile__name">{m.name}</div>
-                <div className="memberTile__role">{m.role}</div>
+              <img
+                className={styles.memberTileAvatar}
+                src={m.avatar}
+                alt={m.avatarAlt}
+              />
+              <div className={styles.memberTileMeta}>
+                <div className={styles.memberTileName}>{m.name}</div>
+                <div className={styles.memberTileRole}>{m.role}</div>
               </div>
             </button>
           ))}
@@ -140,34 +144,44 @@ export default function AboutUs() {
 
       <dialog
         ref={dialogRef}
-        className="aboutModal"
+        className={styles.aboutModal}
         aria-labelledby="aboutModalTitle"
         onClose={close}
       >
         {activeMember && (
-          <div className="aboutModal__content">
-            <div className="aboutModal__top">
-              <div id="aboutModalTitle" className="aboutModal__title">
+          <div className={styles.aboutModalContent}>
+            <div className={styles.aboutModalTop}>
+              <div id="aboutModalTitle" className={styles.aboutModalTitle}>
                 {activeMember.name}
               </div>
 
-              <button type="button" className="aboutModal__close" onClick={close}>
+              <button
+                type="button"
+                className={styles.aboutModalClose}
+                onClick={close}
+              >
                 Schließen
               </button>
             </div>
 
-            <div className="flipCard">
-              <div className={`flipCard__inner ${flipped ? "isFlipped" : ""}`}>
+            <div className={styles.flipCard}>
+              <div
+                className={`${styles.flipCardInner} ${
+                  flipped ? styles.isFlipped : ""
+                }`}
+              >
                 {/* FRONT */}
-                <section className="flipCard__face flipCard__front">
+                <section
+                  className={`${styles.flipCardFace} ${styles.flipCardFront}`}
+                >
                   <img
-                    className="flipCard__img"
+                    className={styles.flipCardImg}
                     src={activeMember.avatar}
                     alt={activeMember.avatarAlt}
                   />
                   <button
                     type="button"
-                    className="flipCard__hint"
+                    className={styles.flipCardHint}
                     onClick={() => setFlipped(true)}
                   >
                     Klick fürs Umdrehen
@@ -175,14 +189,18 @@ export default function AboutUs() {
                 </section>
 
                 {/* BACK */}
-                <section className="flipCard__face flipCard__back">
-                  <div className="flipCard__text">
-                    <div className="flipCard__role">{activeMember.role}</div>
-                    <p className="flipCard__bio">{activeMember.bio}</p>
+                <section
+                  className={`${styles.flipCardFace} ${styles.flipCardBack}`}
+                >
+                  <div className={styles.flipCardText}>
+                    <div className={styles.flipCardRole}>
+                      {activeMember.role}
+                    </div>
+                    <p className={styles.flipCardBio}>{activeMember.bio}</p>
 
-                    <div className="flipCard__tags">
+                    <div className={styles.flipCardTags}>
                       {activeMember.tags.map((t) => (
-                        <span key={t} className="tag">
+                        <span key={t} className={styles.tag}>
                           {t}
                         </span>
                       ))}
@@ -191,7 +209,7 @@ export default function AboutUs() {
 
                   <button
                     type="button"
-                    className="flipCard__hint"
+                    className={styles.flipCardHint}
                     onClick={() => setFlipped(false)}
                   >
                     Klick fürs Bild
@@ -202,6 +220,8 @@ export default function AboutUs() {
           </div>
         )}
       </dialog>
-    </main>
+    </div>
   );
-}
+};
+
+export default AboutUs;

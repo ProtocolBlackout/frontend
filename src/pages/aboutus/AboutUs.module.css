@@ -7,12 +7,12 @@
   font-family: var(--pb-font-content);
 }
 
-.about__header {
+.aboutHeader {
   text-align: center;
   margin-bottom: 2.5rem;
 }
 
-.about__header h1 {
+.aboutHeader h1 {
   margin: 0 0 0.5rem;
   font-size: clamp(2rem, 3.6vw, 3rem);
   letter-spacing: 0.1em;
@@ -21,13 +21,13 @@
   color: var(--text-white);
 }
 
-.about__header p {
+.aboutHeader p {
   margin: 0 auto;
   max-width: 70ch;
   color: var(--text-muted);
 }
 
-.about__team h2 {
+.aboutTeam h2 {
   margin: 0 0 1rem;
   font-family: var(--pb-font-mono);
   letter-spacing: 0.12em;
@@ -66,7 +66,7 @@
   box-shadow: 0 0 18px rgba(0, 255, 208, 0.18);
 }
 
-.memberTile__avatar {
+.memberTileAvatar {
   width: 100%;
   height: 220px;
   object-fit: cover;
@@ -74,11 +74,11 @@
   background: var(--surface-1);
 }
 
-.memberTile__meta {
+.memberTileMeta {
   padding: 0.9rem 1rem 1.05rem;
 }
 
-.memberTile__name {
+.memberTileName {
   font-family: var(--pb-font-mono);
   font-weight: 800;
   letter-spacing: 0.1em;
@@ -87,7 +87,7 @@
   color: var(--text-white);
 }
 
-.memberTile__role {
+.memberTileRole {
   font-family: var(--pb-font-content);
   color: var(--text-muted);
   font-size: 0.95rem;
@@ -126,13 +126,13 @@
   );
 }
 
-.aboutModal__content {
+.aboutModalContent {
   padding: 1rem;
   position: relative;
   z-index: 1;
 }
 
-.aboutModal__top {
+.aboutModalTop {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -140,7 +140,7 @@
   margin-bottom: 0.9rem;
 }
 
-.aboutModal__title {
+.aboutModalTitle {
   font-family: var(--pb-font-mono);
   font-weight: 800;
   letter-spacing: 0.16em;
@@ -148,7 +148,7 @@
   color: var(--text-white);
 }
 
-.aboutModal__close {
+.aboutModalClose {
   border-radius: 0;
   border: 1px solid rgba(244, 244, 255, 0.18);
   background: rgba(255, 255, 255, 0.06);
@@ -163,7 +163,7 @@
   -webkit-perspective: 1400px;
 }
 
-.flipCard__inner {
+.flipCardInner {
   position: relative;
   width: 100%;
   min-height: clamp(420px, 72vh, 760px);
@@ -173,11 +173,11 @@
   transition: transform 650ms ease;
 }
 
-.flipCard__inner.isFlipped {
+.flipCardInner.isFlipped {
   transform: rotateY(180deg);
 }
 
-.flipCard__face {
+.flipCardFace {
   position: absolute;
   inset: 0;
   border-radius: 0;
@@ -187,14 +187,14 @@
 }
 
 /* FRONT */
-.flipCard__front {
+.flipCardFront {
   transform: rotateY(0deg);
   border: 1px solid var(--accent-border-soft);
   background: var(--surface-1);
   box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.1), 0 0 30px rgba(0, 255, 208, 0.14);
 }
 
-.flipCard__img {
+.flipCardImg {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -202,7 +202,7 @@
   filter: contrast(1.08) saturate(1.05) brightness(0.95);
 }
 
-.flipCard__front::before {
+.flipCardFront::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -216,7 +216,7 @@
   opacity: 0.95;
 }
 
-.flipCard__front::after {
+.flipCardFront::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -232,7 +232,7 @@
 }
 
 /* BACK: Terminal */
-.flipCard__back {
+.flipCardBack {
   transform: rotateY(180deg);
   background: var(--surface-1);
   border: 1px solid var(--accent-border);
@@ -242,13 +242,13 @@
   box-shadow: 0 0 0 1px rgba(0, 255, 208, 0.1), 0 0 36px rgba(0, 255, 208, 0.12);
 }
 
-/* overlays dürfen KEINE clicks fressen */
-.flipCard__back::before,
-.flipCard__back::after {
-  pointer-events: none; /* <- Fix: Klick geht durch zum Button/Text */
+/* Overlays must not intercept clicks */
+.flipCardBack::before,
+.flipCardBack::after {
+  pointer-events: none;
 }
 
-.flipCard__back::before {
+.flipCardBack::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -262,14 +262,14 @@
   );
 }
 
-.flipCard__back::after {
+.flipCardBack::after {
   content: "";
   position: absolute;
   inset: 0;
   opacity: 0.9;
 }
 
-.flipCard__text {
+.flipCardText {
   position: relative;
   z-index: 1;
   display: grid;
@@ -279,7 +279,7 @@
 }
 
 /* Terminal Header */
-.flipCard__text::before {
+.flipCardText::before {
   content: "pb://about-us -- user=guest -- shell=zsh";
   display: block;
   padding: 0.75rem 0.9rem;
@@ -287,7 +287,7 @@
   background: linear-gradient(
     to bottom,
     rgba(0, 255, 208, 0.1),
-    rgba(0, 0, 0, 0) 
+    rgba(0, 0, 0, 0)
   );
   color: var(--blue-deep);
   letter-spacing: 0.1em;
@@ -298,30 +298,30 @@
   text-overflow: ellipsis;
 }
 
-.flipCard__role,
-.flipCard__bio,
-.flipCard__tags {
+.flipCardRole,
+.flipCardBio,
+.flipCardTags {
   padding-left: 1rem;
   padding-right: 1rem;
 }
 
-.flipCard__role {
+.flipCardRole {
   padding-top: 1rem;
   font-weight: 800;
   letter-spacing: 0.06em;
- color: var(--about-flipcard-text);
+  color: var(--about-flipcard-text);
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.12);
 }
 
-.flipCard__bio {
+.flipCardBio {
   margin: 0.8rem 0 0;
   padding-bottom: 0.8rem;
   line-height: 1.7;
-color: var(--about-flipcard-text);
+  color: var(--about-flipcard-text);
   text-shadow: 0 0 10px rgba(0, 255, 0, 0.08);
 }
 
-.flipCard__tags {
+.flipCardTags {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
@@ -335,19 +335,19 @@ color: var(--about-flipcard-text);
   border-radius: 0;
   border: 1px solid rgba(0, 255, 0, 0.22);
   background: rgba(0, 255, 0, 0.05);
- color: var(--about-flipcard-text);
+  color: var(--about-flipcard-text);
   font-size: 0.78rem;
   line-height: 1;
   font-family: var(--pb-font-mono);
 }
 
-/* Button muss über allem liegen */
-.flipCard__hint {
+/* Button must stay above all overlays */
+.flipCardHint {
   position: absolute;
   left: 50%;
   bottom: 0.75rem;
   transform: translateX(-50%);
-  z-index: 5; /* <- Fix: sicher über Text/Overlays */
+  z-index: 5;
   padding: 0.35rem 1.1rem;
   border-radius: 0;
   border: 1px solid rgba(0, 255, 0, 0.35);
@@ -360,7 +360,7 @@ color: var(--about-flipcard-text);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .flipCard__inner {
+  .flipCardInner {
     transition: none;
   }
 }
