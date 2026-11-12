@@ -1,8 +1,7 @@
-// src/pages/geschichte/Geschichte.jsx
 import { useState } from "react";
-import "./Geschichte.css";
+import styles from "./Geschichte.module.css";
 
-const mainTimeline = [
+const MAIN_TIMELINE = [
   {
     id: "mit",
     year: "1950–1960",
@@ -103,7 +102,7 @@ const mainTimeline = [
   }
 ];
 
-const milestoneTimeline = [
+const MILESTONE_TIMELINE = [
   {
     id: "ms_mit",
     year: "1950–1960",
@@ -169,14 +168,21 @@ const milestoneTimeline = [
   }
 ];
 
-function Geschichte() {
-  // Start: alles geschlossen
+const Geschichte = () => {
   const [openMainId, setOpenMainId] = useState(null);
   const [openMilestoneId, setOpenMilestoneId] = useState(null);
 
+  const toggleMain = (id) => {
+    setOpenMainId((prev) => (prev === id ? null : id));
+  };
+
+  const toggleMilestone = (id) => {
+    setOpenMilestoneId((prev) => (prev === id ? null : id));
+  };
+
   return (
-    <main className="history">
-      <section className="history-intro">
+    <div className={styles.history}>
+      <section className={styles.historyIntro}>
         <h1>Die Geschichte des Hackings</h1>
         <p>
           Von spielerischen Tüftlern am MIT bis zu globalen Cyberangriffen: diese
@@ -185,38 +191,38 @@ function Geschichte() {
         </p>
       </section>
 
-      {/* Haupt-Timeline */}
-      <section className="history-timeline">
-        {mainTimeline.map((item) => {
+      {/* Main Timeline */}
+      <section className={styles.historyTimeline}>
+        {MAIN_TIMELINE.map((item) => {
           const isOpen = item.id === openMainId;
 
           return (
             <article
               key={item.id}
-              className={`history-event ${isOpen ? "history-event--open" : ""}`}
-              onClick={() => setOpenMainId(isOpen ? null : item.id)}
+              className={`${styles.historyEvent} ${
+                isOpen ? styles.historyEventOpen : ""
+              }`}
+              onClick={() => toggleMain(item.id)}
             >
-              <div className="history-event__marker">
-                <span className="history-event__dot" />
-                <span className="history-event__year">{item.year}</span>
+              <div className={styles.historyEventMarker}>
+                <span className={styles.historyEventYear}>{item.year}</span>
               </div>
 
-              <div className="history-event__card">
+              <div className={styles.historyEventCard}>
                 <h2>{item.title}</h2>
-                <p className="history-event__teaser">{item.teaser}</p>
+                <p className={styles.historyEventTeaser}>{item.teaser}</p>
 
                 {isOpen && (
-                  <p className="history-event__full">
-                    {item.full}
-                  </p>
+                  <p className={styles.historyEventFull}>{item.full}</p>
                 )}
 
                 <button
                   type="button"
-                  className="history-event__toggle"
+                  className={styles.historyEventToggle}
+                  aria-expanded={isOpen}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setOpenMainId(isOpen ? null : item.id);
+                    toggleMain(item.id);
                   }}
                 >
                   {isOpen ? "Weniger anzeigen" : "Mehr anzeigen"}
@@ -227,42 +233,42 @@ function Geschichte() {
         })}
       </section>
 
-      {/* Meilenstein-Timeline */}
-      <section className="history-timeline history-timeline--milestones">
-        <h3 className="history-section-title">Wichtige Meilensteine</h3>
+      {/* Milestones Timeline */}
+      <section
+        className={`${styles.historyTimeline} ${styles.historyTimelineMilestones}`}
+      >
+        <h3 className={styles.historySectionTitle}>Wichtige Meilensteine</h3>
 
-        {milestoneTimeline.map((item) => {
+        {MILESTONE_TIMELINE.map((item) => {
           const isOpen = item.id === openMilestoneId;
 
           return (
             <article
               key={item.id}
-              className={`history-event history-event--milestone ${
-                isOpen ? "history-event--open" : ""
-              }`}
-              onClick={() => setOpenMilestoneId(isOpen ? null : item.id)}
+              className={`${styles.historyEvent} ${
+                styles.historyEventMilestone
+              } ${isOpen ? styles.historyEventOpen : ""}`}
+              onClick={() => toggleMilestone(item.id)}
             >
-              <div className="history-event__marker">
-                <span className="history-event__dot" />
-                <span className="history-event__year">{item.year}</span>
+              <div className={styles.historyEventMarker}>
+                <span className={styles.historyEventYear}>{item.year}</span>
               </div>
 
-              <div className="history-event__card">
+              <div className={styles.historyEventCard}>
                 <h2>{item.title}</h2>
-                <p className="history-event__teaser">{item.teaser}</p>
+                <p className={styles.historyEventTeaser}>{item.teaser}</p>
 
                 {isOpen && (
-                  <p className="history-event__full">
-                    {item.full}
-                  </p>
+                  <p className={styles.historyEventFull}>{item.full}</p>
                 )}
 
                 <button
                   type="button"
-                  className="history-event__toggle"
+                  className={styles.historyEventToggle}
+                  aria-expanded={isOpen}
                   onClick={(e) => {
                     e.stopPropagation();
-                    setOpenMilestoneId(isOpen ? null : item.id);
+                    toggleMilestone(item.id);
                   }}
                 >
                   {isOpen ? "Weniger anzeigen" : "Mehr anzeigen"}
@@ -272,8 +278,8 @@ function Geschichte() {
           );
         })}
       </section>
-    </main>
+    </div>
   );
-}
+};
 
 export default Geschichte;
