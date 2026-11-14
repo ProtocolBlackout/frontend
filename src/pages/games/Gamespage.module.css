@@ -190,7 +190,7 @@ Design angelehnt an EthischesHacken.css (neon / console look)
 /* Action Button */
 .gamesActionBtn {
   /* inherit base button visuals from global retroBtn */
-  composes: retroBtn from "../../components/button.css";
+  composes: retroBtn from "../../components/Button.module.css";
   margin-top: 0.9rem;
   display: inline-block;
 }
@@ -304,7 +304,7 @@ Design angelehnt an EthischesHacken.css (neon / console look)
   position: absolute;
   top: 1.4rem;
   right: 5.6rem;
-  composes: retroBtn from "../../components/button.css";
+  composes: retroBtn from "../../components/Button.module.css";
   background: rgba(0, 0, 0, 0.6);
 }
 
@@ -403,7 +403,7 @@ Design angelehnt an EthischesHacken.css (neon / console look)
 }
 
 .startBtn {
-  composes: retroBtn from "../../components/button.css";
+  composes: retroBtn from "../../components/Button.module.css";
 }
 
 .gameWrap {
@@ -428,7 +428,7 @@ Design angelehnt an EthischesHacken.css (neon / console look)
 }
 
 .stopBtn {
-  composes: retroBtn from "../../components/button.css";
+  composes: retroBtn from "../../components/Button.module.css";
 }
 
 .playingContent {

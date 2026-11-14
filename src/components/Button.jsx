@@ -1,4 +1,4 @@
-import "./button.css";
+import styles from "./Button.module.css";
 
 const Button = ({
   children,
@@ -6,12 +6,18 @@ const Button = ({
   type = "button",
   className = "",
   disabled = false,
+  variant,
   ...rest
 }) => {
+  const variantClass = variant ? styles[`retroBtn--${variant}`] || "" : "";
+  const buttonClass = [styles.retroBtn, variantClass, className]
+    .filter(Boolean)
+    .join(" ");
+
   return (
     <button
       type={type}
-      className={`retroBtn ${className}`.trim()}
+      className={buttonClass}
       onClick={onClick}
       disabled={disabled}
       {...rest}
