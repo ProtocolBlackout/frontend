@@ -13,7 +13,7 @@ const PromptLine = ({ children }) => {
 
 const Goodbye = () => {
   return (
-    <main className={styles.page}>
+    <div className={styles.page}>
 
       <section className={styles.card} aria-labelledby="goodbyeHeadline">
   
@@ -40,7 +40,7 @@ const Goodbye = () => {
           Hinweis: Diese Seite ist aktuell zum Testen frei erreichbar.
         </p>
       </section>
-    </main>
+    </div>
   );
 };
 

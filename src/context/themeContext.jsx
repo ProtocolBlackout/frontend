@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { getToken } from "../services/api.js";
 import { getProfile, updatePreferredTheme } from "../services/theme.api.js";
 
@@ -44,37 +44,37 @@ export const ThemeProvider = ({ children }) => {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
-  const toggleTheme = async () => {
-  const current = theme;
-  const next = current === "dark" ? "light" : "dark";
+  const toggleTheme = useCallback(async () => {
+    let nextTheme = "dark";
+    setTheme((current) => {
+      nextTheme = current === "dark" ? "light" : "dark";
+      return nextTheme;
+    });
 
-  setTheme(next);
+    const token = getToken();
+    if (!token) return;
 
-  const token = getToken();
-  if (!token) return;
-
-  try {
-    await updatePreferredTheme(next);
-  } catch (err) {
-    setTheme(current);
-    throw err;
-  }
-};
-
+    try {
+      await updatePreferredTheme(nextTheme);
+    } catch (err) {
+      setTheme((current) => (current === "dark" ? "light" : "dark"));
+      throw err;
+    }
+  }, []);
 
   const value = useMemo(
     () => ({ theme, toggleTheme, isSyncing }),
-    [theme, isSyncing]
+    [theme, toggleTheme, isSyncing]
   );
 
   return (
-  <ThemeContext.Provider value={value}>
-    {children}
-  </ThemeContext.Provider>
-);
-
+    <ThemeContext.Provider value={value}>
+      {children}
+    </ThemeContext.Provider>
+  );
 };
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const useTheme = () => {
   const ctx = useContext(ThemeContext);
   if (!ctx) throw new Error("useTheme must be used within ThemeProvider");

@@ -1,54 +1,58 @@
-// src/components/DeleteConfirmationModal.jsx
-import React, { useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import Button from "./Button.jsx";
 import styles from "./DeleteConfirmationModal.module.css";
 
-export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm, errorMsg }) {
-    const [password, setPassword] = useState("");
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, errorMsg }) => {
+  const [password, setPassword] = useState("");
 
-    if (!isOpen) return null;
+  if (!isOpen) return null;
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        onConfirm(password);
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    onConfirm(password);
+  };
 
-    // Rendert das Modal direkt in den document.body (außerhalb der normalen Struktur)
-    return createPortal(
-        <div className={styles["modal-overlay"]}>
-            <div
-                className={styles["modal-content"]}
-            >
-                <h2 className={styles["modal-title"]}>⚠️ ACHTUNG: Profil löschen</h2>
+  return createPortal(
+    <div className={styles.modalOverlay}>
+      <div className={styles.modalContent}>
+        <h2 className={styles.modalTitle}>⚠️ ACHTUNG: Profil löschen</h2>
 
-                <p className={styles["modal-warning-text"]}>
-                    Dieser Schritt kann <strong>NICHT WIDERRUFEN</strong> werden.
-                    Dein Account, alle XP, Level und Achievements werden dauerhaft gelöscht.
-                </p>
+        <p className={styles.modalWarningText}>
+          Dieser Schritt kann <strong>NICHT WIDERRUFEN</strong> werden.
+          Dein Account, alle XP, Level und Achievements werden dauerhaft gelöscht.
+        </p>
 
-                {errorMsg && <div className={styles["modal-error"]}>{errorMsg}</div>}
+        {errorMsg && <div className={styles.modalError}>{errorMsg}</div>}
 
-                <form onSubmit={handleSubmit} className={styles["modal-form"]}>
-                    <label htmlFor="confirm-password">Bitte Passwort zur Bestätigung eingeben:</label>
-                    <input
-                        id="confirm-password"
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className={styles["modal-input"]}
-                        placeholder="Dein Passwort"
-                        required
-                        autoFocus
-                    />
+        <form onSubmit={handleSubmit} className={styles.modalForm}>
+          <label htmlFor="confirm-password" className={styles.modalLabel}>
+            Bitte Passwort zur Bestätigung eingeben:
+          </label>
+          <input
+            id="confirm-password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={styles.modalInput}
+            placeholder="Dein Passwort"
+            required
+            autoFocus
+          />
 
-                    <div className="modal-actions">
-                        <Button onClick={onClose} type="button">Abbrechen</Button>
-                        <Button type="submit" className="btn-danger">Endgültig löschen</Button>
-                    </div>
-                </form>
-            </div>
-        </div>,
-        document.body
-    );
-}
+          <div className={styles.modalActions}>
+            <Button onClick={onClose} type="button">
+              Abbrechen
+            </Button>
+            <Button type="submit" className={styles.btnDanger}>
+              Endgültig löschen
+            </Button>
+          </div>
+        </form>
+      </div>
+    </div>,
+    document.body
+  );
+};
+
+export default DeleteConfirmationModal;

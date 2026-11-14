@@ -1,4 +1,4 @@
-.ki {
+.container {
   max-width: 1120px;
   margin: 0 auto;
   padding: 4rem 2rem 5rem;
@@ -9,7 +9,7 @@
 
 /* ===== Console Shell ===== */
 
-.ki-console {
+.console {
   max-width: 920px;
   margin: 0 auto;
   border: 1px solid var(--accent-border);
@@ -21,7 +21,7 @@
     0 0 40px rgba(0, 255, 208, 0.16);
 }
 
-.ki-console__header {
+.consoleHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -30,25 +30,25 @@
   background: var(--surface-2);
 }
 
-.ki-console__title {
+.consoleTitle {
   font-size: 0.78rem;
   letter-spacing: 0.16em;
   color: var(--cyan-neon);
 }
 
-.ki-console__dots {
+.consoleDots {
   font-size: 0.7rem;
   letter-spacing: 0.3em;
   color: var(--text-muted-2);
 }
 
-.ki-console__body {
+.consoleBody {
   padding: 1.2rem 1.2rem 1.4rem;
 }
 
 /* ===== Tabs ===== */
 
-.ki-tabs {
+.tabs {
   display: flex;
   gap: 0.4rem;
   padding: 0.6rem 0.8rem;
@@ -56,7 +56,7 @@
   background: var(--surface-3);
 }
 
-.ki-tab {
+.tab {
   border: 1px solid rgba(244, 244, 255, 0.14);
   background: transparent;
   color: var(--text-muted);
@@ -73,12 +73,12 @@
     transform 0.12s ease;
 }
 
-.ki-tab:hover {
+.tab:hover {
   transform: translateY(-1px);
   border-color: var(--accent-border);
 }
 
-.ki-tab--active {
+.tabActive {
   border-color: rgba(0, 255, 208, 0.6);
   color: var(--cyan-neon);
   box-shadow: 0 0 16px rgba(0, 255, 208, 0.25);
@@ -86,32 +86,32 @@
 
 /* ===== Panel content ===== */
 
-.ki-panel {
+.panel {
   font-family: var(--pb-font-content);
 }
 
-.ki-lead {
+.lead {
   margin: 0 0 1rem;
   color: var(--text-muted);
 }
 
 /* ===== Terminal Form ===== */
 
-.ki-form {
+.form {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1rem 1.2rem;
 }
 
-.ki-field {
+.field {
   display: block;
 }
 
-.ki-field--full {
+.fieldFull {
   grid-column: 1 / -1;
 }
 
-.ki-label {
+.label {
   display: block;
   font-family: var(--pb-font-mono);
   font-size: 0.8rem;
@@ -121,8 +121,8 @@
   margin-bottom: 0.25rem;
 }
 
-.ki-input,
-.ki-textarea {
+.input,
+.textarea {
   width: 100%;
   border: 0;
   outline: none;
@@ -136,13 +136,13 @@
     box-shadow 0.12s ease;
 }
 
-.ki-input:focus,
-.ki-textarea:focus {
+.input:focus,
+.textarea:focus {
   border-bottom-color: rgba(0, 255, 208, 0.9);
   box-shadow: 0 10px 24px rgba(0, 255, 208, 0.08);
 }
 
-.ki-textarea {
+.textarea {
   resize: vertical;
   border-left: 1px solid rgba(0, 255, 208, 0.18);
   border-right: 1px solid rgba(0, 255, 208, 0.18);
@@ -150,14 +150,14 @@
   padding: 0.6rem 0.6rem;
 }
 
-.ki-input::placeholder,
-.ki-textarea::placeholder {
+.input::placeholder,
+.textarea::placeholder {
   color: var(--text-muted-2);
 }
 
 /* Actions */
 
-.ki-actions {
+.actions {
   grid-column: 1 / -1;
   display: flex;
   align-items: center;
@@ -165,7 +165,7 @@
   margin-top: 0.2rem;
 }
 
-.ki-btn {
+.btn {
   border-radius: 0;
   border: 1px solid var(--cyan-neon);
   background: transparent;
@@ -182,20 +182,21 @@
     transform 0.12s ease;
 }
 
-.ki-btn:hover {
+.btn:hover {
   background: rgba(0, 255, 208, 0.14);
   box-shadow: 0 0 18px rgba(0, 255, 208, 0.45);
   transform: translateY(-1px);
 }
 
-.ki-hint {
+.hint {
   margin: 0;
   font-size: 0.9rem;
   color: var(--text-muted-2);
 }
 
-/* [NEU] Alerts für Success/Error (UI-Feedback Kontaktformular) */
-.ki-alert {
+/* Alerts for Success/Error UI Feedback */
+
+.alert {
   grid-column: 1 / -1;
   margin: 0.2rem 0 0;
   padding: 0.7rem 0.8rem;
@@ -205,44 +206,42 @@
   line-height: 1.35;
 }
 
-.ki-alert--success {
-  /* [NEU] leichtes Success-Feeling (ohne neue Farben hardcoden) */
+.alertSuccess {
   border-color: rgba(0, 255, 208, 0.35);
 }
 
-.ki-alert--error {
-  /* [NEU] Error-Abgrenzung */
+.alertError {
   border-color: rgba(255, 90, 90, 0.45);
 }
 
-/* [NEU] Disabled-Style für Senden-Button */
-.ki-btn:disabled {
+/* Disabled button state */
+
+.btn:disabled {
   opacity: 0.65;
   cursor: not-allowed;
 }
 
-/* [NEU] Hover/Active-Effekte deaktivieren, wenn disabled */
-.ki-btn:disabled:hover {
+.btn:disabled:hover {
   background: transparent;
   box-shadow: none;
   transform: none;
 }
 
-/* [NEU] verhindert Active-Effekt bei disabled */
-.ki-btn:disabled:active {
+.btn:disabled:active {
   transform: none;
 }
 
-/* [NEU] Sichtbarer Fokus für Keyboard-User (A11y) */
-.ki-btn:focus-visible,
-.ki-tab:focus-visible {
+/* Focus styles for keyboard accessibility */
+
+.btn:focus-visible,
+.tab:focus-visible {
   outline: 2px solid rgba(0, 255, 208, 0.6);
   outline-offset: 2px;
 }
 
 /* Impressum */
 
-.ki-impressum__h {
+.impressumHeading {
   margin: 1.2rem 0 0.35rem;
   font-family: var(--pb-font-mono);
   font-size: 0.9rem;
@@ -251,7 +250,7 @@
   color: var(--cyan-neon);
 }
 
-.ki-impressum__p {
+.impressumParagraph {
   margin: 0;
   color: var(--text-muted);
   line-height: 1.6;
@@ -260,11 +259,11 @@
 /* Responsive */
 
 @media (max-width: 900px) {
-  .ki {
+  .container {
     padding: 3.5rem 1.4rem 4.5rem;
   }
 
-  .ki-form {
+  .form {
     grid-template-columns: 1fr;
   }
 }

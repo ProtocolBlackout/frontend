@@ -5,20 +5,22 @@ import Footer from "./components/Footer.jsx";
 import HomePage from "./pages/home/HomePage.jsx";
 import Gamespage from "./pages/games/Gamespage.jsx";
 import About from "./pages/aboutus/AboutUs.jsx";
-import Contact from "./pages/kontaktimpressum/KontaktImpressum.jsx";
-import History from "./pages/geschichte/Geschichte.jsx";
-import Ethics from "./pages/ethik/EthischesHacken.jsx";
-import Login from "./pages/login/LoginRegistrieren.jsx";
+import Contact from "./pages/contact/ContactLegal.jsx";
+import History from "./pages/history/HistoryPage.jsx";
+import Ethics from "./pages/ethics/EthicalHacking.jsx";
+import Login from "./pages/login/AuthPage.jsx";
 import VerifyEmail from "./pages/login/VerifyEmail.jsx";
 import PasswordResetForm from "./pages/password-reset/PasswordResetForm.jsx";
-import Profile from "./pages/profil/Profile.jsx";
+import Profile from "./pages/profile/Profile.jsx";
 import AccountDeletedPage from "./pages/goodbye/Goodbye.jsx";
 import { requestJson } from "./services/api.js";
 import "./App.css";
 
 const App = () => {
   // Render Cold Start: Show friendly banner if server wake-up takes longer
-  const [isWakingUp, setIsWakingUp] = useState(false);
+  const [isWakingUp, setIsWakingUp] = useState(() => {
+    return sessionStorage.getItem("pbBackendWarmed") !== "1";
+  });
   const [showColdStartHint, setShowColdStartHint] = useState(false);
 
   useEffect(() => {
@@ -29,7 +31,6 @@ const App = () => {
     sessionStorage.setItem("pbBackendWarmed", "1");
 
     let isDone = false;
-    setIsWakingUp(true);
 
     // Show notice only if cold start takes longer than 2.5s
     const hintTimerId = setTimeout(() => {

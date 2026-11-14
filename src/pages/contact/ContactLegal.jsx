@@ -1,13 +1,11 @@
 import { useRef, useState } from "react";
-import "./KontaktImpressum.css";
-
-// API-Helper für Backend-Call
+import styles from "./ContactLegal.module.css";
 import { requestJson } from "../../services/api.js";
 
-function KontaktImpressum() {
+const ContactLegal = () => {
   const [tab, setTab] = useState("kontakt");
 
-  // nur fürs UI (controlled inputs) + Backend-Call fürs Kontaktformular
+  // Controlled form inputs
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -15,29 +13,26 @@ function KontaktImpressum() {
     message: ""
   });
 
-  // UI-States fürs Formular-Feedback (loading/success/error)
+  // UI feedback states
   const [isSending, setIsSending] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
-  // Refs für Fokus auf Success/Error (Barrierefreiheit)
+  // Refs for programmatic focus management (A11y)
   const successRef = useRef(null);
   const errorRef = useRef(null);
 
-  function onChange(e) {
+  const onChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
-  }
+  };
 
-  // Submit-Handler: Form -> requestJson -> UI-Feedback
-  async function onSubmit(e) {
+  const onSubmit = async (e) => {
     e.preventDefault();
 
-    // Feedback zurücksetzen, damit alte Meldungen nicht stehen bleiben
     setSuccessMessage("");
     setErrorMessage("");
 
-    // Minimale Client-Validierung (Backend validiert ohnehin auch)
     const name = form.name.trim();
     const email = form.email.trim();
     const subject = form.subject.trim();
@@ -45,16 +40,13 @@ function KontaktImpressum() {
 
     if (!name || !email || !subject || !message) {
       setErrorMessage("Bitte fülle alle Felder aus");
-      // Fokus auf Fehlermeldung setzen (Keyboard/Screenreader)
       setTimeout(() => errorRef.current?.focus(), 0);
-
       return;
     }
 
     setIsSending(true);
 
     try {
-      // Content-Type Header, damit Backend sicher JSON erkennt
       const data = await requestJson("/mail/contact", {
         method: "POST",
         headers: {
@@ -68,13 +60,10 @@ function KontaktImpressum() {
         })
       });
 
-      // Success-Message aus Backend nutzen (Fallback, falls nötig)
       setSuccessMessage(data?.message || "Nachricht wurde gesendet");
-
-      // Focus auf Success-Meldung setzen (Keyboard/Screenreader)
       setTimeout(() => successRef.current?.focus(), 0);
 
-      // Formular leeren nach Erfolg
+      // Reset form after successful submission
       setForm({
         name: "",
         email: "",
@@ -82,37 +71,35 @@ function KontaktImpressum() {
         message: ""
       });
     } catch (error) {
-      // requestJson wirft Error(message) -> wir zeigen die Message an
       setErrorMessage(error?.message || "Unbekannter Fehler");
-
-      // Fokus auf Fehlermeldung setzen (Keyboard/Screenreader)
       setTimeout(() => errorRef.current?.focus(), 0);
     } finally {
       setIsSending(false);
     }
-  }
+  };
 
   return (
-    <main className="ki">
-      <section className="ki-console">
-        <header className="ki-console__header">
-          <span className="ki-console__title">KONTAKT_IMPRESSUM</span>
-          <span className="ki-console__dots">● ● ●</span>
+    <div className={styles.container}>
+      <section className={styles.console}>
+        <header className={styles.consoleHeader}>
+          <span className={styles.consoleTitle}>KONTAKT_IMPRESSUM</span>
+          <span className={styles.consoleDots}>● ● ●</span>
         </header>
 
         <div
-          className="ki-tabs"
+          className={styles.tabs}
           role="tablist"
           aria-label="Kontakt und Impressum"
         >
           <button
             type="button"
             role="tab"
-            // Tab-ARIA: eindeutige IDs + Verknüpfung mit Panel
             id="ki-tab-kontakt"
             aria-controls="ki-panel-kontakt"
             aria-selected={tab === "kontakt"}
-            className={`ki-tab ${tab === "kontakt" ? "ki-tab--active" : ""}`}
+            className={`${styles.tab} ${
+              tab === "kontakt" ? styles.tabActive : ""
+            }`}
             onClick={() => setTab("kontakt")}
           >
             Kontakt
@@ -121,38 +108,38 @@ function KontaktImpressum() {
           <button
             type="button"
             role="tab"
-            // Tab-ARIA: eindeutige IDs + Verknüpfung mit Panel
             id="ki-tab-impressum"
             aria-controls="ki-panel-impressum"
             aria-selected={tab === "impressum"}
-            className={`ki-tab ${tab === "impressum" ? "ki-tab--active" : ""}`}
+            className={`${styles.tab} ${
+              tab === "impressum" ? styles.tabActive : ""
+            }`}
             onClick={() => setTab("impressum")}
           >
             Impressum
           </button>
         </div>
 
-        <div className="ki-console__body">
+        <div className={styles.consoleBody}>
           {tab === "kontakt" ? (
             <section
               role="tabpanel"
-              className="ki-panel"
-              // Tab-ARIA: Panel verknüpfen mit Tab
+              className={styles.panel}
               id="ki-panel-kontakt"
               aria-labelledby="ki-tab-kontakt"
             >
-              <p className="ki-lead">Schreib uns eine Nachricht.</p>
+              <p className={styles.lead}>Schreib uns eine Nachricht.</p>
 
               <form
-                className="ki-form"
+                className={styles.form}
                 onSubmit={onSubmit}
                 aria-busy={isSending}
-                noValidate // [NEU] Browser-Validierung aus, wir zeigen eigenes UI-Feedback
+                noValidate
               >
-                <label className="ki-field">
-                  <span className="ki-label">NAME</span>
+                <label className={styles.field}>
+                  <span className={styles.label}>NAME</span>
                   <input
-                    className="ki-input"
+                    className={styles.input}
                     name="name"
                     value={form.name}
                     onChange={onChange}
@@ -163,10 +150,10 @@ function KontaktImpressum() {
                   />
                 </label>
 
-                <label className="ki-field">
-                  <span className="ki-label">E-MAIL</span>
+                <label className={styles.field}>
+                  <span className={styles.label}>E-MAIL</span>
                   <input
-                    className="ki-input"
+                    className={styles.input}
                     name="email"
                     type="email"
                     value={form.email}
@@ -178,10 +165,10 @@ function KontaktImpressum() {
                   />
                 </label>
 
-                <label className="ki-field ki-field--full">
-                  <span className="ki-label">BETREFF</span>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span className={styles.label}>BETREFF</span>
                   <input
-                    className="ki-input"
+                    className={styles.input}
                     name="subject"
                     value={form.subject}
                     onChange={onChange}
@@ -191,10 +178,10 @@ function KontaktImpressum() {
                   />
                 </label>
 
-                <label className="ki-field ki-field--full">
-                  <span className="ki-label">NACHRICHT</span>
+                <label className={`${styles.field} ${styles.fieldFull}`}>
+                  <span className={styles.label}>NACHRICHT</span>
                   <textarea
-                    className="ki-textarea"
+                    className={styles.textarea}
                     name="message"
                     value={form.message}
                     onChange={onChange}
@@ -205,13 +192,12 @@ function KontaktImpressum() {
                   />
                 </label>
 
-                {/* UI-Feedback (success/error) */}
+                {/* UI Feedback */}
                 {successMessage ? (
                   <p
-                    className="ki-alert ki-alert--success"
+                    className={`${styles.alert} ${styles.alertSuccess}`}
                     role="status"
                     aria-live="polite"
-                    // Fokusziel, damit wir per JS fokussieren können
                     tabIndex="-1"
                     ref={successRef}
                   >
@@ -221,10 +207,9 @@ function KontaktImpressum() {
 
                 {errorMessage ? (
                   <p
-                    className="ki-alert ki-alert--error"
+                    className={`${styles.alert} ${styles.alertError}`}
                     role="alert"
                     aria-live="assertive"
-                    // Fokusziel, damit wir per JS fokussieren können (A11y)
                     tabIndex="-1"
                     ref={errorRef}
                   >
@@ -232,12 +217,16 @@ function KontaktImpressum() {
                   </p>
                 ) : null}
 
-                <div className="ki-actions">
-                  <button className="ki-btn" type="submit" disabled={isSending}>
+                <div className={styles.actions}>
+                  <button
+                    className={styles.btn}
+                    type="submit"
+                    disabled={isSending}
+                  >
                     {isSending ? "SENDE…" : "SENDEN"}
                   </button>
 
-                  <p className="ki-hint">
+                  <p className={styles.hint}>
                     {isSending
                       ? "Nachricht wird gesendet…"
                       : "Wir melden uns so schnell wie möglich."}
@@ -248,16 +237,17 @@ function KontaktImpressum() {
           ) : (
             <section
               role="tabpanel"
-              className="ki-panel"
-              // Tab-ARIA: Panel verknüpfen mit Tab
+              className={styles.panel}
               id="ki-panel-impressum"
               aria-labelledby="ki-tab-impressum"
             >
-              <p className="ki-lead">Impressum</p>
+              <p className={styles.lead}>Impressum</p>
 
-              <div className="ki-impressum">
-                <h2 className="ki-impressum__h">Angaben gemäß § 5 DDG</h2>
-                <p className="ki-impressum__p">
+              <div>
+                <h2 className={styles.impressumHeading}>
+                  Angaben gemäß § 5 DDG
+                </h2>
+                <p className={styles.impressumParagraph}>
                   Protocol Blackout HQ
                   <br />
                   Firewall Street 42
@@ -265,18 +255,18 @@ function KontaktImpressum() {
                   Vault Zone
                 </p>
 
-                <h2 className="ki-impressum__h">Kontakt</h2>
-                <p className="ki-impressum__p">
+                <h2 className={styles.impressumHeading}>Kontakt</h2>
+                <p className={styles.impressumParagraph}>
                   E-Mail: prot.blackout@gmail.com
                   <br />
                   Telefon: +49 123 456789
                 </p>
 
-                <h2 className="ki-impressum__h">Vertreten durch</h2>
-                <p className="ki-impressum__p">Darth Vader</p>
+                <h2 className={styles.impressumHeading}>Vertreten durch</h2>
+                <p className={styles.impressumParagraph}>Darth Vader</p>
 
-                <h2 className="ki-impressum__h">Haftungsausschluss</h2>
-                <p className="ki-impressum__p">
+                <h2 className={styles.impressumHeading}>Haftungsausschluss</h2>
+                <p className={styles.impressumParagraph}>
                   Haftung für Inhalte Als Diensteanbieter sind wir gemäß § 7
                   Abs.1 DDG für eigene Inhalte auf diesen Seiten nach den
                   allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 DDG sind
@@ -322,8 +312,8 @@ function KontaktImpressum() {
           )}
         </div>
       </section>
-    </main>
+    </div>
   );
-}
+};
 
-export default KontaktImpressum;
+export default ContactLegal;

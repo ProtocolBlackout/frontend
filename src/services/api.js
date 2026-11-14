@@ -1,24 +1,21 @@
-// Kleine API-Helfer
-// - zentralisiert Base-URL + JSON-Handling
-// - hängt bei Bedarf "Authorization: Bearer <token>" an
-
+// API helper functions: centralizes Base URL + JSON handling + Authorization
 import { backendBaseUrl } from "../config/backend.js";
 
 const TOKEN_KEY = "pbToken";
 
-function getToken() {
+export const getToken = () => {
   return localStorage.getItem(TOKEN_KEY);
-}
+};
 
-function setToken(token) {
+export const setToken = (token) => {
   localStorage.setItem(TOKEN_KEY, token);
-}
+};
 
-function clearToken() {
+export const clearToken = () => {
   localStorage.removeItem(TOKEN_KEY);
-}
+};
 
-async function requestJson(path, options = {}, needsAuth = false) {
+export const requestJson = async (path, options = {}, needsAuth = false) => {
   const headers = {
     "Content-Type": "application/json",
     ...(options.headers ?? {})
@@ -30,7 +27,7 @@ async function requestJson(path, options = {}, needsAuth = false) {
       headers.Authorization = `Bearer ${token}`;
     }
   }
-  // =======================================================
+
   let response;
 
   try {
@@ -39,7 +36,7 @@ async function requestJson(path, options = {}, needsAuth = false) {
       headers
     });
   } catch (err) {
-    // Netzwerk/Cold-Start (render): Fetch kann komplett fehlschlagen (kein HTTP-Status vorhanden)
+    // Network / cold-start error: fetch completely failed (no HTTP status available)
     const error = new Error(
       "Netzwerkfehler - Server nicht erreichbar (ggf. Render Cold Start)"
     );
@@ -55,7 +52,7 @@ async function requestJson(path, options = {}, needsAuth = false) {
   if (contentType.includes("application/json")) {
     data = await response.json().catch(() => ({}));
   } else {
-    // Manchmal kommt HTML/Text statt JSON (z.B. bei Server-/Plattformfehlern)
+    // Platform or server error might return plain text/HTML
     rawText = await response.text().catch(() => "");
   }
 
@@ -89,6 +86,4 @@ async function requestJson(path, options = {}, needsAuth = false) {
   }
 
   return data;
-}
-
-export { getToken, setToken, clearToken, requestJson };
+};

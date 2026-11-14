@@ -1,49 +1,48 @@
-
-.modal-overlay {
+.modalOverlay {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(0, 0, 0, 0.85); /* Dunkler Hintergrund */
+  background-color: rgba(0, 0, 0, 0.85);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1000; /* Ganz oben */
+  z-index: 1000;
   backdrop-filter: blur(2px);
 }
 
-.modal-content {
-  background-color: #1a1a1a;
-  border: 2px solid #ff4b4b; /* Roter Rahmen wie gewünscht */
+.modalContent {
+  background-color: var(--surface-2, #1a1a1a);
+  border: 2px solid #ff4b4b;
   padding: 2rem;
   max-width: 400px;
   width: 90%;
-  border-radius: 8px;
+  border-radius: 0;
   box-shadow: 0 0 20px rgba(255, 75, 75, 0.3);
-  color: #e0e0e0;
+  color: var(--text-white, #e0e0e0);
   animation: fadeIn 0.2s ease-out;
 }
 
-.modal-title {
+.modalTitle {
   color: #ff4b4b;
   margin-top: 0;
-  font-family: monospace;
+  font-family: var(--pb-font-mono, monospace);
   text-transform: uppercase;
 }
 
-.modal-warning-text {
+.modalWarningText {
   margin-bottom: 1.5rem;
   line-height: 1.5;
-  color: #ccc;
+  color: var(--text-muted, #ccc);
 }
 
-.modal-warning-text strong {
+.modalWarningText strong {
   color: #ff4b4b;
   text-decoration: underline;
 }
 
-.modal-error {
+.modalError {
   background: rgba(255, 75, 75, 0.1);
   border: 1px solid #ff4b4b;
   color: #ff4b4b;
@@ -53,29 +52,57 @@
   text-align: center;
 }
 
-.modal-input {
+.modalForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.modalLabel {
+  font-family: var(--pb-font-mono, monospace);
+  font-size: 0.85rem;
+  margin-bottom: 0.5rem;
+  color: var(--text-muted, #ccc);
+}
+
+.modalInput {
   width: 100%;
   padding: 0.8rem;
   margin-bottom: 1.5rem;
   background: #000;
   border: 1px solid #444;
   color: white;
-  font-family: monospace;
+  font-family: var(--pb-font-mono, monospace);
   font-size: 1rem;
 }
 
-.modal-input:focus {
+.modalInput:focus {
   outline: none;
   border-color: #ff4b4b;
 }
 
-.modal-actions {
+.modalActions {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
 }
 
+.btnDanger {
+  border-color: #ff4b4b !important;
+  color: #ff4b4b !important;
+}
+
+.btnDanger:hover {
+  background: rgba(255, 75, 75, 0.15) !important;
+  box-shadow: 0 0 16px rgba(255, 75, 75, 0.4) !important;
+}
+
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }

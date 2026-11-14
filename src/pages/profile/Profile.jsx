@@ -1,14 +1,13 @@
-// === Imports: React Hooks + Routing + API-Helper ===
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { requestJson, getToken, clearToken } from "../../services/api.js";
-import "./profil.css";
+import styles from "./Profile.module.css";
 import DeleteConfirmationModal from "../../components/DeleteConfirmationModal.jsx";
 import Button from "../../components/Button.jsx";
 
 const MOCK_USER = {
   username: "User",
-  avatar: "./images/defaultAvatar.png", // anpassen
+  avatar: "./images/defaultAvatar.png",
   avatarAlt: "Profilbild",
   level: 7,
   xpNow: 420,
@@ -59,36 +58,27 @@ const MOCK_USER = {
 const Profile = () => {
   const navigate = useNavigate();
 
-  // [NEU]: Backend-User (kommt von GET /auth/profile)
+  // Backend user from GET /auth/profile
   const [authUser, setAuthUser] = useState(null);
   const [progress, setProgress] = useState(null);
 
-  // [NEU]: Lade-/Fehlerzustand
+  // Loading and error states
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState("");
 
-  // [NEU]: State für das Lösch-Modal
+  // Account deletion modal state
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [deleteError, setDeleteError] = useState("");
 
-  // Bestehender State bleibt, aber default bleibt aus MOCK_USER
   const [profilePublic, setProfilePublic] = useState(MOCK_USER.profilePublic);
 
-  const handleLogout = () => {
-    clearToken(); // 1. Token aus dem Speicher löschen (aus api.js)
-    navigate("/login"); // 2. Zur Login-Seite navigieren
-  };
-
-  // Profil beim Laden abrufen (oder Redirect zur Login-Seite)
+  // Fetch profile on mount (redirect to login if unauthenticated)
   useEffect(() => {
     let isActive = true;
-
     const token = getToken();
 
-    // Kein Token => kein Profil für Gäste: Redirect zur Login-Seite, kein API-Call
     if (!token) {
-      setIsLoading(false);
-      navigate("/login");
+      navigate("/login", { replace: true });
       return () => {
         isActive = false;
       };
@@ -96,37 +86,21 @@ const Profile = () => {
 
     requestJson("/auth/profile", { method: "GET" }, true)
       .then((data) => {
-        if (!isActive) {
-          return null;
-        }
+        if (!isActive) return null;
         setAuthUser(data?.user ?? null);
         setError("");
-
-        // [NEU]: Danach Progress laden
         return requestJson("/profile/progress", { method: "GET" }, true);
       })
-
       .then((data) => {
-        // Wichtig: Wenn oben null zurückkam (isActive false), hier nichts tun
-        if (!isActive || !data) {
-          return;
-        }
-
+        if (!isActive || !data) return;
         setProgress(data.progress);
       })
-
       .catch((err) => {
-        if (!isActive) {
-          return;
-        }
-
+        if (!isActive) return;
         setError(err?.message ?? "Profil konnte nicht geladen werden");
       })
-
       .finally(() => {
-        if (!isActive) {
-          return;
-        }
+        if (!isActive) return;
         setIsLoading(false);
       });
 
@@ -135,130 +109,99 @@ const Profile = () => {
     };
   }, [navigate]);
 
-  // [NEU]: Die eigentliche Lösch-Logik
   const handleDeleteAccount = async (password) => {
-    setDeleteError(""); // Reset error
-
-    // 1. Optional: Hier könnte man client-seitig prüfen, ob ein Passwort eingegeben wurde,
-    // aber das Modal erlaubt eh kein leeres Submit.
+    setDeleteError("");
 
     try {
-      // ACHTUNG: Dein Backend-Endpunkt "DELETE /auth/profile" erwartet aktuell
-      // laut Dokumentation KEIN Passwort im Body. Er löscht einfach den eingeloggten User.
-      // Falls wir das Passwort prüfen wollen, müsste der Backend-Endpunkt angepasst werden.
-      // Für jetzt senden wir den Request so ab, wie das Backend ihn aktuell versteht.
-
-      // Wenn du Backend-Anpassung willst: Sag Bescheid.
-      // Aktueller Stand Backend: Löscht direkt anhand des Tokens.
-      // Wir "simulieren" den Check hier oder senden es mit, falls das Backend es ignoriert ist es nicht schlimm.
-
       const result = await requestJson(
         "/auth/profile",
         {
           method: "DELETE",
-          // Falls Backend Password-Check unterstützt, würde man es so senden:
           body: JSON.stringify({ password })
         },
         true
       );
 
-      // Erfolg:
       clearToken();
       setIsDeleteModalOpen(false);
-     navigate(result?.nextPath ?? "/goodbye"); // Oder auf eine "Goodbye"-Seite
+      navigate(result?.nextPath ?? "/goodbye");
     } catch (err) {
-      console.error("Löschen fehlgeschlagen:", err);
+      console.error("Account deletion failed:", err);
       setDeleteError(err.message || "Fehler beim Löschen des Accounts.");
     }
   };
 
-  // UI-Daten: Identity kommt aus /auth/profile (username/email/id),
-  // Progress kommt aus /profile/progress (level/xp/nextLevelXp).
-  // MOCK_USER bleibt als Fallback, damit das Layout stabil bleibt, bis die API-Daten geladen sind.
-
-  // [ERKLÄRUNG]: uiUser ist unsere zentrale UI-Quelle: Fallback = MOCK_USER, echte Werte überschreiben den Mock.
-
   const uiUser = useMemo(() => {
     return {
       ...MOCK_USER,
-      // [NEU]: Progress überschreibt Mock-Werte (wenn vorhanden)
       level: progress?.level ?? MOCK_USER.level,
       xpNow: progress?.xp ?? MOCK_USER.xpNow,
       xpMax: progress?.nextLevelXp ?? MOCK_USER.xpMax,
-
       username: authUser?.username ?? MOCK_USER.username,
       email: authUser?.email ?? null,
       id: authUser?.id ?? null
     };
   }, [authUser, progress]);
 
-  // [VORHER]:
-  // const xpPercent = useMemo(() => {
-  //   const p = (MOCK_USER.xpNow / MOCK_USER.xpMax) * 100;
-  //   return Math.max(0, Math.min(100, Math.round(p)));
-  // }, []);
-
-  // [ERSETZT]: xpPercent basiert jetzt auf uiUser (statt fest auf MOCK_USER)
   const xpPercent = useMemo(() => {
     const p = (uiUser.xpNow / uiUser.xpMax) * 100;
     return Math.max(0, Math.min(100, Math.round(p)));
   }, [uiUser.xpNow, uiUser.xpMax]);
 
   return (
-    <main className="profile">
-      <section className="terminal">
-        <header className="terminal__header">
-          <div className="terminal__title">
+    <div className={styles.profile}>
+      <section className={styles.terminal}>
+        <header className={styles.terminalHeader}>
+          <div className={styles.terminalTitle}>
             pb://profile -- user={uiUser.username} -- access=
             {profilePublic ? "public" : "private"}
           </div>
 
-          <label className="terminal__toggle">
-            <span className="terminal__toggleLabel">Profil öffentlich</span>
+          <label className={styles.terminalToggle}>
+            <span>Profil öffentlich</span>
             <input
               type="checkbox"
               checked={profilePublic}
               disabled={isLoading}
               onChange={(e) => setProfilePublic(e.target.checked)}
             />
-            <span className="terminal__toggleUI" aria-hidden="true" />
+            <span className={styles.terminalToggleUI} aria-hidden="true" />
           </label>
         </header>
 
-        <div className="terminal__body">
-          {/* [NEU]: Status-Hinweise oben, ohne dein Layout umzubauen */}
+        <div className={styles.terminalBody}>
           {isLoading ? (
-            <p style={{ margin: 0, padding: 12 }}>Lädt Profil...</p>
+            <p className={styles.statusMsg}>Lädt Profil...</p>
           ) : null}
 
           {!isLoading && error ? (
-            <p style={{ margin: 0, padding: 12 }}>{error}</p>
+            <p className={styles.statusMsg}>{error}</p>
           ) : null}
 
-          <div className="profileGrid">
+          <div className={styles.profileGrid}>
             {/* Identity */}
-            <section className="panel">
-              <div className="panel__title">IDENTITY</div>
+            <section className={styles.panel}>
+              <div className={styles.panelTitle}>IDENTITY</div>
 
-              <div className="identity">
+              <div className={styles.identity}>
                 <img
-                  className="identity__avatar"
+                  className={styles.identityAvatar}
                   src={uiUser.avatar}
                   alt={uiUser.avatarAlt}
                 />
 
-                <div className="identity__meta">
-                  <div className="identity__user">
-                    <span className="prompt">$</span> {uiUser.username}
-                    <span className="cursor" aria-hidden="true" />
+                <div className={styles.identityMeta}>
+                  <div className={styles.identityUser}>
+                    <span className={styles.prompt}>$</span> {uiUser.username}
+                    <span className={styles.cursor} aria-hidden="true" />
                   </div>
 
-                  <div className="identity__line">
-                    <span className="key">Level:</span> {uiUser.level}
+                  <div className={styles.identityLine}>
+                    <span className={styles.key}>Level:</span> {uiUser.level}
                   </div>
 
-                  <div className="identity__line">
-                    <span className="key">Streak:</span> {uiUser.streakDays}{" "}
+                  <div className={styles.identityLine}>
+                    <span className={styles.key}>Streak:</span> {uiUser.streakDays}{" "}
                     Tage
                   </div>
                 </div>
@@ -266,16 +209,16 @@ const Profile = () => {
             </section>
 
             {/* XP */}
-            <section className="panel">
-              <div className="panel__title">PROGRESS</div>
+            <section className={styles.panel}>
+              <div className={styles.panelTitle}>PROGRESS</div>
 
-              <div className="xpRow">
-                <div className="xpText">
+              <div className={styles.xpRow}>
+                <div className={styles.xpText}>
                   Level {uiUser.level} — {uiUser.xpNow}/{uiUser.xpMax} EXP
                 </div>
 
                 <div
-                  className="xpBar"
+                  className={styles.xpBar}
                   role="progressbar"
                   aria-label="Erfahrungspunkte Fortschritt"
                   aria-valuenow={uiUser.xpNow}
@@ -284,66 +227,57 @@ const Profile = () => {
                   aria-valuetext={`${uiUser.xpNow} von ${uiUser.xpMax} EXP`}
                 >
                   <div
-                    className="xpBar__fill"
+                    className={styles.xpBarFill}
                     style={{ width: `${xpPercent}%` }}
                   />
                 </div>
 
-                <div className="xpNext">
+                <div className={styles.xpNext}>
                   Next unlock at {uiUser.xpMax} EXP:{" "}
-                  <span className="accent">{uiUser.nextUnlock}</span>
+                  <span className={styles.accent}>{uiUser.nextUnlock}</span>
                 </div>
               </div>
             </section>
 
             {/* Achievements */}
-            <section className="panel panel--wide">
-              <div className="panel__title">ACHIEVEMENTS</div>
+            <section className={`${styles.panel} ${styles.panelWide}`}>
+              <div className={styles.panelTitle}>ACHIEVEMENTS</div>
 
-              <div className="badgeGrid">
+              <div className={styles.badgeGrid}>
                 {uiUser.achievements.map((a) => (
-                  <article key={a.id} className="badge">
-                    <div className="badge__name">{a.title}</div>
-                    <div className="badge__desc">{a.desc}</div>
-                    <div className="badge__date">{a.date}</div>
+                  <article key={a.id} className={styles.badge}>
+                    <div className={styles.badgeName}>{a.title}</div>
+                    <div className={styles.badgeDesc}>{a.desc}</div>
+                    <div className={styles.badgeDate}>{a.date}</div>
                   </article>
                 ))}
               </div>
             </section>
 
             {/* Activity */}
-            <section className="panel panel--wide">
-              <div className="panel__title">ACTIVITY FEED</div>
+            <section className={`${styles.panel} ${styles.panelWide}`}>
+              <div className={styles.panelTitle}>ACTIVITY FEED</div>
 
-              <ul className="feed">
+              <ul className={styles.feed}>
                 {uiUser.activity.map((e) => (
-                  <li key={e.id} className="feed__item">
-                    <span className="feed__ts">[{e.ts}]</span> {e.text}
+                  <li key={e.id} className={styles.feedItem}>
+                    <span className={styles.feedTs}>[{e.ts}]</span> {e.text}
                   </li>
                 ))}
               </ul>
             </section>
 
-            {/* [NEU]: Gefahr-Zone unter dem Activity Feed */}
-            <section
-              className="profile-section danger-zone"
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "3rem",
-                borderTop: "1px solid #333",
-                paddingTop: "1rem"
-              }}
-            >
+            {/* Danger Zone */}
+            <section className={styles.dangerZone}>
               <Button
-                className="btn-danger"
+                className={styles.dangerBtn}
                 onClick={() => setIsDeleteModalOpen(true)}
-                style={{ width: "100%", maxWidth: 400 }} // Schön breit, aber nicht zu breit
               >
                 ACCOUNT LÖSCHEN
               </Button>
             </section>
-            {/* [NEU]: Das Modal einbinden */}
+
+            {/* Modal */}
             <DeleteConfirmationModal
               isOpen={isDeleteModalOpen}
               onClose={() => setIsDeleteModalOpen(false)}
@@ -353,7 +287,7 @@ const Profile = () => {
           </div>
         </div>
       </section>
-    </main>
+    </div>
   );
 };
 

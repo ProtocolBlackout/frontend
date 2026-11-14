@@ -1,10 +1,10 @@
 import { requestJson } from "./api.js";
 
-export function getProfile() {
+export const getProfile = () => {
   return requestJson("/auth/profile", { method: "GET" }, true);
-}
+};
 
-export function updatePreferredTheme(preferredTheme) {
+export const updatePreferredTheme = (preferredTheme) => {
   return requestJson(
     "/auth/profile/theme",
     {
@@ -13,4 +13,4 @@ export function updatePreferredTheme(preferredTheme) {
     },
     true
   );
-}
+};

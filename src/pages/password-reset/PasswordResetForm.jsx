@@ -1,40 +1,25 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
-// Wir nutzen das bestehende Auth-Layout/CSS vom Login
-import "../login/LoginRegistrieren.css";
-
-// Zentraler API-Helper (Base-URL + JSON + Fehlerhandling)
+import { useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
+import styles from "../login/AuthPage.module.css";
 import { requestJson } from "../../services/api.js";
 
-function PasswordResetForm() {
+const PasswordResetForm = () => {
   const [email, setEmail] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const token = searchParams.get("token") ?? "";
 
-  // Token aus der URL (confirm-Mode) oder leer (request-Mode)
-  const [token, setToken] = useState("");
-
-  // Felder für "neues Passwort setzen"
+  // Password fields for "set new password"
   const [password, setPassword] = useState("");
   const [passwordRepeat, setPasswordRepeat] = useState("");
 
-  // UI-Status
+  // UI status
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  // Wenn true: Erfolgsscreen nach "Passwort setzen"
   const [isDone, setIsDone] = useState(false);
 
-  // Token aus URL lesen: /password-reset?token=...
-  // Hinweis: Wenn Token vorhanden ist, sind wir im Confirm-Flow (neues Passwort setzen).
-  useEffect(() => {
-    const urlToken = new URLSearchParams(window.location.search).get("token");
-    setToken(urlToken ?? "");
-    setIsDone(false);
-  }, []);
-
-  // Passwort-Reset-Link anfordern (Mail wird verschickt, wenn der User existiert)
-  async function handleRequestLink(e) {
+  // Request password reset link (email is sent if the account exists)
+  const handleRequestLink = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
@@ -50,7 +35,6 @@ function PasswordResetForm() {
         false
       );
 
-      // Backend gibt immer die gleiche Erfolgsmeldung zurück (keine E-Mail-Enumeration)
       setMessage(
         data?.message ??
           "Wenn ein Account mit dieser E-Mail existiert, wurde ein Link gesendet."
@@ -61,10 +45,10 @@ function PasswordResetForm() {
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
-  // Passwort-Reset bestätigen (Token + neues Passwort an Backend)
-  async function handleConfirmReset(e) {
+  // Confirm password reset (token + new password sent to backend)
+  const handleConfirmReset = async (e) => {
     e.preventDefault();
     setError("");
     setMessage("");
@@ -89,28 +73,26 @@ function PasswordResetForm() {
       setPassword("");
       setPasswordRepeat("");
       setIsDone(true);
-
-      // Token aus der URL entfernen, damit man nicht versehentlich erneut bestätigt
-      window.history.replaceState(null, "", "/password-reset");
-      setToken("");
+      // Clear token from search params without full page reload
+      setSearchParams({}, { replace: true });
     } catch (err) {
       setError(err?.message ?? "Fehler beim Zurücksetzen des Passworts.");
     } finally {
       setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <main className="auth">
-      <section className="auth-console">
-        <header className="auth-console__header">
-          <span className="auth-console__title">SYSTEM // PASSWORD_RESET</span>
-          <span className="auth-console__dots">● ● ●</span>
+    <div className={styles.auth}>
+      <section className={styles.authConsole}>
+        <header className={styles.authConsoleHeader}>
+          <span className={styles.authConsoleTitle}>SYSTEM // PASSWORD_RESET</span>
+          <span className={styles.authConsoleDots}>● ● ●</span>
         </header>
 
-        <div className="auth-console__body">
-          <section className="auth-panel">
-            <p className="auth-lead">
+        <div className={styles.authConsoleBody}>
+          <section className={styles.authPanel}>
+            <p className={styles.authLead}>
               {isDone
                 ? "Passwort wurde erfolgreich gesetzt."
                 : token
@@ -118,26 +100,23 @@ function PasswordResetForm() {
                   : "Gib deine E-Mail-Adresse ein, um das Passwort zurückzusetzen."}
             </p>
 
-            {/* Statusausgabe */}
-            {error ? <p className="auth-hint">{error}</p> : null}
-            {message ? <p className="auth-hint">{message}</p> : null}
+            {error ? <p className={styles.authHint}>{error}</p> : null}
+            {message ? <p className={styles.authHint}>{message}</p> : null}
 
-            {/* Erfolgsscreen */}
             {isDone ? (
-              <div className="auth-actions">
-                <Link to="/login" className="auth-link">
+              <div className={styles.authActions}>
+                <Link to="/login" className={styles.authLink}>
                   Jetzt einloggen
                 </Link>
               </div>
             ) : null}
 
-            {/* Request-Mode: Link anfordern */}
             {!isDone && !token ? (
-              <form className="auth-form" onSubmit={handleRequestLink}>
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">E-MAIL</span>
+              <form className={styles.authForm} onSubmit={handleRequestLink}>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>E-MAIL</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -147,29 +126,31 @@ function PasswordResetForm() {
                   />
                 </label>
 
-                <div className="auth-actions">
+                <div className={styles.authActions}>
                   <button
-                    className="auth-btn"
+                    className={styles.authBtn}
                     type="submit"
                     disabled={isLoading}
                   >
                     {isLoading ? "..." : "LINK ANFORDERN"}
                   </button>
 
-                  <Link to="/login" className="auth-link retroBtn auth-forgotBtn">
+                  <Link
+                    to="/login"
+                    className={`${styles.authLink} ${styles.authForgotBtn}`}
+                  >
                     Zurück zum Login
                   </Link>
                 </div>
               </form>
             ) : null}
 
-            {/* Confirm-Mode: neues Passwort setzen */}
             {!isDone && token ? (
-              <form className="auth-form" onSubmit={handleConfirmReset}>
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">NEUES PASSWORT</span>
+              <form className={styles.authForm} onSubmit={handleConfirmReset}>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>NEUES PASSWORT</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
@@ -178,10 +159,10 @@ function PasswordResetForm() {
                   />
                 </label>
 
-                <label className="auth-field auth-field--full">
-                  <span className="auth-label">PASSWORT WIEDERHOLEN</span>
+                <label className={`${styles.authField} ${styles.authFieldFull}`}>
+                  <span className={styles.authLabel}>PASSWORT WIEDERHOLEN</span>
                   <input
-                    className="auth-input"
+                    className={styles.authInput}
                     type="password"
                     value={passwordRepeat}
                     onChange={(e) => setPasswordRepeat(e.target.value)}
@@ -190,16 +171,16 @@ function PasswordResetForm() {
                   />
                 </label>
 
-                <div className="auth-actions">
+                <div className={styles.authActions}>
                   <button
-                    className="auth-btn"
+                    className={styles.authBtn}
                     type="submit"
                     disabled={isLoading}
                   >
                     {isLoading ? "..." : "PASSWORT SETZEN"}
                   </button>
 
-                  <Link to="/login" className="auth-link">
+                  <Link to="/login" className={styles.authLink}>
                     Zurück zum Login
                   </Link>
                 </div>
@@ -208,8 +189,8 @@ function PasswordResetForm() {
           </section>
         </div>
       </section>
-    </main>
+    </div>
   );
-}
+};
 
 export default PasswordResetForm;
