@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import styles from "./Goodbye.module.css";
-import Button from "../../components/button"
 
 const PromptLine = ({ children }) => {
   return (

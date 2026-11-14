@@ -1,8 +1,8 @@
 // src/components/DeleteConfirmationModal.jsx
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
-import Button from "./button";
-import styles from "./DeleteConfirmationModal.module.css"
+import Button from "./Button.jsx";
+import styles from "./DeleteConfirmationModal.module.css";
 
 export default function DeleteConfirmationModal({ isOpen, onClose, onConfirm, errorMsg }) {
     const [password, setPassword] = useState("");

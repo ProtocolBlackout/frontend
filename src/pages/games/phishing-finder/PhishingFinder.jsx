@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import Button from "../../../components/button";
+import Button from "../../../components/Button.jsx";
 import styles from "./phishingFinder.module.css";
 import { initialEmails } from "./phishingFinderData";
 
