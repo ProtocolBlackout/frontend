@@ -1,14 +1,11 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import { requestJson } from "../../services/api.js";
-import Quiz from "./quiz/gameQuiz";
-import GamePasswordCracker from "./password-cracker/passwordCracker";
-import styles from "./Gamespage.module.css";
-import PhishingFinder from "./phishing-finder/PhishingFinder";
+import Quiz from "./quiz/GameQuiz.jsx";
+import GamePasswordCracker from "./password-cracker/PasswordCracker.jsx";
+import PhishingFinder from "./phishing-finder/PhishingFinder.jsx";
+import styles from "./GamesPage.module.css";
 
-// import ErrorBoundary from '../../components/ErrorBoundary'
-
-export default function Gamespage() {
+const GamesPage = () => {
   const [selectedGame, setSelectedGame] = useState(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [modalPageIndex, setModalPageIndex] = useState(0);
@@ -288,4 +285,6 @@ export default function Gamespage() {
       </div>
     </div>
   );
-}
+};
+
+export default GamesPage;

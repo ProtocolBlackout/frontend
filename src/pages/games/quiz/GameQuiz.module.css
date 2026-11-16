@@ -13,7 +13,7 @@
 .gameContainer {
   background-color: #050505;
   color: #00ff41;
-  font-family: 'Consolas', 'Monaco', monospace;
+  font-family: "Consolas", "Monaco", monospace;
   padding: 20px;
   border: 1px solid #333;
   max-width: 900px;
@@ -78,6 +78,16 @@
   border: 1px dashed #333;
   padding: 20px;
   background: rgba(0, 20, 0, 0.3);
+}
+
+/* --- QUESTION META --- */
+.questionMeta {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: #666;
+  font-size: 0.8rem;
 }
 
 /* --- ACTION BUTTONS (Start, Restart) --- */

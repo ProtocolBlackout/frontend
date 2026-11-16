@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header.jsx";
 import Footer from "./components/Footer.jsx";
 import HomePage from "./pages/home/HomePage.jsx";
-import Gamespage from "./pages/games/Gamespage.jsx";
+import GamesPage from "./pages/games/GamesPage.jsx";
 import About from "./pages/aboutus/AboutUs.jsx";
 import Contact from "./pages/contact/ContactLegal.jsx";
 import History from "./pages/history/HistoryPage.jsx";
@@ -73,7 +73,7 @@ const App = () => {
           <Route path="/home" element={<HomePage />} />
           <Route path="/history" element={<History />} />
           <Route path="/ethics" element={<Ethics />} />
-          <Route path="/games" element={<Gamespage />} />
+          <Route path="/games" element={<GamesPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/auth/verify-email" element={<VerifyEmail />} />
           <Route path="/password-reset" element={<PasswordResetForm />} />

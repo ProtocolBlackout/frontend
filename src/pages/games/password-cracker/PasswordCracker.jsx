@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { requestJson, getToken } from "../../../services/api.js";
-import styles from "./passwordCracker.module.css";
+import styles from "./PasswordCracker.module.css";
 
 const PENDING_RESULT_KEY = "pbPendingGameResult";
 
@@ -355,10 +355,7 @@ const PasswordCracker = ({ onBack }) => {
             &lt; Zurück
           </button>
         </div>
-        <div
-          className={styles.terminal}
-          style={{ borderColor: "red", color: "red" }}
-        >
+        <div className={`${styles.terminal} ${styles.terminalError}`}>
           <h3>VERBINDUNGSFEHLER</h3>
           <p>{error}</p>
           <button
@@ -420,16 +417,8 @@ const PasswordCracker = ({ onBack }) => {
         </div>
       </div>
 
-      {/* --- ÄNDERUNG HIER: Layout angepasst --- */}
-      <div
-        className={styles.targetSelect}
-        style={{
-          display: "flex",
-          width: "100%",
-          gap: "15px",
-          justifyContent: "space-between"
-        }}
-      >
+      {/* --- Layout: Target-Auswahl --- */}
+      <div className={styles.targetSelect}>
         {targetsStatus.map((target) => (
           <button
             key={target.id}
@@ -439,9 +428,7 @@ const PasswordCracker = ({ onBack }) => {
               selectedTargetId === target.id ? styles.active : ""
             } ${target.solved ? styles.solved : ""}`}
             style={{
-              "--target-color": target.color,
-              flex: 1, // Verteilt Platz gleichmäßig
-              minHeight: "80px" // Macht Button höher
+              "--target-color": target.color
             }}
           >
             <div className={styles.targetName}>{target.name}</div>
@@ -530,7 +517,7 @@ const PasswordCracker = ({ onBack }) => {
           </button>
         </div>
 
-        <div className={styles.terminal} style={{ borderColor: activeColor }}>
+        <div className={styles.terminal}>
           <div className={styles.terminalHeader}>
             root@kali-linux:~# tail -f /var/log/syslog
           </div>

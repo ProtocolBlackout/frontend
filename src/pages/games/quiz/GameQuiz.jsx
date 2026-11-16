@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { requestJson, getToken } from "../../../services/api.js";
-import styles from "./gameQuiz.module.css";
+import styles from "./GameQuiz.module.css";
 
 const PENDING_RESULT_KEY = "pbPendingGameResult";
 
 // Hinweis: Fragen werden beim Start vom Backend geladen (wenn erreichbar).
 // Falls nicht, greift der automatische Fallback auf './questions.js'.
 
-function GameQuiz() {
+const GameQuiz = () => {
   // --- STATE ---
   const [started, setStarted] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -288,16 +288,7 @@ function GameQuiz() {
 
     return (
       <div className={styles.contentArea}>
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "space-between",
-            marginBottom: "10px",
-            color: "#666",
-            fontSize: "0.8rem"
-          }}
-        >
+        <div className={styles.questionMeta}>
           <span>
             FRAGE {currentIndex + 1} / {questions.length}
           </span>
@@ -333,6 +324,6 @@ function GameQuiz() {
       {isFinished && renderResultScreen()}
     </div>
   );
-}
+};
 
 export default GameQuiz;

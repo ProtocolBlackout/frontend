@@ -20,9 +20,9 @@ Ihr Bank-Sicherheitsteam`,
     options: [
       { id: "o1", text: "Dringlichkeit und Drohung mit Kontosperrung" },
       { id: "o2", text: "Unpersönliche Anrede" },
-      { id: "o3", text: "Link führt auf fremde Seite" },
+      { id: "o3", text: "Link führt auf fremde Seite" }
     ],
-    correctOptionIds: ["o1", "o2", "o3"],
+    correctOptionIds: ["o1", "o2", "o3"]
   },
   {
     id: 2,
@@ -40,9 +40,9 @@ Vielen Dank an alle Contributor!
 Happy Coding!`,
     options: [
       { id: "o1", text: "Keine Datenabfrage" },
-      { id: "o2", text: "Plausibler Absender und Kontext" },
+      { id: "o2", text: "Plausibler Absender und Kontext" }
     ],
-    correctOptionIds: ["o1", "o2"],
+    correctOptionIds: ["o1", "o2"]
   },
   {
     id: 3,
@@ -61,9 +61,9 @@ Warst du das? Falls nein, sichere dein Konto sofort:
 Dein Support-Team`,
     options: [
       { id: "o1", text: "Manipulierte Absender-Adresse (Typosquatting)" },
-      { id: "o2", text: "Panikmache durch Standort im Ausland" },
+      { id: "o2", text: "Panikmache durch Standort im Ausland" }
     ],
-    correctOptionIds: ["o1", "o2"],
+    correctOptionIds: ["o1", "o2"]
   },
   {
     id: 4,
@@ -81,8 +81,8 @@ Vielen Dank,
 Euer HR Team`,
     options: [
       { id: "o1", text: "Interne Kommunikation über bekannten Kanal" },
-      { id: "o2", text: "Keine Abfrage sensibler Daten" },
+      { id: "o2", text: "Keine Abfrage sensibler Daten" }
     ],
-    correctOptionIds: ["o1", "o2"],
-  },
+    correctOptionIds: ["o1", "o2"]
+  }
 ];
